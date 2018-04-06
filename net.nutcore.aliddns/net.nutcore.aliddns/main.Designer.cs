@@ -301,7 +301,7 @@
             this.checkAndSaveConfig.Name = "checkAndSaveConfig";
             this.checkAndSaveConfig.Size = new System.Drawing.Size(93, 23);
             this.checkAndSaveConfig.TabIndex = 10;
-            this.checkAndSaveConfig.Text = "验证并保存";
+            this.checkAndSaveConfig.Text = "测试并保存";
             this.checkAndSaveConfig.UseVisualStyleBackColor = true;
             this.checkAndSaveConfig.Click += new System.EventHandler(this.checkConfig_Click);
             // 
@@ -347,6 +347,7 @@
             this.fullDomainName.Size = new System.Drawing.Size(135, 21);
             this.fullDomainName.TabIndex = 4;
             this.fullDomainName.Text = "www.xxx.com";
+            this.fullDomainName.ModifiedChanged += new System.EventHandler(this.fullDomainName_ModifiedChanged);
             // 
             // accessKeySecret
             // 

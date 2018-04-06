@@ -36,7 +36,7 @@ namespace net.nutcore.aliddns
                     {
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml 创建成功！" + "\r\n");
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml 设置项目默认赋值完成！" + "\r\n");
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请填写正确内容，点击“验证并保存”完成设置！" + "\r\n");
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请填写正确内容，点击“测试并保存”完成设置！" + "\r\n");
                     }
                 }
             }
@@ -205,8 +205,11 @@ namespace net.nutcore.aliddns
 
                 if (list.Count == 0)
                 {
-                    addDomainRecord();
-                    return false;
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务访问成功，但没有找到对应域名信息！" + "\r\n");
+                    if (addDomainRecord())
+                        return true;
+                    else
+                        return false;
                 }
 
                 int i = 0;
@@ -214,8 +217,7 @@ namespace net.nutcore.aliddns
                 foreach (Record record in list)
                 {
                     i++;
-                    //MessageBox.Show("Record" + i.ToString());
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "服务器返回Record:" + i.ToString() + " RecordId：" + record.RecordId + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务返回Record:" + i.ToString() + " RecordId：" + record.RecordId + "\r\n");
                     recordId.Text = record.RecordId;
                     globalRR.Text = record.RR;
                     globalDomainType.Text = record.Type;
@@ -247,7 +249,7 @@ namespace net.nutcore.aliddns
             try
             {
                 DescribeDomainRecordInfoResponse response = client.GetAcsResponse(request);
-                if (response.Value.Length > 0)
+                if (response.Value != "0.0.0.0")
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名:" + response.RR + "." + response.DomainName + " 已经绑定IP:" + response.Value + "\r\n");
                     recordId.Text = response.RecordId;
@@ -264,7 +266,6 @@ namespace net.nutcore.aliddns
             //处理错误 
             catch (ServerException e)
             {
-                //MessageBox.Show("Server Exception: " + e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
@@ -272,7 +273,6 @@ namespace net.nutcore.aliddns
             }
             catch (ClientException e)
             {
-                //MessageBox.Show("Client Exception: " + e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
@@ -306,18 +306,16 @@ namespace net.nutcore.aliddns
             //处理错误
             catch (ServerException e)
             {
-                //MessageBox.Show(e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
 
             }
             catch (ClientException e)
             {
-                //MessageBox.Show(e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
             }
         }
 
-        private void addDomainRecord()
+        private bool addDomainRecord()
         {
             string[] symbols = new string[1] { "." };
             string[] data = fullDomainName.Text.Split(symbols, 30, StringSplitOptions.RemoveEmptyEntries);
@@ -331,23 +329,28 @@ namespace net.nutcore.aliddns
             request.Value = localIP.Text;
             try
             {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "尝试向阿里云DNS服务添加域名:" + fullDomainName.Text + "\r\n");
                 AddDomainRecordResponse response = client.GetAcsResponse(request);
                 if (response.RecordId != null)
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "RecordId:" + response.RecordId + "添加成功！" + "\r\n");
-                recordId.Text = response.RecordId;
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "RecordId:" + response.RecordId + " 域名：" + fullDomainName.Text + "添加成功！" + "\r\n");
+                recordId.Text = response.RecordId; 
+                globalDomainType.Text = request.Type;
+                globalRR.Text = request.RR; 
+                globalValue.Text = domainIP.Text = request.Value;
                 label_DomainIpStatus.Text = "已绑定";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
+                return true;
             }
             //处理错误
             catch (ServerException e)
             {
-                //MessageBox.Show(e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
+                return false;
             }
             catch (ClientException e)
             {
-                //MessageBox.Show(e.ErrorCode + e.ErrorMessage);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
+                return false;
             }
         }
 
@@ -367,7 +370,7 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "WAN口IP:" + localIP.Text + " 与域名绑定IP:" + domainIP.Text + "不一致，需要更新！" + "\r\n");
                     updateDomainRecord();
                 }
-
+              
                 //localIP.Text = getLocalIP();
                 //domainIP.Text = getDomainIP();
             }
@@ -379,7 +382,7 @@ namespace net.nutcore.aliddns
         //Events in form
         private void updateNow_Click(object sender, EventArgs e)
         {
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---立即开始WAN口IP和域名IP查询比较---" + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---立即开始WAN口IP和域名绑定IP进行查询比较---" + "\r\n");
             updatePrepare();
         }
 
@@ -403,7 +406,7 @@ namespace net.nutcore.aliddns
                 }
                 else
                 {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云访问成功，但没有找到对应域名信息，设置文件没有更新！ " + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件没有更新！" + "\r\n");
                 }
                    
             }
@@ -498,6 +501,11 @@ namespace net.nutcore.aliddns
                 accessKeyId.PasswordChar = '*';
                 accessKeySecret.PasswordChar = '*';
             }
+        }
+
+        private void fullDomainName_ModifiedChanged(object sender, EventArgs e)
+        {
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名修改后请测试并保存！" + "\r\n");
         }
     }
 }
