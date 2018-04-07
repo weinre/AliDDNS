@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.timeSetGroup = new System.Windows.Forms.GroupBox();
+            this.checkBox_autoUpdate = new System.Windows.Forms.CheckBox();
+            this.checkBox_autoBoot = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.nextUpdateSeconds = new System.Windows.Forms.Label();
             this.updateNow = new System.Windows.Forms.Button();
-            this.autoUpdateOff = new System.Windows.Forms.RadioButton();
-            this.autoUpdateOn = new System.Windows.Forms.RadioButton();
             this.debugMessage = new System.Windows.Forms.GroupBox();
             this.recordId = new System.Windows.Forms.TextBox();
             this.globalValue = new System.Windows.Forms.Label();
@@ -75,6 +75,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBox_minimized = new System.Windows.Forms.CheckBox();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -85,22 +86,46 @@
             // 
             // timeSetGroup
             // 
+            this.timeSetGroup.Controls.Add(this.checkBox_minimized);
+            this.timeSetGroup.Controls.Add(this.checkBox_autoUpdate);
+            this.timeSetGroup.Controls.Add(this.checkBox_autoBoot);
             this.timeSetGroup.Controls.Add(this.label3);
             this.timeSetGroup.Controls.Add(this.nextUpdateSeconds);
             this.timeSetGroup.Controls.Add(this.updateNow);
-            this.timeSetGroup.Controls.Add(this.autoUpdateOff);
-            this.timeSetGroup.Controls.Add(this.autoUpdateOn);
             this.timeSetGroup.Location = new System.Drawing.Point(12, 44);
             this.timeSetGroup.Name = "timeSetGroup";
-            this.timeSetGroup.Size = new System.Drawing.Size(190, 88);
+            this.timeSetGroup.Size = new System.Drawing.Size(190, 91);
             this.timeSetGroup.TabIndex = 4;
             this.timeSetGroup.TabStop = false;
-            this.timeSetGroup.Text = "定时更新";
+            this.timeSetGroup.Text = "其它设置";
+            // 
+            // checkBox_autoUpdate
+            // 
+            this.checkBox_autoUpdate.AutoSize = true;
+            this.checkBox_autoUpdate.Checked = true;
+            this.checkBox_autoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_autoUpdate.Location = new System.Drawing.Point(13, 41);
+            this.checkBox_autoUpdate.Name = "checkBox_autoUpdate";
+            this.checkBox_autoUpdate.Size = new System.Drawing.Size(72, 16);
+            this.checkBox_autoUpdate.TabIndex = 6;
+            this.checkBox_autoUpdate.Text = "自动更新";
+            this.checkBox_autoUpdate.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_autoBoot
+            // 
+            this.checkBox_autoBoot.AutoSize = true;
+            this.checkBox_autoBoot.Location = new System.Drawing.Point(13, 20);
+            this.checkBox_autoBoot.Name = "checkBox_autoBoot";
+            this.checkBox_autoBoot.Size = new System.Drawing.Size(84, 16);
+            this.checkBox_autoBoot.TabIndex = 5;
+            this.checkBox_autoBoot.Text = "随系统启动";
+            this.checkBox_autoBoot.UseVisualStyleBackColor = true;
+            this.checkBox_autoBoot.CheckedChanged += new System.EventHandler(this.checkBox_autoBoot_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(95, 40);
+            this.label3.Location = new System.Drawing.Point(110, 42);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 4;
@@ -109,7 +134,8 @@
             // nextUpdateSeconds
             // 
             this.nextUpdateSeconds.AutoSize = true;
-            this.nextUpdateSeconds.Location = new System.Drawing.Point(47, 40);
+            this.nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
+            this.nextUpdateSeconds.Location = new System.Drawing.Point(90, 42);
             this.nextUpdateSeconds.Name = "nextUpdateSeconds";
             this.nextUpdateSeconds.Size = new System.Drawing.Size(17, 12);
             this.nextUpdateSeconds.TabIndex = 3;
@@ -117,35 +143,13 @@
             // 
             // updateNow
             // 
-            this.updateNow.Location = new System.Drawing.Point(16, 55);
+            this.updateNow.Location = new System.Drawing.Point(12, 64);
             this.updateNow.Name = "updateNow";
-            this.updateNow.Size = new System.Drawing.Size(156, 23);
+            this.updateNow.Size = new System.Drawing.Size(175, 23);
             this.updateNow.TabIndex = 2;
             this.updateNow.Text = "立即更新";
             this.updateNow.UseVisualStyleBackColor = true;
             this.updateNow.Click += new System.EventHandler(this.updateNow_Click);
-            // 
-            // autoUpdateOff
-            // 
-            this.autoUpdateOff.AutoSize = true;
-            this.autoUpdateOff.Checked = true;
-            this.autoUpdateOff.Location = new System.Drawing.Point(125, 20);
-            this.autoUpdateOff.Name = "autoUpdateOff";
-            this.autoUpdateOff.Size = new System.Drawing.Size(47, 16);
-            this.autoUpdateOff.TabIndex = 1;
-            this.autoUpdateOff.TabStop = true;
-            this.autoUpdateOff.Text = "关闭";
-            this.autoUpdateOff.UseVisualStyleBackColor = true;
-            // 
-            // autoUpdateOn
-            // 
-            this.autoUpdateOn.AutoSize = true;
-            this.autoUpdateOn.Location = new System.Drawing.Point(17, 21);
-            this.autoUpdateOn.Name = "autoUpdateOn";
-            this.autoUpdateOn.Size = new System.Drawing.Size(47, 16);
-            this.autoUpdateOn.TabIndex = 0;
-            this.autoUpdateOn.Text = "开启";
-            this.autoUpdateOn.UseVisualStyleBackColor = true;
             // 
             // debugMessage
             // 
@@ -157,9 +161,9 @@
             this.debugMessage.Controls.Add(this.globalRR);
             this.debugMessage.Controls.Add(this.label10);
             this.debugMessage.Controls.Add(this.label9);
-            this.debugMessage.Location = new System.Drawing.Point(12, 133);
+            this.debugMessage.Location = new System.Drawing.Point(12, 141);
             this.debugMessage.Name = "debugMessage";
-            this.debugMessage.Size = new System.Drawing.Size(190, 111);
+            this.debugMessage.Size = new System.Drawing.Size(190, 101);
             this.debugMessage.TabIndex = 5;
             this.debugMessage.TabStop = false;
             this.debugMessage.Text = "调试信息";
@@ -527,6 +531,16 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
+            // checkBox_minimized
+            // 
+            this.checkBox_minimized.AutoSize = true;
+            this.checkBox_minimized.Location = new System.Drawing.Point(94, 20);
+            this.checkBox_minimized.Name = "checkBox_minimized";
+            this.checkBox_minimized.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_minimized.TabIndex = 7;
+            this.checkBox_minimized.Text = "启动时最小化";
+            this.checkBox_minimized.UseVisualStyleBackColor = true;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -565,8 +579,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label nextUpdateSeconds;
         private System.Windows.Forms.Button updateNow;
-        private System.Windows.Forms.RadioButton autoUpdateOff;
-        private System.Windows.Forms.RadioButton autoUpdateOn;
         private System.Windows.Forms.GroupBox debugMessage;
         private System.Windows.Forms.GroupBox globalSetGroup;
         private System.Windows.Forms.Label label8;
@@ -606,6 +618,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button_ShowHide;
         private System.Windows.Forms.LinkLabel PublishLink;
+        private System.Windows.Forms.CheckBox checkBox_autoBoot;
+        private System.Windows.Forms.CheckBox checkBox_autoUpdate;
+        private System.Windows.Forms.CheckBox checkBox_minimized;
     }
 }
 

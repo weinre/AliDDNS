@@ -29,25 +29,40 @@ namespace net.nutcore.aliddns
         {
             try //检查配置文件，如果没有则新建，并赋值默认值
             {
-                if (File.Exists("config.xml") != true)
+                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+                string config_file = ExePath + "aliddns_config.xml";
+                if (File.Exists(config_file) != true)
                 {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "没有找到配置文件 config.xml，重新创建！" + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "没有找到配置文件 aliddns_config.xml，重新创建！" + "\r\n");
                     if (saveConfigFile())
                     {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml 创建成功！" + "\r\n");
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml 设置项目默认赋值完成！" + "\r\n");
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 aliddns_config.xml 创建成功！" + "\r\n");
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件设置项目默认赋值完成！" + "\r\n");
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请填写正确内容，点击“测试并保存”完成设置！" + "\r\n");
                     }
                 }
             }
             catch(Exception error)
             {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml 错误！信息：" + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 aliddns_config.xml 错误！信息：" + error + "\r\n");
             }
             
             //读取配置文件config.xml
             readConfigFile();
-
+            //窗体根据参数判断是否最小化驻留系统托盘
+            if (checkBox_minimized.Checked == true)
+            {
+                this.ShowInTaskbar = false; //从状态栏清除
+                this.WindowState = FormWindowState.Minimized; //窗体最小化
+                this.Hide(); //窗体隐藏
+            }
+            else if (checkBox_minimized.Checked == false)
+            {
+                this.Show(); //窗体显示
+                this.WindowState = FormWindowState.Normal; //窗体正常化
+                this.ShowInTaskbar = true; //从状态栏显示
+            }
+                
             try //获取WAN口IP
             {
                 localIP.Text = getLocalIP();
@@ -72,21 +87,24 @@ namespace net.nutcore.aliddns
 
         private void readConfigFile()
         {
-            string[] config = new string[7]; //需要根据config.xml文件内设置项目数量设置读取数量，目前config.xml配置文件内存储了7个设置项目
+            string[] config = new string[9]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
             int i = 0;
 
             //Create xml object
             XmlDocument xmlDOC = new XmlDocument();
-            xmlDOC.Load("config.xml");
+            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string config_file = ExePath + "aliddns_config.xml";
+            xmlDOC.Load(config_file);
             XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "开始读取配置文件config.xml..." + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件找到，开始读取..." + "\r\n");
             while (readXML.Read())
             {
                 readXML.MoveToElement(); //Forward
                 if (readXML.NodeType == XmlNodeType.Text) //Only save config
                 {
                     config[i] = readXML.Value;
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "项目[" + i + "]: " + config[i] + "\r\n"); //显示读取内容，用于调试DEBUG。
+                    //此行用于调试读取内容
+                    //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "项目[" + i + "]: " + config[i] + "\r\n"); //显示读取内容，用于调试DEBUG。
                     i++;
                 }
             }
@@ -95,10 +113,16 @@ namespace net.nutcore.aliddns
             recordId.Text = config[2];
             fullDomainName.Text = config[3];
             nextUpdateSeconds.Text = newSeconds.Text = config[4];
-            if ( config[5] == "On" ) autoUpdateOn.Checked = true;
-            if ( config[5] == "Off ") autoUpdateOff.Checked = true;
+            if (config[5] == "On") checkBox_autoUpdate.Checked = true;
+            else checkBox_autoUpdate.Checked = false;
+            //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
+            //if ( config[5] == "Off ") autoUpdateOff.Checked = true;
             text_whatIsUrl.Text = config[6];
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件 config.xml读取成功！" + "\r\n");
+            if (config[7] == "On") checkBox_autoBoot.Checked = true;
+            else checkBox_autoBoot.Checked = false;
+            if (config[8] == "On") checkBox_minimized.Checked = true;
+            else checkBox_minimized.Checked = false;
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件读取成功！" + "\r\n");
         }
 
         private bool saveConfigFile()
@@ -109,8 +133,9 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "任何值都不能为空！无法填写请输入null或0！" + "\r\n");
                 return false;
             }
-
-            XmlTextWriter textWriter = new XmlTextWriter("config.xml", null);
+            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string config_file = ExePath + "aliddns_config.xml";
+            XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
             textWriter.WriteStartDocument(); //文档开始
 
             textWriter.WriteComment("AlidnsAutoCheckTool");
@@ -139,14 +164,32 @@ namespace net.nutcore.aliddns
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("autoUpdate", "");
-            if (autoUpdateOn.Checked == true)
+            if (checkBox_autoUpdate.Checked == true)
+                textWriter.WriteString("On");
+            else
+                textWriter.WriteString("Off");
+            /*if (autoUpdateOn.Checked == true)
                 textWriter.WriteString("On");
             if (autoUpdateOff.Checked)
-                textWriter.WriteString("Off");
+                textWriter.WriteString("Off");*/
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("whatIsUrl", "");
             textWriter.WriteString(text_whatIsUrl.Text);
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("autoBoot", "");
+            if (checkBox_autoBoot.Checked == true)
+                textWriter.WriteString("On");
+            else
+                textWriter.WriteString("Off");
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("minimized", "");
+            if (checkBox_minimized.Checked == true)
+                textWriter.WriteString("On");
+            else
+                textWriter.WriteString("Off");
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement(); //设置项目结束
@@ -431,7 +474,7 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                if (autoUpdateOn.Checked == true && nextUpdateSeconds.Text != "")
+                if (checkBox_autoUpdate.Checked == true && nextUpdateSeconds.Text != "")
                 {
                     int seconds = Convert.ToInt32(nextUpdateSeconds.Text);
                     if (seconds > 0)
@@ -506,6 +549,32 @@ namespace net.nutcore.aliddns
         private void fullDomainName_ModifiedChanged(object sender, EventArgs e)
         {
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名修改后请测试并保存！" + "\r\n");
+        }
+
+        private void checkBox_autoBoot_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if(checkBox_autoBoot.Checked == true)
+            {
+                //获取执行该方法的程序集，并获取该程序集的文件路径（由该文件路径可以得到程序集所在的目录）
+                string thisExecutablePath = System.Reflection.Assembly.GetExecutingAssembly().Location;//this.GetType().Assembly.Location;
+                //SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run注册表中这个路径是开机自启动的路径
+                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+                Rkey.SetValue("AliDDNS Tray", thisExecutablePath);
+                Rkey.Close();
+                //RegistryKey RKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+                //RKey.SetValue("AliDDNS Tray", @str);
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行设置成功！" + "\r\n");
+            }
+            else
+            {
+                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+                Rkey.DeleteSubKey("AliDDNS Tray",false);
+                Rkey.Close();
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
+            }
+                
+            
         }
     }
 }

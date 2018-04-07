@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("AliDDNS")]
-[assembly: AssemblyDescription("自动更新域名解析")]
+[assembly: AssemblyDescription("通过AliDNS API自动更新域名解析，实现动态域名服务")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Qingdao Nutcore Co., Ltd.")]
+[assembly: AssemblyCompany("https://github.com/wisdomwei201804/AliDDNS")]
 [assembly: AssemblyProduct("AliDDNS")]
-[assembly: AssemblyCopyright("Copyright © Nutcore  2016")]
+[assembly: AssemblyCopyright("https://github.com/wisdomwei201804/AliDDNS")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.2.0.0")]
-[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyVersion("3.5.0.0")]
+[assembly: AssemblyFileVersion("3.5.0.0")]
