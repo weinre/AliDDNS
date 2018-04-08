@@ -61,13 +61,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.accessKeyId = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.authorInformation = new System.Windows.Forms.GroupBox();
-            this.PublishLink = new System.Windows.Forms.LinkLabel();
-            this.personalWebsite = new System.Windows.Forms.LinkLabel();
             this.autoUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.groupBox_netstate = new System.Windows.Forms.GroupBox();
             this.label_DomainIpStatus = new System.Windows.Forms.Label();
@@ -76,25 +73,33 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox_logAutoSave = new System.Windows.Forms.CheckBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textBox_logDay = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
-            this.authorInformation.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox_netstate.SuspendLayout();
             this.SuspendLayout();
             // 
             // timeSetGroup
             // 
+            this.timeSetGroup.Controls.Add(this.label15);
+            this.timeSetGroup.Controls.Add(this.textBox_logDay);
+            this.timeSetGroup.Controls.Add(this.label13);
+            this.timeSetGroup.Controls.Add(this.checkBox_logAutoSave);
             this.timeSetGroup.Controls.Add(this.checkBox_minimized);
             this.timeSetGroup.Controls.Add(this.checkBox_autoUpdate);
             this.timeSetGroup.Controls.Add(this.checkBox_autoBoot);
             this.timeSetGroup.Controls.Add(this.label3);
             this.timeSetGroup.Controls.Add(this.nextUpdateSeconds);
             this.timeSetGroup.Controls.Add(this.updateNow);
-            this.timeSetGroup.Location = new System.Drawing.Point(12, 44);
+            this.timeSetGroup.Location = new System.Drawing.Point(12, 151);
             this.timeSetGroup.Name = "timeSetGroup";
-            this.timeSetGroup.Size = new System.Drawing.Size(190, 91);
+            this.timeSetGroup.Size = new System.Drawing.Size(190, 157);
             this.timeSetGroup.TabIndex = 4;
             this.timeSetGroup.TabStop = false;
             this.timeSetGroup.Text = "其它设置";
@@ -114,7 +119,7 @@
             this.checkBox_autoUpdate.AutoSize = true;
             this.checkBox_autoUpdate.Checked = true;
             this.checkBox_autoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_autoUpdate.Location = new System.Drawing.Point(13, 41);
+            this.checkBox_autoUpdate.Location = new System.Drawing.Point(9, 41);
             this.checkBox_autoUpdate.Name = "checkBox_autoUpdate";
             this.checkBox_autoUpdate.Size = new System.Drawing.Size(72, 16);
             this.checkBox_autoUpdate.TabIndex = 6;
@@ -124,7 +129,7 @@
             // checkBox_autoBoot
             // 
             this.checkBox_autoBoot.AutoSize = true;
-            this.checkBox_autoBoot.Location = new System.Drawing.Point(13, 20);
+            this.checkBox_autoBoot.Location = new System.Drawing.Point(9, 20);
             this.checkBox_autoBoot.Name = "checkBox_autoBoot";
             this.checkBox_autoBoot.Size = new System.Drawing.Size(84, 16);
             this.checkBox_autoBoot.TabIndex = 5;
@@ -171,7 +176,7 @@
             this.debugMessage.Controls.Add(this.globalRR);
             this.debugMessage.Controls.Add(this.label10);
             this.debugMessage.Controls.Add(this.label9);
-            this.debugMessage.Location = new System.Drawing.Point(12, 141);
+            this.debugMessage.Location = new System.Drawing.Point(12, 44);
             this.debugMessage.Name = "debugMessage";
             this.debugMessage.Size = new System.Drawing.Size(190, 101);
             this.debugMessage.TabIndex = 5;
@@ -399,39 +404,6 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "accessKeyId";
             // 
-            // authorInformation
-            // 
-            this.authorInformation.Controls.Add(this.PublishLink);
-            this.authorInformation.Controls.Add(this.personalWebsite);
-            this.authorInformation.Location = new System.Drawing.Point(15, 246);
-            this.authorInformation.Name = "authorInformation";
-            this.authorInformation.Size = new System.Drawing.Size(187, 62);
-            this.authorInformation.TabIndex = 7;
-            this.authorInformation.TabStop = false;
-            this.authorInformation.Text = "著作信息";
-            // 
-            // PublishLink
-            // 
-            this.PublishLink.AutoSize = true;
-            this.PublishLink.Location = new System.Drawing.Point(49, 38);
-            this.PublishLink.Name = "PublishLink";
-            this.PublishLink.Size = new System.Drawing.Size(77, 12);
-            this.PublishLink.TabIndex = 2;
-            this.PublishLink.TabStop = true;
-            this.PublishLink.Text = "程序发布页面";
-            this.PublishLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PubilishLink_LinkClicked);
-            // 
-            // personalWebsite
-            // 
-            this.personalWebsite.AutoSize = true;
-            this.personalWebsite.Location = new System.Drawing.Point(45, 17);
-            this.personalWebsite.Name = "personalWebsite";
-            this.personalWebsite.Size = new System.Drawing.Size(95, 12);
-            this.personalWebsite.TabIndex = 1;
-            this.personalWebsite.TabStop = true;
-            this.personalWebsite.Text = "www.nutcore.net";
-            this.personalWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.personalWebsite_LinkClicked);
-            // 
             // autoUpdateTimer
             // 
             this.autoUpdateTimer.Enabled = true;
@@ -450,25 +422,26 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem_Exit,
+            this.ToolStripMenuItem_About});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 48);
             // 
-            // toolStripMenuItem1
+            // toolStripMenuItem_Exit
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
-            this.toolStripMenuItem1.Text = "退出";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
+            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(100, 22);
+            this.toolStripMenuItem_Exit.Text = "退出";
+            this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // textBox_log
             // 
-            this.textBox_log.Location = new System.Drawing.Point(15, 314);
+            this.textBox_log.Location = new System.Drawing.Point(12, 314);
             this.textBox_log.Multiline = true;
             this.textBox_log.Name = "textBox_log";
             this.textBox_log.ReadOnly = true;
             this.textBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_log.Size = new System.Drawing.Size(399, 109);
+            this.textBox_log.Size = new System.Drawing.Size(402, 109);
             this.textBox_log.TabIndex = 8;
             // 
             // groupBox_netstate
@@ -499,7 +472,7 @@
             // label_localIpStatus
             // 
             this.label_localIpStatus.AutoSize = true;
-            this.label_localIpStatus.Location = new System.Drawing.Point(147, 19);
+            this.label_localIpStatus.Location = new System.Drawing.Point(150, 19);
             this.label_localIpStatus.Name = "label_localIpStatus";
             this.label_localIpStatus.Size = new System.Drawing.Size(41, 12);
             this.label_localIpStatus.TabIndex = 8;
@@ -508,7 +481,7 @@
             // domainIP
             // 
             this.domainIP.AutoSize = true;
-            this.domainIP.Location = new System.Drawing.Point(237, 19);
+            this.domainIP.Location = new System.Drawing.Point(244, 19);
             this.domainIP.Name = "domainIP";
             this.domainIP.Size = new System.Drawing.Size(47, 12);
             this.domainIP.TabIndex = 7;
@@ -517,7 +490,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(191, 19);
+            this.label2.Location = new System.Drawing.Point(198, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 6;
@@ -526,7 +499,7 @@
             // localIP
             // 
             this.localIP.AutoSize = true;
-            this.localIP.Location = new System.Drawing.Point(55, 19);
+            this.localIP.Location = new System.Drawing.Point(56, 19);
             this.localIP.Name = "localIP";
             this.localIP.Size = new System.Drawing.Size(47, 12);
             this.localIP.TabIndex = 5;
@@ -541,6 +514,50 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
+            // ToolStripMenuItem_About
+            // 
+            this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(100, 22);
+            this.ToolStripMenuItem_About.Text = "关于";
+            this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
+            // 
+            // checkBox_logAutoSave
+            // 
+            this.checkBox_logAutoSave.AutoSize = true;
+            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 98);
+            this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
+            this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_logAutoSave.TabIndex = 8;
+            this.checkBox_logAutoSave.Text = "日志自动转储";
+            this.checkBox_logAutoSave.UseVisualStyleBackColor = true;
+            this.checkBox_logAutoSave.CheckedChanged += new System.EventHandler(this.checkBox_logAutoSave_CheckedChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 120);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(17, 12);
+            this.label13.TabIndex = 9;
+            this.label13.Text = "每";
+            // 
+            // textBox_logDay
+            // 
+            this.textBox_logDay.Location = new System.Drawing.Point(32, 117);
+            this.textBox_logDay.Name = "textBox_logDay";
+            this.textBox_logDay.Size = new System.Drawing.Size(36, 21);
+            this.textBox_logDay.TabIndex = 10;
+            this.textBox_logDay.Text = "1";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(74, 120);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(65, 12);
+            this.label15.TabIndex = 11;
+            this.label15.Text = "天转储一次";
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -548,14 +565,13 @@
             this.ClientSize = new System.Drawing.Size(426, 430);
             this.Controls.Add(this.groupBox_netstate);
             this.Controls.Add(this.textBox_log);
-            this.Controls.Add(this.authorInformation);
             this.Controls.Add(this.globalSetGroup);
             this.Controls.Add(this.debugMessage);
             this.Controls.Add(this.timeSetGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mainForm";
-            this.Text = "Aliddns";
+            this.Text = "AliDDNS";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
             this.Load += new System.EventHandler(this.mainForm_Load);
             this.timeSetGroup.ResumeLayout(false);
@@ -564,8 +580,6 @@
             this.debugMessage.PerformLayout();
             this.globalSetGroup.ResumeLayout(false);
             this.globalSetGroup.PerformLayout();
-            this.authorInformation.ResumeLayout(false);
-            this.authorInformation.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox_netstate.ResumeLayout(false);
             this.groupBox_netstate.PerformLayout();
@@ -590,8 +604,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox accessKeyId;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox authorInformation;
-        private System.Windows.Forms.LinkLabel personalWebsite;
         private System.Windows.Forms.Timer autoUpdateTimer;
         private System.Windows.Forms.Button checkAndSaveConfig;
         private System.Windows.Forms.Label label9;
@@ -604,7 +616,7 @@
         private System.Windows.Forms.TextBox recordId;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;
         private System.Windows.Forms.TextBox textBox_log;
         private System.Windows.Forms.TextBox text_whatIsUrl;
         private System.Windows.Forms.Label label14;
@@ -617,10 +629,14 @@
         private System.Windows.Forms.Label localIP;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button_ShowHide;
-        private System.Windows.Forms.LinkLabel PublishLink;
         private System.Windows.Forms.CheckBox checkBox_autoBoot;
         private System.Windows.Forms.CheckBox checkBox_autoUpdate;
         private System.Windows.Forms.CheckBox checkBox_minimized;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_About;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox textBox_logDay;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox checkBox_logAutoSave;
     }
 }
 

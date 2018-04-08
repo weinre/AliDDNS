@@ -27,6 +27,9 @@ namespace net.nutcore.aliddns
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "AliDDNS 原作者主页: http://www.netcore.net" + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "原作者开发至AliDDNS 3.0，最后更新在2017.10.6。本程序在此基础上继续开发、完善。" + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "发布页面: https://github.com/wisdomwei201804/AliDDNS" + "\r\n");
             try //检查配置文件，如果没有则新建，并赋值默认值
             {
                 string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -87,7 +90,7 @@ namespace net.nutcore.aliddns
 
         private void readConfigFile()
         {
-            string[] config = new string[9]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
+            string[] config = new string[11]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
             int i = 0;
 
             //Create xml object
@@ -122,6 +125,18 @@ namespace net.nutcore.aliddns
             else checkBox_autoBoot.Checked = false;
             if (config[8] == "On") checkBox_minimized.Checked = true;
             else checkBox_minimized.Checked = false;
+            if (config[9] == "On")
+            {
+                checkBox_logAutoSave.Checked = true;
+                textBox_logDay.Text = config[10];
+                textBox_logDay.Enabled = false;
+            }
+            else
+            {
+                checkBox_logAutoSave.Checked = false;
+                textBox_logDay.Text = config[10];
+                textBox_logDay.Enabled = true;
+            } 
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件读取成功！" + "\r\n");
         }
 
@@ -190,6 +205,17 @@ namespace net.nutcore.aliddns
                 textWriter.WriteString("On");
             else
                 textWriter.WriteString("Off");
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("logautosave", "");
+            if (checkBox_logAutoSave.Checked == true)
+                textWriter.WriteString("On");
+            else
+                textWriter.WriteString("Off");
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("logday", "");
+            textWriter.WriteString(textBox_logDay.Text);
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement(); //设置项目结束
@@ -459,17 +485,7 @@ namespace net.nutcore.aliddns
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
             }
         }
-        
-        private void PubilishLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("explorer.exe", "https://github.com/wisdomwei201804/AliDDNS/");
-        }
-
-        private void personalWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("explorer.exe", "http://www.nutcore.net/");
-        }
-
+       
         private void autoUpdateTimer_Tick(object sender, EventArgs e)
         {
             try
@@ -553,7 +569,6 @@ namespace net.nutcore.aliddns
 
         private void checkBox_autoBoot_CheckedChanged(object sender, EventArgs e)
         {
-
             if(checkBox_autoBoot.Checked == true)
             {
                 //获取执行该方法的程序集，并获取该程序集的文件路径（由该文件路径可以得到程序集所在的目录）
@@ -575,6 +590,22 @@ namespace net.nutcore.aliddns
             }
                 
             
+        }
+
+        private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
+        {
+            this.MinimizeBox = false; //取消窗口最小化按钮
+            this.MaximizeBox = false; //取消窗口最大化按钮
+            Form_About about = new Form_About();
+            about.Show(this);
+        }
+
+        private void checkBox_logAutoSave_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_logAutoSave.Checked == true)
+                textBox_logDay.Enabled = false;
+            else
+                textBox_logDay.Enabled = true;
         }
     }
 }
