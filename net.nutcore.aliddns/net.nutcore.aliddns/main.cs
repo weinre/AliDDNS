@@ -27,9 +27,6 @@ namespace net.nutcore.aliddns
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "AliDDNS 原作者主页: http://www.netcore.net" + "\r\n");
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "原作者开发至AliDDNS 3.0，最后更新在2017.10.6。本程序在此基础上继续开发、完善。" + "\r\n");
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "发布页面: https://github.com/wisdomwei201804/AliDDNS" + "\r\n");
             try //检查配置文件，如果没有则新建，并赋值默认值
             {
                 string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -90,7 +87,7 @@ namespace net.nutcore.aliddns
 
         private void readConfigFile()
         {
-            string[] config = new string[11]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
+            string[] config = new string[10]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
             int i = 0;
 
             //Create xml object
@@ -126,17 +123,10 @@ namespace net.nutcore.aliddns
             if (config[8] == "On") checkBox_minimized.Checked = true;
             else checkBox_minimized.Checked = false;
             if (config[9] == "On")
-            {
                 checkBox_logAutoSave.Checked = true;
-                textBox_logDay.Text = config[10];
-                textBox_logDay.Enabled = false;
-            }
             else
-            {
                 checkBox_logAutoSave.Checked = false;
-                textBox_logDay.Text = config[10];
-                textBox_logDay.Enabled = true;
-            } 
+
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件读取成功！" + "\r\n");
         }
 
@@ -212,10 +202,6 @@ namespace net.nutcore.aliddns
                 textWriter.WriteString("On");
             else
                 textWriter.WriteString("Off");
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("logday", "");
-            textWriter.WriteString(textBox_logDay.Text);
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement(); //设置项目结束
@@ -502,22 +488,19 @@ namespace net.nutcore.aliddns
                         updatePrepare();
                     }
                 }
-                /*if (checkBox_logAutoSave.Checked == true && label_nextUpdateDays.Text != "")
+                if (checkBox_logAutoSave.Checked == true)
                 {
-                    int days = Convert.ToInt32(label_nextUpdateDays.Text);
-                    if ( days > 0 ) days = days*86400-1;
-                    label_nextUpdateDays.Text = days.ToString();
-                    if ( days == 0 )
+                    if ( textBox_log.GetLineFromCharIndex(textBox_log.Text.Length) >10000 )
                     {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---计划任务被触发，开始日志转储---" + "\r\n");
-                        //logToFiles();
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---运行日志超过10000行，开始日志转储---" + "\r\n");
+                        logToFiles();
                     }
-                }*/
+                }
             }
             catch (Exception error)
             {
                 //MessageBox.Show("请检查设置中的秒数是否为整数！错误信息：" + error);
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查设置中的秒数是否为整数！错误信息： " + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出现错误！错误信息: " + error + "\r\n");
             }
         }
 
@@ -585,14 +568,12 @@ namespace net.nutcore.aliddns
                 Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
                 Rkey.SetValue("AliDDNS Tray", thisExecutablePath);
                 Rkey.Close();
-                //RegistryKey RKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-                //RKey.SetValue("AliDDNS Tray", @str);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行设置成功！" + "\r\n");
             }
             else
             {
-                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
-                Rkey.DeleteSubKey("AliDDNS Tray",false);
+                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",true);
+                Rkey.DeleteValue("AliDDNS Tray");
                 Rkey.Close();
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
             }
@@ -611,34 +592,41 @@ namespace net.nutcore.aliddns
         private void checkBox_logAutoSave_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox_logAutoSave.Checked == true)
-                textBox_logDay.Enabled = false;
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储启用成功！日志超过1万行将自动转储。" + "\r\n");
             else
-                textBox_logDay.Enabled = true;
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储取消！" + "\r\n");
         }
 
-        private void textBox_logDay_Enter(object sender, EventArgs e)
+        private void logToFiles()
         {
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数请输入1至30之间的整数！" + "\r\n");
+            string logPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string logfile = logPath + DateTime.Now.ToString("yyyyMMddHHmmss") + "aliddns_log.txt";
+            if (!File.Exists(logfile))
+            {
+                //using (File.Create(logPath)) { }
+                System.IO.StreamWriter sw = System.IO.File.AppendText(logfile);
+                sw.WriteLine(textBox_log.Text);
+                sw.Close();
+                sw.Dispose();
+                textBox_log.Clear();
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储为: " + logfile + "\r\n");
+            }
         }
 
-        private void textBox_logDay_Leave(object sender, EventArgs e)
+        private void checkBox_autoUpdate_CheckedChanged(object sender, EventArgs e)
         {
-            int days = Convert.ToInt32(textBox_logDay.Text);
-            if (days < 1)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数小于1天，自动修改为1天！" + "\r\n");
-                textBox_logDay.Text = "1";
-            }
-            else if (days > 30)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数大于30天，自动修改为30天！" + "\r\n");
-                textBox_logDay.Text = "30";
-            }
+            if(checkBox_autoUpdate.Checked == true)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名记录自动更新启用成功！" + "\r\n");
             else
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数修改为: "+ days + "\r\n");
-                textBox_logDay.Text = days.ToString();
-            }
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名记录自动更新取消！" + "\r\n");
+        }
+
+        private void checkBox_minimized_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_minimized.Checked == true)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘启用！" + "\r\n");
+            else
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘取消！" + "\r\n");
         }
     }
 }

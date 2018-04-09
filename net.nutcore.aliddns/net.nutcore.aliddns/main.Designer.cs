@@ -31,9 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.timeSetGroup = new System.Windows.Forms.GroupBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBox_logDay = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.checkBox_logAutoSave = new System.Windows.Forms.CheckBox();
             this.checkBox_minimized = new System.Windows.Forms.CheckBox();
             this.checkBox_autoUpdate = new System.Windows.Forms.CheckBox();
@@ -78,8 +75,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label_nextUpdateDays = new System.Windows.Forms.Label();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -89,11 +84,6 @@
             // 
             // timeSetGroup
             // 
-            this.timeSetGroup.Controls.Add(this.label_nextUpdateDays);
-            this.timeSetGroup.Controls.Add(this.label16);
-            this.timeSetGroup.Controls.Add(this.label15);
-            this.timeSetGroup.Controls.Add(this.textBox_logDay);
-            this.timeSetGroup.Controls.Add(this.label13);
             this.timeSetGroup.Controls.Add(this.checkBox_logAutoSave);
             this.timeSetGroup.Controls.Add(this.checkBox_minimized);
             this.timeSetGroup.Controls.Add(this.checkBox_autoUpdate);
@@ -108,38 +98,10 @@
             this.timeSetGroup.TabStop = false;
             this.timeSetGroup.Text = "其它设置";
             // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(74, 120);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 12);
-            this.label15.TabIndex = 11;
-            this.label15.Text = "天转储一次";
-            // 
-            // textBox_logDay
-            // 
-            this.textBox_logDay.Location = new System.Drawing.Point(32, 117);
-            this.textBox_logDay.Name = "textBox_logDay";
-            this.textBox_logDay.Size = new System.Drawing.Size(36, 21);
-            this.textBox_logDay.TabIndex = 10;
-            this.textBox_logDay.Text = "1";
-            this.textBox_logDay.Enter += new System.EventHandler(this.textBox_logDay_Enter);
-            this.textBox_logDay.Leave += new System.EventHandler(this.textBox_logDay_Leave);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(9, 120);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(17, 12);
-            this.label13.TabIndex = 9;
-            this.label13.Text = "每";
-            // 
             // checkBox_logAutoSave
             // 
             this.checkBox_logAutoSave.AutoSize = true;
-            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 98);
+            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 71);
             this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
             this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
             this.checkBox_logAutoSave.TabIndex = 8;
@@ -150,29 +112,31 @@
             // checkBox_minimized
             // 
             this.checkBox_minimized.AutoSize = true;
-            this.checkBox_minimized.Location = new System.Drawing.Point(94, 20);
+            this.checkBox_minimized.Location = new System.Drawing.Point(9, 47);
             this.checkBox_minimized.Name = "checkBox_minimized";
             this.checkBox_minimized.Size = new System.Drawing.Size(96, 16);
             this.checkBox_minimized.TabIndex = 7;
             this.checkBox_minimized.Text = "启动时最小化";
             this.checkBox_minimized.UseVisualStyleBackColor = true;
+            this.checkBox_minimized.CheckedChanged += new System.EventHandler(this.checkBox_minimized_CheckedChanged);
             // 
             // checkBox_autoUpdate
             // 
             this.checkBox_autoUpdate.AutoSize = true;
             this.checkBox_autoUpdate.Checked = true;
             this.checkBox_autoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_autoUpdate.Location = new System.Drawing.Point(9, 41);
+            this.checkBox_autoUpdate.Location = new System.Drawing.Point(9, 97);
             this.checkBox_autoUpdate.Name = "checkBox_autoUpdate";
             this.checkBox_autoUpdate.Size = new System.Drawing.Size(72, 16);
             this.checkBox_autoUpdate.TabIndex = 6;
             this.checkBox_autoUpdate.Text = "自动更新";
             this.checkBox_autoUpdate.UseVisualStyleBackColor = true;
+            this.checkBox_autoUpdate.CheckedChanged += new System.EventHandler(this.checkBox_autoUpdate_CheckedChanged);
             // 
             // checkBox_autoBoot
             // 
             this.checkBox_autoBoot.AutoSize = true;
-            this.checkBox_autoBoot.Location = new System.Drawing.Point(9, 20);
+            this.checkBox_autoBoot.Location = new System.Drawing.Point(9, 22);
             this.checkBox_autoBoot.Name = "checkBox_autoBoot";
             this.checkBox_autoBoot.Size = new System.Drawing.Size(84, 16);
             this.checkBox_autoBoot.TabIndex = 5;
@@ -183,7 +147,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(110, 42);
+            this.label3.Location = new System.Drawing.Point(110, 98);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 4;
@@ -193,7 +157,7 @@
             // 
             this.label_nextUpdateSeconds.AutoSize = true;
             this.label_nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
-            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(90, 42);
+            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(90, 98);
             this.label_nextUpdateSeconds.Name = "label_nextUpdateSeconds";
             this.label_nextUpdateSeconds.Size = new System.Drawing.Size(17, 12);
             this.label_nextUpdateSeconds.TabIndex = 3;
@@ -201,7 +165,7 @@
             // 
             // updateNow
             // 
-            this.updateNow.Location = new System.Drawing.Point(12, 64);
+            this.updateNow.Location = new System.Drawing.Point(6, 124);
             this.updateNow.Name = "updateNow";
             this.updateNow.Size = new System.Drawing.Size(175, 23);
             this.updateNow.TabIndex = 2;
@@ -468,19 +432,19 @@
             this.toolStripMenuItem_Exit,
             this.ToolStripMenuItem_About});
             this.contextMenuStrip_sysTrayMenu.Name = "contextMenuStrip1";
-            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(101, 48);
             // 
             // toolStripMenuItem_Exit
             // 
             this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem_Exit.Text = "退出";
             this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // ToolStripMenuItem_About
             // 
             this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
-            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(152, 22);
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(100, 22);
             this.ToolStripMenuItem_About.Text = "关于";
             this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
             // 
@@ -565,25 +529,6 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(131, 99);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(53, 12);
-            this.label16.TabIndex = 12;
-            this.label16.Text = "天后转储";
-            // 
-            // label_nextUpdateDays
-            // 
-            this.label_nextUpdateDays.AutoSize = true;
-            this.label_nextUpdateDays.ForeColor = System.Drawing.Color.Red;
-            this.label_nextUpdateDays.Location = new System.Drawing.Point(113, 99);
-            this.label_nextUpdateDays.Name = "label_nextUpdateDays";
-            this.label_nextUpdateDays.Size = new System.Drawing.Size(17, 12);
-            this.label_nextUpdateDays.TabIndex = 13;
-            this.label_nextUpdateDays.Text = "30";
-            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -659,12 +604,7 @@
         private System.Windows.Forms.CheckBox checkBox_autoUpdate;
         private System.Windows.Forms.CheckBox checkBox_minimized;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_About;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox textBox_logDay;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox checkBox_logAutoSave;
-        private System.Windows.Forms.Label label_nextUpdateDays;
-        private System.Windows.Forms.Label label16;
     }
 }
 
