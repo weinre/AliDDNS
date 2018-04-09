@@ -115,7 +115,7 @@ namespace net.nutcore.aliddns
             accessKeySecret.Text = config[1];
             recordId.Text = config[2];
             fullDomainName.Text = config[3];
-            nextUpdateSeconds.Text = newSeconds.Text = config[4];
+            label_nextUpdateSeconds.Text = newSeconds.Text = config[4];
             if (config[5] == "On") checkBox_autoUpdate.Checked = true;
             else checkBox_autoUpdate.Checked = false;
             //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
@@ -222,7 +222,7 @@ namespace net.nutcore.aliddns
             textWriter.WriteEndDocument();//文档结束
             textWriter.Close(); //文档保存关闭
 
-            nextUpdateSeconds.Text = newSeconds.Text;
+            label_nextUpdateSeconds.Text = newSeconds.Text;
             
             return true;
         }
@@ -425,7 +425,7 @@ namespace net.nutcore.aliddns
 
         private void updatePrepare()
         {
-            nextUpdateSeconds.Text = newSeconds.Text;
+            label_nextUpdateSeconds.Text = newSeconds.Text;
             try
             {
                 localIP.Text = getLocalIP();
@@ -490,14 +490,11 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                if (checkBox_autoUpdate.Checked == true && nextUpdateSeconds.Text != "")
+                if (checkBox_autoUpdate.Checked == true && label_nextUpdateSeconds.Text != "")
                 {
-                    int seconds = Convert.ToInt32(nextUpdateSeconds.Text);
-                    if (seconds > 0)
-                        seconds--;
-                    else
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查时间设置！" + "\r\n");
-                    nextUpdateSeconds.Text = seconds.ToString();
+                    int seconds = Convert.ToInt32(label_nextUpdateSeconds.Text);
+                    if (seconds > 0) seconds--;
+                    label_nextUpdateSeconds.Text = seconds.ToString();
 
                     if (seconds == 0)
                     {
@@ -505,6 +502,17 @@ namespace net.nutcore.aliddns
                         updatePrepare();
                     }
                 }
+                /*if (checkBox_logAutoSave.Checked == true && label_nextUpdateDays.Text != "")
+                {
+                    int days = Convert.ToInt32(label_nextUpdateDays.Text);
+                    if ( days > 0 ) days = days*86400-1;
+                    label_nextUpdateDays.Text = days.ToString();
+                    if ( days == 0 )
+                    {
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---计划任务被触发，开始日志转储---" + "\r\n");
+                        //logToFiles();
+                    }
+                }*/
             }
             catch (Exception error)
             {
@@ -518,7 +526,7 @@ namespace net.nutcore.aliddns
             this.Dispose();
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void notifyIcon_sysTray_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
@@ -606,6 +614,31 @@ namespace net.nutcore.aliddns
                 textBox_logDay.Enabled = false;
             else
                 textBox_logDay.Enabled = true;
+        }
+
+        private void textBox_logDay_Enter(object sender, EventArgs e)
+        {
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数请输入1至30之间的整数！" + "\r\n");
+        }
+
+        private void textBox_logDay_Leave(object sender, EventArgs e)
+        {
+            int days = Convert.ToInt32(textBox_logDay.Text);
+            if (days < 1)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数小于1天，自动修改为1天！" + "\r\n");
+                textBox_logDay.Text = "1";
+            }
+            else if (days > 30)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数大于30天，自动修改为30天！" + "\r\n");
+                textBox_logDay.Text = "30";
+            }
+            else
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储天数修改为: "+ days + "\r\n");
+                textBox_logDay.Text = days.ToString();
+            }
         }
     }
 }

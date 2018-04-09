@@ -31,11 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.timeSetGroup = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textBox_logDay = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.checkBox_logAutoSave = new System.Windows.Forms.CheckBox();
             this.checkBox_minimized = new System.Windows.Forms.CheckBox();
             this.checkBox_autoUpdate = new System.Windows.Forms.CheckBox();
             this.checkBox_autoBoot = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.nextUpdateSeconds = new System.Windows.Forms.Label();
+            this.label_nextUpdateSeconds = new System.Windows.Forms.Label();
             this.updateNow = new System.Windows.Forms.Button();
             this.debugMessage = new System.Windows.Forms.GroupBox();
             this.recordId = new System.Windows.Forms.TextBox();
@@ -62,9 +66,10 @@
             this.accessKeyId = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.autoUpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.notifyIcon_sysTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip_sysTrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.groupBox_netstate = new System.Windows.Forms.GroupBox();
             this.label_DomainIpStatus = new System.Windows.Forms.Label();
@@ -73,20 +78,19 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBox_logAutoSave = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBox_logDay = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label_nextUpdateDays = new System.Windows.Forms.Label();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip_sysTrayMenu.SuspendLayout();
             this.groupBox_netstate.SuspendLayout();
             this.SuspendLayout();
             // 
             // timeSetGroup
             // 
+            this.timeSetGroup.Controls.Add(this.label_nextUpdateDays);
+            this.timeSetGroup.Controls.Add(this.label16);
             this.timeSetGroup.Controls.Add(this.label15);
             this.timeSetGroup.Controls.Add(this.textBox_logDay);
             this.timeSetGroup.Controls.Add(this.label13);
@@ -95,7 +99,7 @@
             this.timeSetGroup.Controls.Add(this.checkBox_autoUpdate);
             this.timeSetGroup.Controls.Add(this.checkBox_autoBoot);
             this.timeSetGroup.Controls.Add(this.label3);
-            this.timeSetGroup.Controls.Add(this.nextUpdateSeconds);
+            this.timeSetGroup.Controls.Add(this.label_nextUpdateSeconds);
             this.timeSetGroup.Controls.Add(this.updateNow);
             this.timeSetGroup.Location = new System.Drawing.Point(12, 151);
             this.timeSetGroup.Name = "timeSetGroup";
@@ -103,6 +107,45 @@
             this.timeSetGroup.TabIndex = 4;
             this.timeSetGroup.TabStop = false;
             this.timeSetGroup.Text = "其它设置";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(74, 120);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(65, 12);
+            this.label15.TabIndex = 11;
+            this.label15.Text = "天转储一次";
+            // 
+            // textBox_logDay
+            // 
+            this.textBox_logDay.Location = new System.Drawing.Point(32, 117);
+            this.textBox_logDay.Name = "textBox_logDay";
+            this.textBox_logDay.Size = new System.Drawing.Size(36, 21);
+            this.textBox_logDay.TabIndex = 10;
+            this.textBox_logDay.Text = "1";
+            this.textBox_logDay.Enter += new System.EventHandler(this.textBox_logDay_Enter);
+            this.textBox_logDay.Leave += new System.EventHandler(this.textBox_logDay_Leave);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 120);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(17, 12);
+            this.label13.TabIndex = 9;
+            this.label13.Text = "每";
+            // 
+            // checkBox_logAutoSave
+            // 
+            this.checkBox_logAutoSave.AutoSize = true;
+            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 98);
+            this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
+            this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
+            this.checkBox_logAutoSave.TabIndex = 8;
+            this.checkBox_logAutoSave.Text = "日志自动转储";
+            this.checkBox_logAutoSave.UseVisualStyleBackColor = true;
+            this.checkBox_logAutoSave.CheckedChanged += new System.EventHandler(this.checkBox_logAutoSave_CheckedChanged);
             // 
             // checkBox_minimized
             // 
@@ -146,15 +189,15 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "秒后更新记录";
             // 
-            // nextUpdateSeconds
+            // label_nextUpdateSeconds
             // 
-            this.nextUpdateSeconds.AutoSize = true;
-            this.nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
-            this.nextUpdateSeconds.Location = new System.Drawing.Point(90, 42);
-            this.nextUpdateSeconds.Name = "nextUpdateSeconds";
-            this.nextUpdateSeconds.Size = new System.Drawing.Size(17, 12);
-            this.nextUpdateSeconds.TabIndex = 3;
-            this.nextUpdateSeconds.Text = "60";
+            this.label_nextUpdateSeconds.AutoSize = true;
+            this.label_nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
+            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(90, 42);
+            this.label_nextUpdateSeconds.Name = "label_nextUpdateSeconds";
+            this.label_nextUpdateSeconds.Size = new System.Drawing.Size(17, 12);
+            this.label_nextUpdateSeconds.TabIndex = 3;
+            this.label_nextUpdateSeconds.Text = "60";
             // 
             // updateNow
             // 
@@ -410,29 +453,36 @@
             this.autoUpdateTimer.Interval = 1000;
             this.autoUpdateTimer.Tick += new System.EventHandler(this.autoUpdateTimer_Tick);
             // 
-            // notifyIcon1
+            // notifyIcon_sysTray
             // 
-            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "AliDDNS Tray";
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.notifyIcon_sysTray.ContextMenuStrip = this.contextMenuStrip_sysTrayMenu;
+            this.notifyIcon_sysTray.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon_sysTray.Icon")));
+            this.notifyIcon_sysTray.Text = "AliDDNS Tray";
+            this.notifyIcon_sysTray.Visible = true;
+            this.notifyIcon_sysTray.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_sysTray_MouseDoubleClick);
             // 
-            // contextMenuStrip1
+            // contextMenuStrip_sysTrayMenu
             // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStrip_sysTrayMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuStrip_sysTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_Exit,
             this.ToolStripMenuItem_About});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 48);
+            this.contextMenuStrip_sysTrayMenu.Name = "contextMenuStrip1";
+            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(153, 70);
             // 
             // toolStripMenuItem_Exit
             // 
             this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(100, 22);
+            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem_Exit.Text = "退出";
             this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // ToolStripMenuItem_About
+            // 
+            this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(152, 22);
+            this.ToolStripMenuItem_About.Text = "关于";
+            this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
             // 
             // textBox_log
             // 
@@ -472,11 +522,12 @@
             // label_localIpStatus
             // 
             this.label_localIpStatus.AutoSize = true;
+            this.label_localIpStatus.ForeColor = System.Drawing.Color.Red;
             this.label_localIpStatus.Location = new System.Drawing.Point(150, 19);
             this.label_localIpStatus.Name = "label_localIpStatus";
             this.label_localIpStatus.Size = new System.Drawing.Size(41, 12);
             this.label_localIpStatus.TabIndex = 8;
-            this.label_localIpStatus.Text = "已连接";
+            this.label_localIpStatus.Text = "未连接";
             // 
             // domainIP
             // 
@@ -514,49 +565,24 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
-            // ToolStripMenuItem_About
+            // label16
             // 
-            this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
-            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(100, 22);
-            this.ToolStripMenuItem_About.Text = "关于";
-            this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(131, 99);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(53, 12);
+            this.label16.TabIndex = 12;
+            this.label16.Text = "天后转储";
             // 
-            // checkBox_logAutoSave
+            // label_nextUpdateDays
             // 
-            this.checkBox_logAutoSave.AutoSize = true;
-            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 98);
-            this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
-            this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
-            this.checkBox_logAutoSave.TabIndex = 8;
-            this.checkBox_logAutoSave.Text = "日志自动转储";
-            this.checkBox_logAutoSave.UseVisualStyleBackColor = true;
-            this.checkBox_logAutoSave.CheckedChanged += new System.EventHandler(this.checkBox_logAutoSave_CheckedChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(9, 120);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(17, 12);
-            this.label13.TabIndex = 9;
-            this.label13.Text = "每";
-            // 
-            // textBox_logDay
-            // 
-            this.textBox_logDay.Location = new System.Drawing.Point(32, 117);
-            this.textBox_logDay.Name = "textBox_logDay";
-            this.textBox_logDay.Size = new System.Drawing.Size(36, 21);
-            this.textBox_logDay.TabIndex = 10;
-            this.textBox_logDay.Text = "1";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(74, 120);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 12);
-            this.label15.TabIndex = 11;
-            this.label15.Text = "天转储一次";
+            this.label_nextUpdateDays.AutoSize = true;
+            this.label_nextUpdateDays.ForeColor = System.Drawing.Color.Red;
+            this.label_nextUpdateDays.Location = new System.Drawing.Point(113, 99);
+            this.label_nextUpdateDays.Name = "label_nextUpdateDays";
+            this.label_nextUpdateDays.Size = new System.Drawing.Size(17, 12);
+            this.label_nextUpdateDays.TabIndex = 13;
+            this.label_nextUpdateDays.Text = "30";
             // 
             // mainForm
             // 
@@ -580,7 +606,7 @@
             this.debugMessage.PerformLayout();
             this.globalSetGroup.ResumeLayout(false);
             this.globalSetGroup.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip_sysTrayMenu.ResumeLayout(false);
             this.groupBox_netstate.ResumeLayout(false);
             this.groupBox_netstate.PerformLayout();
             this.ResumeLayout(false);
@@ -591,7 +617,7 @@
         #endregion
         private System.Windows.Forms.GroupBox timeSetGroup;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label nextUpdateSeconds;
+        private System.Windows.Forms.Label label_nextUpdateSeconds;
         private System.Windows.Forms.Button updateNow;
         private System.Windows.Forms.GroupBox debugMessage;
         private System.Windows.Forms.GroupBox globalSetGroup;
@@ -614,8 +640,8 @@
         private System.Windows.Forms.Label globalDomainType;
         private System.Windows.Forms.Label globalValue;
         private System.Windows.Forms.TextBox recordId;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.NotifyIcon notifyIcon_sysTray;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_sysTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;
         private System.Windows.Forms.TextBox textBox_log;
         private System.Windows.Forms.TextBox text_whatIsUrl;
@@ -637,6 +663,8 @@
         private System.Windows.Forms.TextBox textBox_logDay;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox checkBox_logAutoSave;
+        private System.Windows.Forms.Label label_nextUpdateDays;
+        private System.Windows.Forms.Label label16;
     }
 }
 
