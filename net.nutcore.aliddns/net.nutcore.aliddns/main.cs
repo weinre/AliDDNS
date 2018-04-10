@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using static Aliyun.Acs.Alidns.Model.V20150109.DescribeSubDomainRecordsResponse;
@@ -117,7 +118,7 @@ namespace net.nutcore.aliddns
             else checkBox_autoUpdate.Checked = false;
             //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
             //if ( config[5] == "Off ") autoUpdateOff.Checked = true;
-            text_whatIsUrl.Text = config[6];
+            comboBox_whatIsUrl.Text = config[6];
             if (config[7] == "On") checkBox_autoBoot.Checked = true;
             else checkBox_autoBoot.Checked = false;
             if (config[8] == "On") checkBox_minimized.Checked = true;
@@ -132,7 +133,7 @@ namespace net.nutcore.aliddns
 
         private bool saveConfigFile()
         {
-            if (accessKeyId.Text == "" || accessKeySecret.Text == "" || recordId.Text == "" || fullDomainName.Text == "" || newSeconds.Text == "" || text_whatIsUrl.Text == "")
+            if (accessKeyId.Text == "" || accessKeySecret.Text == "" || recordId.Text == "" || fullDomainName.Text == "" || newSeconds.Text == "" || comboBox_whatIsUrl.Text == "")
             {
                 //MessageBox.Show("任何值都不能为空！无法填写请输入null或0");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "任何值都不能为空！无法填写请输入null或0！" + "\r\n");
@@ -180,7 +181,7 @@ namespace net.nutcore.aliddns
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("whatIsUrl", "");
-            textWriter.WriteString(text_whatIsUrl.Text);
+            textWriter.WriteString(comboBox_whatIsUrl.Text);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("autoBoot", "");
@@ -217,27 +218,39 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                string strUrl = text_whatIsUrl.Text; //"http://whatismyip.akamai.com/";
+                string strUrl = comboBox_whatIsUrl.Text; //"http://whatismyip.akamai.com/";
                 Uri uri = new Uri(strUrl);
                 WebRequest webreq = WebRequest.Create(uri);
                 Stream s = webreq.GetResponse().GetResponseStream();
                 StreamReader sr = new StreamReader(s, Encoding.Default);
                 string all = sr.ReadToEnd();
-
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
                 //Cut the string
                 /*
                 string[] symbols = new string[2] { "[", "]" };
                 string[] data = all.Split(symbols, 30, StringSplitOptions.RemoveEmptyEntries);
-                string ip = data[1];
-                */
-                string ip = all;
-                if(ip.Length > 0)
+                string ip = data[1];*/
+                all = Regex.Replace(all, @"(\d+)", "000$1");
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
+                all = Regex.Replace(all, @"0+(\d{1,4})", "$1");
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
+                string reg = @"(\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4})";
+                Regex regex = new Regex(reg);
+                Match match = regex.Match(all);
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + match + "\r\n");
+                string ip = match.Groups[1].Value;
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + ip + "\r\n");
+                //return Regex.Replace(ip, @"0*(\d+)", "$1");
+
+                //string ip = all;
+                if (ip.Length > 0)
                 {
                     label_localIpStatus.Text = "已连接";
                     label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "成功获取WAN口IP:" + ip + "\r\n");
                 }
-                return ip;
+                //return ip;
+                return Regex.Replace(ip, @"0*(\d+)", "$1");
             }
             catch (Exception)
             {
@@ -534,6 +547,7 @@ namespace net.nutcore.aliddns
 
         private void button_whatIsTest_Click(object sender, EventArgs e)
         {
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "开始向网址发起查询... " + "\r\n");
             localIP.Text = getLocalIP();
         }
 

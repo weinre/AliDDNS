@@ -50,7 +50,6 @@
             this.globalSetGroup = new System.Windows.Forms.GroupBox();
             this.button_ShowHide = new System.Windows.Forms.Button();
             this.button_whatIsTest = new System.Windows.Forms.Button();
-            this.text_whatIsUrl = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.checkAndSaveConfig = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -75,6 +74,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -263,9 +263,9 @@
             // 
             // globalSetGroup
             // 
+            this.globalSetGroup.Controls.Add(this.comboBox_whatIsUrl);
             this.globalSetGroup.Controls.Add(this.button_ShowHide);
             this.globalSetGroup.Controls.Add(this.button_whatIsTest);
-            this.globalSetGroup.Controls.Add(this.text_whatIsUrl);
             this.globalSetGroup.Controls.Add(this.label14);
             this.globalSetGroup.Controls.Add(this.checkAndSaveConfig);
             this.globalSetGroup.Controls.Add(this.label8);
@@ -303,14 +303,6 @@
             this.button_whatIsTest.Text = "获取WAN口IP";
             this.button_whatIsTest.UseVisualStyleBackColor = true;
             this.button_whatIsTest.Click += new System.EventHandler(this.button_whatIsTest_Click);
-            // 
-            // text_whatIsUrl
-            // 
-            this.text_whatIsUrl.Location = new System.Drawing.Point(8, 40);
-            this.text_whatIsUrl.Name = "text_whatIsUrl";
-            this.text_whatIsUrl.Size = new System.Drawing.Size(192, 21);
-            this.text_whatIsUrl.TabIndex = 12;
-            this.text_whatIsUrl.Text = "http://whatismyip.akamai.com/";
             // 
             // label14
             // 
@@ -529,6 +521,18 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
+            // comboBox_whatIsUrl
+            // 
+            this.comboBox_whatIsUrl.FormattingEnabled = true;
+            this.comboBox_whatIsUrl.Items.AddRange(new object[] {
+            "http://whatismyip.akamai.com/",
+            "http://www.net.cn/static/customercare/yourip.asp"});
+            this.comboBox_whatIsUrl.Location = new System.Drawing.Point(8, 39);
+            this.comboBox_whatIsUrl.Name = "comboBox_whatIsUrl";
+            this.comboBox_whatIsUrl.Size = new System.Drawing.Size(192, 20);
+            this.comboBox_whatIsUrl.TabIndex = 15;
+            this.comboBox_whatIsUrl.Text = "http://whatismyip.akamai.com/";
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -589,7 +593,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_sysTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;
         private System.Windows.Forms.TextBox textBox_log;
-        private System.Windows.Forms.TextBox text_whatIsUrl;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button_whatIsTest;
         private System.Windows.Forms.GroupBox groupBox_netstate;
@@ -605,6 +608,7 @@
         private System.Windows.Forms.CheckBox checkBox_minimized;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_About;
         private System.Windows.Forms.CheckBox checkBox_logAutoSave;
+        private System.Windows.Forms.ComboBox comboBox_whatIsUrl;
     }
 }
 
