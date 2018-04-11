@@ -2,6 +2,7 @@
 using Aliyun.Acs.Core;
 using Aliyun.Acs.Core.Exceptions;
 using Aliyun.Acs.Core.Profile;
+using IPmaskedtextbox;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -641,6 +642,14 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘启用！" + "\r\n");
             else
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘取消！" + "\r\n");
+        }
+
+        private void button_setIP_Click(object sender, EventArgs e)
+        {
+            //localIP.Text = IPMaskedTextBox ;
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + ipMaskedTextBox1.ToString() + "\r\n");
+            if (elementHost1.Text !="")
+            localIP.Text = elementHost1.Text;
         }
     }
 }
