@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,13 @@ namespace net.nutcore.aliddns
         public Form_About()
         {
             InitializeComponent();
+            textBox_updateInfo.ReadOnly = true;
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string updateInfoFile = filePath + "updateinfo.txt";
+            if (File.Exists(updateInfoFile))
+                textBox_updateInfo.Text = File.ReadAllText(updateInfoFile, Encoding.Default);
+            else
+                textBox_updateInfo.Text = "软件运行目录下没有找到updateinfo.txt文件！";
         }
 
         private void PublishLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

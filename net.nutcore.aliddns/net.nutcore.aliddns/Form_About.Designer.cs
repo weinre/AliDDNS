@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.authorInformation = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.PublishLink = new System.Windows.Forms.LinkLabel();
             this.personalWebsite = new System.Windows.Forms.LinkLabel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.textBox_updateInfo = new System.Windows.Forms.TextBox();
             this.authorInformation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,6 +53,44 @@
             this.authorInformation.TabIndex = 8;
             this.authorInformation.TabStop = false;
             this.authorInformation.Text = "著作信息";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(95, 12);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "本程序发布地址:";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(107, 39);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(77, 12);
+            this.linkLabel1.TabIndex = 5;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "阿里开发论坛";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 39);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(95, 12);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "原程序发布地址:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(71, 12);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "原作者主页:";
             // 
             // PublishLink
             // 
@@ -75,55 +114,28 @@
             this.personalWebsite.Text = "www.nutcore.net";
             this.personalWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.personalWebsite_LinkClicked);
             // 
-            // label1
+            // textBox_updateInfo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 12);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "原作者主页:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 12);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "原程序发布地址:";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(107, 39);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(77, 12);
-            this.linkLabel1.TabIndex = 5;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "阿里开发论坛";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 12);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "本程序发布地址:";
+            this.textBox_updateInfo.Location = new System.Drawing.Point(12, 109);
+            this.textBox_updateInfo.Multiline = true;
+            this.textBox_updateInfo.Name = "textBox_updateInfo";
+            this.textBox_updateInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_updateInfo.Size = new System.Drawing.Size(242, 132);
+            this.textBox_updateInfo.TabIndex = 9;
             // 
             // Form_About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 115);
+            this.ClientSize = new System.Drawing.Size(267, 253);
+            this.Controls.Add(this.textBox_updateInfo);
             this.Controls.Add(this.authorInformation);
             this.Name = "Form_About";
             this.Text = "关于";
             this.authorInformation.ResumeLayout(false);
             this.authorInformation.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -136,5 +148,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel PublishLink;
         private System.Windows.Forms.LinkLabel personalWebsite;
+        private System.Windows.Forms.TextBox textBox_updateInfo;
     }
 }
