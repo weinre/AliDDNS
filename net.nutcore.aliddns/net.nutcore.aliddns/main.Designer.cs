@@ -72,19 +72,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox_setWanIp = new System.Windows.Forms.GroupBox();
             this.button_setIP = new System.Windows.Forms.Button();
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.ipMaskedTextBox1 = new IPmaskedtextbox.IPMaskedTextBox();
+            this.maskedTextBox_setIP = new System.Windows.Forms.MaskedTextBox();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
             this.contextMenuStrip_sysTrayMenu.SuspendLayout();
             this.groupBox_netstate.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBox_setWanIp.SuspendLayout();
             this.SuspendLayout();
             // 
             // timeSetGroup
@@ -504,19 +503,19 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "WAN口IP:";
             // 
-            // groupBox1
+            // groupBox_setWanIp
             // 
-            this.groupBox1.Controls.Add(this.elementHost1);
-            this.groupBox1.Controls.Add(this.button_setIP);
-            this.groupBox1.Controls.Add(this.comboBox_whatIsUrl);
-            this.groupBox1.Controls.Add(this.button_whatIsTest);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Location = new System.Drawing.Point(12, 47);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(201, 135);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "WAN口IP设置";
+            this.groupBox_setWanIp.Controls.Add(this.maskedTextBox_setIP);
+            this.groupBox_setWanIp.Controls.Add(this.button_setIP);
+            this.groupBox_setWanIp.Controls.Add(this.comboBox_whatIsUrl);
+            this.groupBox_setWanIp.Controls.Add(this.button_whatIsTest);
+            this.groupBox_setWanIp.Controls.Add(this.label14);
+            this.groupBox_setWanIp.Location = new System.Drawing.Point(12, 47);
+            this.groupBox_setWanIp.Name = "groupBox_setWanIp";
+            this.groupBox_setWanIp.Size = new System.Drawing.Size(201, 135);
+            this.groupBox_setWanIp.TabIndex = 10;
+            this.groupBox_setWanIp.TabStop = false;
+            this.groupBox_setWanIp.Text = "WAN口IP设置";
             // 
             // button_setIP
             // 
@@ -558,21 +557,21 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
             // 
-            // elementHost1
+            // maskedTextBox_setIP
             // 
-            this.elementHost1.Location = new System.Drawing.Point(7, 99);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(107, 23);
-            this.elementHost1.TabIndex = 20;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.ipMaskedTextBox1;
+            this.maskedTextBox_setIP.Location = new System.Drawing.Point(7, 100);
+            this.maskedTextBox_setIP.Mask = "000.000.000.000";
+            this.maskedTextBox_setIP.Name = "maskedTextBox_setIP";
+            this.maskedTextBox_setIP.PromptChar = ' ';
+            this.maskedTextBox_setIP.Size = new System.Drawing.Size(106, 21);
+            this.maskedTextBox_setIP.TabIndex = 20;
             // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(437, 430);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox_setWanIp);
             this.Controls.Add(this.groupBox_netstate);
             this.Controls.Add(this.textBox_log);
             this.Controls.Add(this.globalSetGroup);
@@ -593,8 +592,8 @@
             this.contextMenuStrip_sysTrayMenu.ResumeLayout(false);
             this.groupBox_netstate.ResumeLayout(false);
             this.groupBox_netstate.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBox_setWanIp.ResumeLayout(false);
+            this.groupBox_setWanIp.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -643,13 +642,12 @@
         private System.Windows.Forms.CheckBox checkBox_minimized;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_About;
         private System.Windows.Forms.CheckBox checkBox_logAutoSave;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox_setWanIp;
         private System.Windows.Forms.ComboBox comboBox_whatIsUrl;
         private System.Windows.Forms.Button button_whatIsTest;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button_setIP;
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private IPmaskedtextbox.IPMaskedTextBox ipMaskedTextBox1;
+        private System.Windows.Forms.MaskedTextBox maskedTextBox_setIP;
     }
 }
 

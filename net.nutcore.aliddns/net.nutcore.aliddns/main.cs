@@ -2,7 +2,6 @@
 using Aliyun.Acs.Core;
 using Aliyun.Acs.Core.Exceptions;
 using Aliyun.Acs.Core.Profile;
-using IPmaskedtextbox;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -646,10 +645,14 @@ namespace net.nutcore.aliddns
 
         private void button_setIP_Click(object sender, EventArgs e)
         {
-            //localIP.Text = IPMaskedTextBox ;
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + ipMaskedTextBox1.ToString() + "\r\n");
-            if (elementHost1.Text !="")
-            localIP.Text = elementHost1.Text;
+           if(maskedTextBox_setIP.Text != "")
+            {
+                localIP.Text = maskedTextBox_setIP.Text;
+                updateDomainRecord();
+                getDomainIP();
+            }
+           else
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查录入是否正确！" + "\r\n");
         }
     }
 }
