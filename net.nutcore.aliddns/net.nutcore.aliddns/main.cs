@@ -645,14 +645,26 @@ namespace net.nutcore.aliddns
 
         private void button_setIP_Click(object sender, EventArgs e)
         {
-           if(maskedTextBox_setIP.Text != "")
+            try
             {
-                localIP.Text = maskedTextBox_setIP.Text;
-                updateDomainRecord();
-                getDomainIP();
+                string strIn = maskedTextBox_setIP.Text;
+                if (Regex.IsMatch(strIn, @"^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$"))
+                {
+                    localIP.Text = maskedTextBox_setIP.Text;
+                    updateDomainRecord();
+                    getDomainIP();
+                }
+                else
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查输入格式是否正确！IP地址示例格式:255.255.255.255" + "\r\n");
+                }
             }
-           else
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查录入是否正确！" + "\r\n");
+            catch(Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "出错:" + error + "\r\n");
+            }
+                
         }
+
     }
 }

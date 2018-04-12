@@ -73,11 +73,11 @@
             this.localIP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox_setWanIp = new System.Windows.Forms.GroupBox();
+            this.maskedTextBox_setIP = new System.Windows.Forms.MaskedTextBox();
             this.button_setIP = new System.Windows.Forms.Button();
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.maskedTextBox_setIP = new System.Windows.Forms.MaskedTextBox();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -205,7 +205,7 @@
             // globalValue
             // 
             this.globalValue.AutoSize = true;
-            this.globalValue.Location = new System.Drawing.Point(66, 60);
+            this.globalValue.Location = new System.Drawing.Point(47, 60);
             this.globalValue.Name = "globalValue";
             this.globalValue.Size = new System.Drawing.Size(41, 12);
             this.globalValue.TabIndex = 7;
@@ -214,7 +214,7 @@
             // globalDomainType
             // 
             this.globalDomainType.AutoSize = true;
-            this.globalDomainType.Location = new System.Drawing.Point(108, 42);
+            this.globalDomainType.Location = new System.Drawing.Point(110, 42);
             this.globalDomainType.Name = "globalDomainType";
             this.globalDomainType.Size = new System.Drawing.Size(41, 12);
             this.globalDomainType.TabIndex = 6;
@@ -241,7 +241,7 @@
             // globalRR
             // 
             this.globalRR.AutoSize = true;
-            this.globalRR.Location = new System.Drawing.Point(30, 41);
+            this.globalRR.Location = new System.Drawing.Point(28, 41);
             this.globalRR.Name = "globalRR";
             this.globalRR.Size = new System.Drawing.Size(41, 12);
             this.globalRR.TabIndex = 3;
@@ -517,6 +517,15 @@
             this.groupBox_setWanIp.TabStop = false;
             this.groupBox_setWanIp.Text = "WAN口IP设置";
             // 
+            // maskedTextBox_setIP
+            // 
+            this.maskedTextBox_setIP.Location = new System.Drawing.Point(7, 100);
+            this.maskedTextBox_setIP.Mask = "000.000.000.000";
+            this.maskedTextBox_setIP.Name = "maskedTextBox_setIP";
+            this.maskedTextBox_setIP.PromptChar = ' ';
+            this.maskedTextBox_setIP.Size = new System.Drawing.Size(106, 21);
+            this.maskedTextBox_setIP.TabIndex = 20;
+            // 
             // button_setIP
             // 
             this.button_setIP.Location = new System.Drawing.Point(119, 99);
@@ -547,6 +556,7 @@
             this.button_whatIsTest.TabIndex = 17;
             this.button_whatIsTest.Text = "获取WAN口IP";
             this.button_whatIsTest.UseVisualStyleBackColor = true;
+            this.button_whatIsTest.Click += new System.EventHandler(this.button_whatIsTest_Click);
             // 
             // label14
             // 
@@ -556,15 +566,6 @@
             this.label14.Size = new System.Drawing.Size(59, 12);
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
-            // 
-            // maskedTextBox_setIP
-            // 
-            this.maskedTextBox_setIP.Location = new System.Drawing.Point(7, 100);
-            this.maskedTextBox_setIP.Mask = "000.000.000.000";
-            this.maskedTextBox_setIP.Name = "maskedTextBox_setIP";
-            this.maskedTextBox_setIP.PromptChar = ' ';
-            this.maskedTextBox_setIP.Size = new System.Drawing.Size(106, 21);
-            this.maskedTextBox_setIP.TabIndex = 20;
             // 
             // mainForm
             // 
