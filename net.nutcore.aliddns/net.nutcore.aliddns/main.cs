@@ -88,130 +88,152 @@ namespace net.nutcore.aliddns
 
         private void readConfigFile()
         {
-            string[] config = new string[10]; //需要根据config.xml文件内设置项目数量设置读取数量，目前aliddns_config.xml配置文件内存储了7个设置项目
-            int i = 0;
-
-            //Create xml object
-            XmlDocument xmlDOC = new XmlDocument();
-            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-            string config_file = ExePath + "aliddns_config.xml";
-            xmlDOC.Load(config_file);
-            XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件找到，开始读取..." + "\r\n");
-            while (readXML.Read())
+            try
             {
-                readXML.MoveToElement(); //Forward
-                if (readXML.NodeType == XmlNodeType.Text) //Only save config
+                //Create xml object
+                XmlDocument xmlDOC = new XmlDocument();
+                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+                string config_file = ExePath + "aliddns_config.xml";
+                xmlDOC.Load(config_file);
+                XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
+                XmlNodeList nodes = xmlDOC.SelectSingleNode("Config").ChildNodes; //读取config节点下所有元素
+                /*
+                for (int i = 0; i < nodes.Count; i++)
                 {
-                    config[i] = readXML.Value;
-                    //此行用于调试读取内容
-                    //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "项目[" + i + "]: " + config[i] + "\r\n"); //显示读取内容，用于调试DEBUG。
-                    i++;
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + nodes[i].Name + ":" + nodes[i].InnerText + "\r\n"); //显示读取内容，用于调试DEBUG。
                 }
-            }
-            accessKeyId.Text = config[0];
-            accessKeySecret.Text = config[1];
-            recordId.Text = config[2];
-            fullDomainName.Text = config[3];
-            label_nextUpdateSeconds.Text = newSeconds.Text = config[4];
-            if (config[5] == "On") checkBox_autoUpdate.Checked = true;
-            else checkBox_autoUpdate.Checked = false;
-            //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
-            //if ( config[5] == "Off ") autoUpdateOff.Checked = true;
-            comboBox_whatIsUrl.Text = config[6];
-            if (config[7] == "On") checkBox_autoBoot.Checked = true;
-            else checkBox_autoBoot.Checked = false;
-            if (config[8] == "On") checkBox_minimized.Checked = true;
-            else checkBox_minimized.Checked = false;
-            if (config[9] == "On")
-                checkBox_logAutoSave.Checked = true;
-            else
-                checkBox_logAutoSave.Checked = false;
+                string[] config = new string[nodes.Count]; //创建一个配置读取数组用于存储读取内容
+                int i = 0;
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件找到，开始读取..." + "\r\n");
+                while (readXML.Read())
+                {
+                    readXML.MoveToElement(); //Forward
+                    if (readXML.NodeType == XmlNodeType.Text) //(node.NodeType 是Text时，即是最内层 即innertext值，node.Attributes为null。
+                    {
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + readXML.NodeType + "\r\n"); //显示读取内容，用于调试DEBUG。
+                        config[i] = readXML.Value;
+                        //此行用于调试读取内容
+                        //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "项目[" + i + "]: " + config[i] + "\r\n"); //显示读取内容，用于调试DEBUG。
+                        i++;
+                    }
+                }*/
+                accessKeyId.Text = nodes[0].InnerText;
+                accessKeySecret.Text = nodes[1].InnerText;
+                recordId.Text = nodes[2].InnerText;
+                fullDomainName.Text = nodes[3].InnerText;
+                label_nextUpdateSeconds.Text = newSeconds.Text = nodes[4].InnerText;
+                if (nodes[5].InnerText == "On") checkBox_autoUpdate.Checked = true;
+                else checkBox_autoUpdate.Checked = false;
+                //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
+                //if ( config[5] == "Off ") autoUpdateOff.Checked = true;
+                comboBox_whatIsUrl.Text = nodes[6].InnerText;
+                if (nodes[7].InnerText == "On") checkBox_autoBoot.Checked = true;
+                else checkBox_autoBoot.Checked = false;
+                if (nodes[8].InnerText == "On") checkBox_minimized.Checked = true;
+                else checkBox_minimized.Checked = false;
+                if (nodes[9].InnerText == "On")
+                    checkBox_logAutoSave.Checked = true;
+                else
+                    checkBox_logAutoSave.Checked = false;
 
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件读取成功！" + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件读取成功！" + "\r\n");
+            }
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错，信息: " + error + "\r\n");
+            }
+
         }
 
         private bool saveConfigFile()
         {
-            if (accessKeyId.Text == "" || accessKeySecret.Text == "" || recordId.Text == "" || fullDomainName.Text == "" || newSeconds.Text == "" || comboBox_whatIsUrl.Text == "")
+            try
             {
-                //MessageBox.Show("任何值都不能为空！无法填写请输入null或0");
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "任何值都不能为空！无法填写请输入null或0！" + "\r\n");
+                if (accessKeyId.Text == "" || accessKeySecret.Text == "" || recordId.Text == "" || fullDomainName.Text == "" || newSeconds.Text == "" || comboBox_whatIsUrl.Text == "")
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "任何值都不能为空！无法填写请输入null或0！" + "\r\n");
+                    return false;
+                }
+                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+                string config_file = ExePath + "aliddns_config.xml";
+                XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
+                textWriter.WriteStartDocument(); //文档开始
+
+                textWriter.WriteComment("AlidnsAutoCheckTool");
+                textWriter.WriteComment("Version:Beta 1.0");
+                //Start config file
+                textWriter.WriteStartElement("Config"); //设置项目开始
+
+                textWriter.WriteStartElement("AccessKeyID", "");
+                textWriter.WriteString(accessKeyId.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("AccessKeySecret", "");
+                textWriter.WriteString(accessKeySecret.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("RecordID", "");
+                textWriter.WriteString(recordId.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("fullDomainName", "");
+                textWriter.WriteString(fullDomainName.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("WaitingTime", "");
+                textWriter.WriteString(newSeconds.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("autoUpdate", "");
+                if (checkBox_autoUpdate.Checked == true)
+                    textWriter.WriteString("On");
+                else
+                    textWriter.WriteString("Off");
+                /*if (autoUpdateOn.Checked == true)
+                    textWriter.WriteString("On");
+                if (autoUpdateOff.Checked)
+                    textWriter.WriteString("Off");*/
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("whatIsUrl", "");
+                textWriter.WriteString(comboBox_whatIsUrl.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("autoBoot", "");
+                if (checkBox_autoBoot.Checked == true)
+                    textWriter.WriteString("On");
+                else
+                    textWriter.WriteString("Off");
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("minimized", "");
+                if (checkBox_minimized.Checked == true)
+                    textWriter.WriteString("On");
+                else
+                    textWriter.WriteString("Off");
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("logautosave", "");
+                if (checkBox_logAutoSave.Checked == true)
+                    textWriter.WriteString("On");
+                else
+                    textWriter.WriteString("Off");
+                textWriter.WriteEndElement();
+
+                textWriter.WriteEndElement(); //设置项目结束
+                textWriter.WriteEndDocument();//文档结束
+                textWriter.Close(); //文档保存关闭
+
+                label_nextUpdateSeconds.Text = newSeconds.Text;
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错，信息: " + error + "\r\n");
                 return false;
             }
-            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-            string config_file = ExePath + "aliddns_config.xml";
-            XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
-            textWriter.WriteStartDocument(); //文档开始
 
-            textWriter.WriteComment("AlidnsAutoCheckTool");
-            textWriter.WriteComment("Version:Beta 1.0");
-            //Start config file
-            textWriter.WriteStartElement("Config"); //设置项目开始
-
-            textWriter.WriteStartElement("AccessKeyID", "");
-            textWriter.WriteString(accessKeyId.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("AccessKeySecret", "");
-            textWriter.WriteString(accessKeySecret.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("RecordID", "");
-            textWriter.WriteString(recordId.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("fullDomainName", "");
-            textWriter.WriteString(fullDomainName.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("WaitingTime", "");
-            textWriter.WriteString(newSeconds.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("autoUpdate", "");
-            if (checkBox_autoUpdate.Checked == true)
-                textWriter.WriteString("On");
-            else
-                textWriter.WriteString("Off");
-            /*if (autoUpdateOn.Checked == true)
-                textWriter.WriteString("On");
-            if (autoUpdateOff.Checked)
-                textWriter.WriteString("Off");*/
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("whatIsUrl", "");
-            textWriter.WriteString(comboBox_whatIsUrl.Text);
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("autoBoot", "");
-            if (checkBox_autoBoot.Checked == true)
-                textWriter.WriteString("On");
-            else
-                textWriter.WriteString("Off");
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("minimized", "");
-            if (checkBox_minimized.Checked == true)
-                textWriter.WriteString("On");
-            else
-                textWriter.WriteString("Off");
-            textWriter.WriteEndElement();
-
-            textWriter.WriteStartElement("logautosave", "");
-            if (checkBox_logAutoSave.Checked == true)
-                textWriter.WriteString("On");
-            else
-                textWriter.WriteString("Off");
-            textWriter.WriteEndElement();
-
-            textWriter.WriteEndElement(); //设置项目结束
-            textWriter.WriteEndDocument();//文档结束
-            textWriter.Close(); //文档保存关闭
-
-            label_nextUpdateSeconds.Text = newSeconds.Text;
-            
-            return true;
         }
 
         private string getLocalIP()
@@ -513,7 +535,7 @@ namespace net.nutcore.aliddns
             catch (Exception error)
             {
                 //MessageBox.Show("请检查设置中的秒数是否为整数！错误信息：" + error);
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出现错误！错误信息: " + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错，信息: " + error + "\r\n");
             }
         }
 
