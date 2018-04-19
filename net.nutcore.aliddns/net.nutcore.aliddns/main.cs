@@ -45,7 +45,7 @@ namespace net.nutcore.aliddns
             }
             catch(Exception error)
             {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息：" + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 this.Dispose();
             }
             
@@ -84,8 +84,8 @@ namespace net.nutcore.aliddns
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名和绑定IP失败，请检查设置项目内容和网络状态！" + "\r\n");
             }
-            if (localIP.Text == domainIP.Text) //如果WAN口IP与域名绑定IP一致，刷新系统托盘图标
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
+
+            notifyIcon_sysTray_Update(); //如果WAN口IP与域名绑定IP一致，刷新系统托盘图标
         }
 
         private void readConfigFile()
@@ -272,7 +272,6 @@ namespace net.nutcore.aliddns
                     label_localIpStatus.Text = "已连接";
                     label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "成功获取WAN口IP:" + ip + "\r\n");
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
                 }
                 //return ip;
                 return Regex.Replace(ip, @"0*(\d+)", "$1");
@@ -283,7 +282,6 @@ namespace net.nutcore.aliddns
                 label_localIpStatus.Text = "无连接";
                 label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(255,255,0,0);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败，请检查设置！" + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_gray;
                 return "0.0.0.0";
             }
         }
@@ -317,7 +315,6 @@ namespace net.nutcore.aliddns
                     globalDomainType.Text = record.Type;
                     globalValue.Text = domainIP.Text = record.Value;
                     label_DomainIpStatus.Text = "已绑定";
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
                     label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                 }
                 return true;
@@ -326,13 +323,11 @@ namespace net.nutcore.aliddns
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return false;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return false;
             }
         }
@@ -352,12 +347,10 @@ namespace net.nutcore.aliddns
                     globalDomainType.Text = response.Type;
                     globalValue.Text = response.Value;
                     label_DomainIpStatus.Text = "已绑定";
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
                     label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                     return response.Value;
                 }
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名绑定IP失败！" + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return "0.0.0.0";
             }
             //处理错误 
@@ -366,7 +359,6 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return "0.0.0.0";
             }
             catch (ClientException e)
@@ -374,7 +366,6 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return "0.0.0.0";
             }
         }
@@ -398,7 +389,6 @@ namespace net.nutcore.aliddns
                 if (response.RecordId != null)
                 {
                     domainIP.Text = localIP.Text; //更新窗体数据
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名绑定IP更新成功！" + "\r\n");
                 }
                 recordId.Text = response.RecordId;
@@ -407,12 +397,10 @@ namespace net.nutcore.aliddns
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
             }
         }
 
@@ -439,7 +427,6 @@ namespace net.nutcore.aliddns
                 globalRR.Text = request.RR; 
                 globalValue.Text = domainIP.Text = request.Value;
                 label_DomainIpStatus.Text = "已绑定";
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                 return true;
             }
@@ -447,13 +434,11 @@ namespace net.nutcore.aliddns
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return false;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 return false;
             }
         }
@@ -468,12 +453,10 @@ namespace net.nutcore.aliddns
                 if (domainIP.Text == localIP.Text)
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "WAN口IP:" + localIP.Text + " 与域名绑定IP:" + domainIP.Text + "一致，无需更新！" + "\r\n");
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
                 }
                 else
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "WAN口IP:" + localIP.Text + " 与域名绑定IP:" + domainIP.Text + "不一致，需要更新！" + "\r\n");
-                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
                     updateDomainRecord();
                 }
               
@@ -483,7 +466,6 @@ namespace net.nutcore.aliddns
             catch (Exception)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名绑定IP更新失败！" + "\r\n");
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
             }
         }
 
@@ -491,7 +473,6 @@ namespace net.nutcore.aliddns
         private void updateNow_Click(object sender, EventArgs e)
         {
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---立即开始WAN口IP和域名绑定IP进行查询比较---" + "\r\n");
-            this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
             updatePrepare();
         }
 
@@ -517,9 +498,9 @@ namespace net.nutcore.aliddns
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务没有返回RecordId，设置项目内容没有保存！" + "\r\n");
                 }
-                   
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务访问失败，请检查账户accessKeyId和accessKeySecret！" + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 domainIP.Text = "0.0.0.0";
@@ -527,9 +508,9 @@ namespace net.nutcore.aliddns
                 globalRR.Text = "null";
                 globalDomainType.Text = "null";
                 globalValue.Text = "null";
-                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
             }
+            notifyIcon_sysTray_Update();
         }
        
         private void autoUpdateTimer_Tick(object sender, EventArgs e)
@@ -561,6 +542,7 @@ namespace net.nutcore.aliddns
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
+            notifyIcon_sysTray_Update();
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -707,9 +689,32 @@ namespace net.nutcore.aliddns
             }
             catch(Exception error)
             {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "出错:" + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
-                
+            notifyIcon_sysTray_Update();
+        }
+
+        private void notifyIcon_sysTray_Update()
+        {
+            if ( label_localIpStatus.Text == "未连接" )
+            {
+                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_gray;
+            }
+            else
+            {
+                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
+                if ( label_DomainIpStatus.Text == "未绑定" )
+                {
+                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_red;
+                }
+                else
+                {
+                    this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_yellow;
+                    if( localIP.Text == domainIP.Text )
+                        this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
+                }
+            }
+
         }
 
     }
