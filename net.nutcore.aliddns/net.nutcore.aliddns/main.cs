@@ -74,7 +74,7 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败！" + "\r\n");
             }
 
-            try
+            try //获取域名绑定IP
             {
                 clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text, accessKeySecret.Text);
                 client = new DefaultAcsClient(clientProfile);
@@ -82,9 +82,10 @@ namespace net.nutcore.aliddns
             }
             catch (Exception)
             {
-                
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名和绑定IP失败，请检查设置项目内容和网络状态！" + "\r\n");
             }
+            if (localIP.Text == domainIP.Text) //如果WAN口IP与域名绑定IP一致，刷新系统托盘图标
+                this.notifyIcon_sysTray.Icon = Properties.Resources.alidns_green;
         }
 
         private void readConfigFile()
