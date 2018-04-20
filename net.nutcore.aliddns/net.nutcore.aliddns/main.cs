@@ -450,6 +450,7 @@ namespace net.nutcore.aliddns
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名绑定IP更新失败！" + "\r\n");
             }
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
         //Events in form
@@ -497,34 +498,24 @@ namespace net.nutcore.aliddns
        
         private void autoUpdateTimer_Tick(object sender, EventArgs e)
         {
-            try
+            if (checkBox_autoUpdate.Checked == true)
             {
-                if (checkBox_autoUpdate.Checked == true && label_nextUpdateSeconds.Text != "")
+                if(Convert.ToInt32(label_nextUpdateSeconds.Text) > 0)
                 {
-                    int seconds = Convert.ToInt32(label_nextUpdateSeconds.Text);
-                    if (seconds > 0) seconds--;
-                    label_nextUpdateSeconds.Text = seconds.ToString();
-
-                    if (seconds == 0)
-                    {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---计划任务被触发，开始WAN口IP和域名IP查询比较---" + "\r\n");
-                        updatePrepare();
-                    }
+                    label_nextUpdateSeconds.Text = Convert.ToString((Convert.ToInt32(label_nextUpdateSeconds.Text) - 1));
                 }
-                if (checkBox_logAutoSave.Checked == true)
+                else
                 {
-                    if ( textBox_log.GetLineFromCharIndex(textBox_log.Text.Length) >10000 )
-                    {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---运行日志超过10000行，开始日志转储---" + "\r\n");
-                        logToFiles();
-                    }
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---计划任务被触发，开始WAN口IP和域名IP查询比较---" + "\r\n");
+                    updatePrepare();
                 }
             }
-            catch (Exception error)
+            
+            if (checkBox_logAutoSave.Checked == true && textBox_log.GetLineFromCharIndex(textBox_log.Text.Length) > 10000)
             {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "---运行日志超过10000行，开始日志转储---" + "\r\n");
+                logToFiles();
             }
-            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
