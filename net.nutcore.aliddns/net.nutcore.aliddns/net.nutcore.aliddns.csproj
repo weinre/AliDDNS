@@ -126,6 +126,7 @@
     <Content Include="alidns_green.ico" />
     <Content Include="alidns_red.ico" />
     <Content Include="alidns_yellow.ico" />
+    <Content Include="updateinfo.txt" />
     <None Include="Resources\alidns_yellow.ico" />
     <None Include="Resources\alidns_red.ico" />
     <None Include="Resources\alidns_green.ico" />

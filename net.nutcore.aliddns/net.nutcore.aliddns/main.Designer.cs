@@ -78,7 +78,6 @@
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -568,11 +567,6 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
             // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -655,7 +649,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button_setIP;
         private System.Windows.Forms.MaskedTextBox maskedTextBox_setIP;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

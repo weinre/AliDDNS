@@ -50,21 +50,34 @@ namespace net.nutcore.aliddns
             }
             
             //读取设置文件config.xml
-            readConfigFile();
-            //窗体根据参数判断是否最小化驻留系统托盘
-            if (checkBox_minimized.Checked == true)
+            if(readConfigFile())
             {
-                this.ShowInTaskbar = false; //从状态栏清除
-                this.WindowState = FormWindowState.Minimized; //窗体最小化
-                this.Hide(); //窗体隐藏
+                //窗体根据参数判断是否最小化驻留系统托盘
+                if (checkBox_minimized.Checked == true)
+                {
+                    this.ShowInTaskbar = false; //从状态栏清除
+                    this.WindowState = FormWindowState.Minimized; //窗体最小化
+                    this.Hide(); //窗体隐藏
+                }
+                else if (checkBox_minimized.Checked == false)
+                {
+                    this.Show(); //窗体显示
+                    this.WindowState = FormWindowState.Normal; //窗体正常化
+                    this.ShowInTaskbar = true; //从状态栏显示
+                }
+
+                try //获取域名绑定IP
+                {
+                    clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text, accessKeySecret.Text);
+                    client = new DefaultAcsClient(clientProfile);
+                    domainIP.Text = getDomainIP();
+                }
+                catch (Exception)
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名和绑定IP失败，请检查设置项目内容和网络状态！" + "\r\n");
+                }
             }
-            else if (checkBox_minimized.Checked == false)
-            {
-                this.Show(); //窗体显示
-                this.WindowState = FormWindowState.Normal; //窗体正常化
-                this.ShowInTaskbar = true; //从状态栏显示
-            }
-                
+
             try //获取WAN口IP
             {
                 localIP.Text = getLocalIP();
@@ -74,21 +87,10 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败！" + "\r\n");
             }
 
-            try //获取域名绑定IP
-            {
-                clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text, accessKeySecret.Text);
-                client = new DefaultAcsClient(clientProfile);
-                domainIP.Text = getDomainIP();
-            }
-            catch (Exception)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名和绑定IP失败，请检查设置项目内容和网络状态！" + "\r\n");
-            }
-
-            notifyIcon_sysTray_Update(); //如果WAN口IP与域名绑定IP一致，刷新系统托盘图标
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
-        private void readConfigFile()
+        private bool readConfigFile()
         {
             try
             {
@@ -126,8 +128,6 @@ namespace net.nutcore.aliddns
                 label_nextUpdateSeconds.Text = newSeconds.Text = nodes[4].InnerText;
                 if (nodes[5].InnerText == "On") checkBox_autoUpdate.Checked = true;
                 else checkBox_autoUpdate.Checked = false;
-                //if ( config[5] == "On" ) autoUpdateOn.Checked = true;
-                //if ( config[5] == "Off ") autoUpdateOff.Checked = true;
                 comboBox_whatIsUrl.Text = nodes[6].InnerText;
                 if (nodes[7].InnerText == "On") checkBox_autoBoot.Checked = true;
                 else checkBox_autoBoot.Checked = false;
@@ -139,10 +139,12 @@ namespace net.nutcore.aliddns
                     checkBox_logAutoSave.Checked = false;
 
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件读取成功！" + "\r\n");
+                return true;
             }
             catch (Exception error)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
+                return false;
             }
 
         }
@@ -191,10 +193,6 @@ namespace net.nutcore.aliddns
                     textWriter.WriteString("On");
                 else
                     textWriter.WriteString("Off");
-                /*if (autoUpdateOn.Checked == true)
-                    textWriter.WriteString("On");
-                if (autoUpdateOff.Checked)
-                    textWriter.WriteString("Off");*/
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("whatIsUrl", "");
@@ -242,31 +240,18 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                string strUrl = comboBox_whatIsUrl.Text; //"http://whatismyip.akamai.com/";
+                string strUrl = comboBox_whatIsUrl.Text; //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
                 Uri uri = new Uri(strUrl);
                 WebRequest webreq = WebRequest.Create(uri);
                 Stream s = webreq.GetResponse().GetResponseStream();
                 StreamReader sr = new StreamReader(s, Encoding.Default);
                 string all = sr.ReadToEnd();
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
-                //Cut the string
-                /*
-                string[] symbols = new string[2] { "[", "]" };
-                string[] data = all.Split(symbols, 30, StringSplitOptions.RemoveEmptyEntries);
-                string ip = data[1];*/
                 all = Regex.Replace(all, @"(\d+)", "000$1");
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
                 all = Regex.Replace(all, @"0+(\d{1,4})", "$1");
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + all + "\r\n");
                 string reg = @"(\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4})";
                 Regex regex = new Regex(reg);
                 Match match = regex.Match(all);
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + match + "\r\n");
                 string ip = match.Groups[1].Value;
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "DEBUG信息:" + ip + "\r\n");
-                //return Regex.Replace(ip, @"0*(\d+)", "$1");
-
-                //string ip = all;
                 if (ip.Length > 0)
                 {
                     label_localIpStatus.Text = "已连接";
@@ -278,8 +263,7 @@ namespace net.nutcore.aliddns
             }
             catch (Exception)
             {
-                
-                label_localIpStatus.Text = "无连接";
+                label_localIpStatus.Text = "未连接";
                 label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(255,255,0,0);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败，请检查设置！" + "\r\n");
                 return "0.0.0.0";
@@ -320,7 +304,7 @@ namespace net.nutcore.aliddns
                 return true;
             }
             //处理错误
-            catch (ServerException e)
+            catch (ServerException e)  
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 return false;
@@ -431,7 +415,7 @@ namespace net.nutcore.aliddns
                 return true;
             }
             //处理错误
-            catch (ServerException e)
+            catch (ServerException e)  
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
                 return false;
@@ -459,7 +443,6 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "WAN口IP:" + localIP.Text + " 与域名绑定IP:" + domainIP.Text + "不一致，需要更新！" + "\r\n");
                     updateDomainRecord();
                 }
-              
                 //localIP.Text = getLocalIP();
                 //domainIP.Text = getDomainIP();
             }
@@ -480,9 +463,8 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                localIP.Text = getLocalIP(); //读取WAN口IP
+                //localIP.Text = getLocalIP(); //读取WAN口IP
                 //domainIP.Text = getDomainIP(); //读取AliDDNS已经绑定IP
-
                 clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text, accessKeySecret.Text);
                 client = new DefaultAcsClient(clientProfile);
                 if (setRecordId()) //检查能否从服务器返回RecordId，返回则设置正确，否则设置不正确
@@ -510,7 +492,7 @@ namespace net.nutcore.aliddns
                 globalValue.Text = "null";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
             }
-            notifyIcon_sysTray_Update();
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
        
         private void autoUpdateTimer_Tick(object sender, EventArgs e)
@@ -542,7 +524,7 @@ namespace net.nutcore.aliddns
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
-            notifyIcon_sysTray_Update();
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -577,6 +559,7 @@ namespace net.nutcore.aliddns
         {
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "开始向网址发起查询... " + "\r\n");
             localIP.Text = getLocalIP();
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
         private void button_ShowHide_Click(object sender, EventArgs e)
@@ -691,7 +674,7 @@ namespace net.nutcore.aliddns
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
-            notifyIcon_sysTray_Update();
+            notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
         private void notifyIcon_sysTray_Update()
