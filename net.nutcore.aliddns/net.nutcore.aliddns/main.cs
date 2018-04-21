@@ -137,6 +137,7 @@ namespace net.nutcore.aliddns
                     checkBox_logAutoSave.Checked = true;
                 else
                     checkBox_logAutoSave.Checked = false;
+                textBox_TTL.Text = nodes[10].InnerText;
 
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件读取成功！" + "\r\n");
                 return true;
@@ -220,6 +221,10 @@ namespace net.nutcore.aliddns
                     textWriter.WriteString("Off");
                 textWriter.WriteEndElement();
 
+                textWriter.WriteStartElement("TTL", "");
+                textWriter.WriteString(textBox_TTL.Text);
+                textWriter.WriteEndElement();
+
                 textWriter.WriteEndElement(); //设置项目结束
                 textWriter.WriteEndDocument();//文档结束
                 textWriter.Close(); //文档保存关闭
@@ -270,7 +275,7 @@ namespace net.nutcore.aliddns
             }
         }
 
-        private bool setRecordId()
+        private bool setRecordId() //获取阿里云解析返回recordId
         {
             DescribeSubDomainRecordsRequest request = new DescribeSubDomainRecordsRequest();
             request.SubDomain = fullDomainName.Text;
@@ -279,7 +284,7 @@ namespace net.nutcore.aliddns
                 DescribeSubDomainRecordsResponse response = client.GetAcsResponse(request);
                 List<Record> list = response.DomainRecords;
 
-                if (list.Count == 0)
+                if (list.Count == 0) //当不存在域名记录时，添加一个
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务访问成功，但没有找到对应域名信息！" + "\r\n");
                     if (addDomainRecord())
@@ -290,7 +295,7 @@ namespace net.nutcore.aliddns
 
                 int i = 0;
 
-                foreach (Record record in list)
+                foreach (Record record in list) //当存在域名记录时，返回域名记录信息
                 {
                     i++;
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务返回RecordId:" + i.ToString() + " RecordId：" + record.RecordId + "\r\n");
@@ -298,6 +303,7 @@ namespace net.nutcore.aliddns
                     globalRR.Text = record.RR;
                     globalDomainType.Text = record.Type;
                     globalValue.Text = domainIP.Text = record.Value;
+                    label_TTL.Text = Convert.ToString(record.TTL);
                     label_DomainIpStatus.Text = "已绑定";
                     label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                 }
@@ -330,6 +336,7 @@ namespace net.nutcore.aliddns
                     globalRR.Text = response.RR;
                     globalDomainType.Text = response.Type;
                     globalValue.Text = response.Value;
+                    label_TTL.Text = Convert.ToString(response.TTL);
                     label_DomainIpStatus.Text = "已绑定";
                     label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
                     return response.Value;
@@ -365,6 +372,7 @@ namespace net.nutcore.aliddns
             request.Type = "A";
             request.RR = domainRR;
             request.RecordId = recordId.Text;
+            request.TTL = Convert.ToInt32(textBox_TTL.Text);
             request.Value = localIP.Text;
             try
             {
@@ -399,6 +407,7 @@ namespace net.nutcore.aliddns
             request.Type = "A";
             request.RR = domainRR;
             request.DomainName = domainName;
+            request.TTL = Convert.ToInt32(textBox_TTL.Text);
             request.Value = localIP.Text;
             try
             {
@@ -491,6 +500,7 @@ namespace net.nutcore.aliddns
                 globalRR.Text = "null";
                 globalDomainType.Text = "null";
                 globalValue.Text = "null";
+                label_TTL.Text = "null";
                 label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
             }
             notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
@@ -689,6 +699,5 @@ namespace net.nutcore.aliddns
             }
 
         }
-
     }
 }
