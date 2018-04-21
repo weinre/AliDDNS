@@ -16,6 +16,8 @@ namespace net.nutcore.aliddns
         public Form_About()
         {
             InitializeComponent();
+            this.MinimizeBox = false; //取消窗口最小化按钮
+            this.MaximizeBox = false; //取消窗口最大化按钮
             textBox_updateInfo.ReadOnly = true;
             string filePath = System.AppDomain.CurrentDomain.BaseDirectory;
             string updateInfoFile = filePath + "updateinfo.txt";

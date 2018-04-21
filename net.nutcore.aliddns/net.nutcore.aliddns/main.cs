@@ -619,7 +619,6 @@ namespace net.nutcore.aliddns
             string logfile = logPath + DateTime.Now.ToString("yyyyMMddHHmmss") + "aliddns_log.txt";
             if (!File.Exists(logfile))
             {
-                //using (File.Create(logPath)) { }
                 System.IO.StreamWriter sw = System.IO.File.AppendText(logfile);
                 sw.WriteLine(textBox_log.Text);
                 sw.Close();
