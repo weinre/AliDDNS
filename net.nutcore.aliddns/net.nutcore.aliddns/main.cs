@@ -29,6 +29,44 @@ namespace net.nutcore.aliddns
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            //获取当前用户名和计算机名并写入日志
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "计算机名: " + System.Environment.UserDomainName + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户: " + System.Environment.UserName + "\r\n");
+            //检查当前用户权限
+            System.Security.Principal.WindowsIdentity wid = System.Security.Principal.WindowsIdentity.GetCurrent();
+            System.Security.Principal.WindowsPrincipal printcipal = new System.Security.Principal.WindowsPrincipal(wid);
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "角色信息:" + printcipal.Identity.Name.ToString() + "\r\n");
+            /*
+            bool isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: Administrator" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.User));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: User" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.AccountOperator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: AccountOperator" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.BackupOperator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: BackupOperator" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Guest));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: Guest" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.PowerUser));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: PowerUser" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.PrintOperator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: PrintOperator" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Replicator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: Replicator" + "\r\n");
+            isUser = (printcipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.SystemOperator));
+            if (isUser)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户角色: SystemOperator" + "\r\n");
+            */
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户需要文件写入和注册表操作权限，否则相关参数不起作用！" + "\r\n");
+            
             try //检查设置文件，如果没有则新建，并赋值默认值
             {
                 string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -73,8 +111,9 @@ namespace net.nutcore.aliddns
                     client = new DefaultAcsClient(clientProfile);
                     domainIP.Text = getDomainIP();
                 }
-                catch (Exception)
+                catch (Exception error)
                 {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名和绑定IP失败，请检查设置项目内容和网络状态！" + "\r\n");
                 }
             }
@@ -83,8 +122,9 @@ namespace net.nutcore.aliddns
             {
                 localIP.Text = getLocalIP();
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败！" + "\r\n");
             }
 
@@ -271,8 +311,9 @@ namespace net.nutcore.aliddns
                 //return ip;
                 return Regex.Replace(ip, @"0*(\d+)", "$1");
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 label_localIpStatus.Text = "未连接";
                 label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(255,255,0,0);
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败，请检查设置！" + "\r\n");
@@ -460,8 +501,9 @@ namespace net.nutcore.aliddns
                 //localIP.Text = getLocalIP();
                 //domainIP.Text = getDomainIP();
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名绑定IP更新失败！" + "\r\n");
             }
             notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
@@ -496,8 +538,9 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务没有返回RecordId，设置项目内容没有保存！" + "\r\n");
                 }
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务访问失败，请检查账户accessKeyId和accessKeySecret！" + "\r\n");
                 label_DomainIpStatus.Text = "未绑定";
                 domainIP.Text = "0.0.0.0";
@@ -591,22 +634,29 @@ namespace net.nutcore.aliddns
 
         private void checkBox_autoBoot_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox_autoBoot.Checked == true)
+            try
             {
-                //获取执行该方法的程序集，并获取该程序集的文件路径（由该文件路径可以得到程序集所在的目录）
-                string thisExecutablePath = System.Reflection.Assembly.GetExecutingAssembly().Location;//this.GetType().Assembly.Location;
-                //SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run注册表中这个路径是开机自启动的路径
-                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
-                Rkey.SetValue("AliDDNS Tray", thisExecutablePath);
-                Rkey.Close();
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行设置成功！" + "\r\n");
+                if (checkBox_autoBoot.Checked == true)
+                {
+                    //获取执行该方法的程序集，并获取该程序集的文件路径（由该文件路径可以得到程序集所在的目录）
+                    string thisExecutablePath = System.Reflection.Assembly.GetExecutingAssembly().Location;//this.GetType().Assembly.Location;
+                                                                                                           //SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run注册表中这个路径是开机自启动的路径
+                    Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+                    Rkey.SetValue("AliDDNS Tray", thisExecutablePath);
+                    Rkey.Close();
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行设置成功！" + "\r\n");
+                }
+                else
+                {
+                    Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    Rkey.DeleteValue("AliDDNS Tray");
+                    Rkey.Close();
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
+                }
             }
-            else
+            catch(Exception error)
             {
-                Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",true);
-                Rkey.DeleteValue("AliDDNS Tray");
-                Rkey.Close();
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
                 
             
@@ -614,8 +664,6 @@ namespace net.nutcore.aliddns
 
         private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
         {
-            this.MinimizeBox = false; //取消窗口最小化按钮
-            this.MaximizeBox = false; //取消窗口最大化按钮
             Form_About about = new Form_About();
             about.Show(this);
         }
@@ -630,17 +678,34 @@ namespace net.nutcore.aliddns
 
         private void logToFiles()
         {
-            string logPath = System.AppDomain.CurrentDomain.BaseDirectory;
-            string logfile = logPath + DateTime.Now.ToString("yyyyMMddHHmmss") + "aliddns_log.txt";
-            if (!File.Exists(logfile))
+            try
             {
-                System.IO.StreamWriter sw = System.IO.File.AppendText(logfile);
-                sw.WriteLine(textBox_log.Text);
-                sw.Close();
-                sw.Dispose();
-                textBox_log.Clear();
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储为: " + logfile + "\r\n");
+                string logPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                string logfile = logPath + DateTime.Now.ToString("yyyyMMddHHmmss") + "aliddns_log.txt";
+                if (!File.Exists(logfile))
+                {
+                    StreamWriter sw = new StreamWriter(logfile); 
+                    sw.WriteLine(textBox_log.Text);
+                    sw.Close();
+                    sw.Dispose();
+                    textBox_log.Clear();
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储为: " + logfile + "\r\n");
+                }
+                else
+                {
+                    StreamWriter sw = File.AppendText(logfile);
+                    sw.WriteLine(textBox_log.Text);
+                    sw.Close();
+                    sw.Dispose();
+                    textBox_log.Clear();
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志转储为: " + logfile + "\r\n");
+                }
             }
+            catch(Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
+            }
+            
         }
 
         private void checkBox_autoUpdate_CheckedChanged(object sender, EventArgs e)
