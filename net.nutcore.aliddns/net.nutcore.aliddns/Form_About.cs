@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace net.nutcore.aliddns
 {
@@ -15,9 +10,13 @@ namespace net.nutcore.aliddns
     {
         public Form_About()
         {
+            
             InitializeComponent();
             this.MinimizeBox = false; //取消窗口最小化按钮
             this.MaximizeBox = false; //取消窗口最大化按钮
+            if (mainForm.checkUpdate == true)
+                checkBox_autoCheckUpdate.Checked = true;
+            else checkBox_autoCheckUpdate.Checked = false;
             textBox_updateInfo.ReadOnly = true;
             string filePath = System.AppDomain.CurrentDomain.BaseDirectory;
             string updateInfoFile = filePath + "updateinfo.txt";
@@ -40,6 +39,65 @@ namespace net.nutcore.aliddns
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer.exe", "https://bbs.aliyun.com/read/289624.html");
+        }
+
+        private void checkBox_autoCheckUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string config_file = ExePath + "aliddns_config.xml";
+            if(File.Exists(config_file))
+            {
+                XmlDocument xmlDOC = new XmlDocument();
+                xmlDOC.Load(config_file);
+                if (xmlDOC.GetElementsByTagName("autoCheckUpdate")[0] == null)
+                {
+                    XmlNode node = xmlDOC.CreateNode(XmlNodeType.Element, "autoCheckUpdate",null);
+                    if (checkBox_autoCheckUpdate.Checked == true)
+                        node.InnerText = "On";
+                    else
+                        node.InnerText = "Off";
+                    xmlDOC.DocumentElement.AppendChild(node);
+                    xmlDOC.Save(config_file);
+                }
+                else
+                {
+                    XmlNode node = xmlDOC.GetElementsByTagName("autoCheckUpdate")[0];
+                    if (checkBox_autoCheckUpdate.Checked == true)
+                        node.InnerText = "On";
+                    else
+                        node.InnerText = "Off";
+                    xmlDOC.DocumentElement.AppendChild(node);
+                    xmlDOC.Save(config_file);
+                }
+            }
+            /*
+            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            map.ExeConfigFilename = config_file;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+            if(checkBox_autoCheckUpdate.Checked == true)
+            {
+                if (config.AppSettings.Settings["autoCheckUpdate"] == null)
+                {
+                    config.AppSettings.Settings.Add("autoCheckUpdate", "On");
+                }
+                else
+                {
+                    config.AppSettings.Settings["autoCheckUpdate"].Value = "On";
+                }
+            }
+            else
+            {
+                if (config.AppSettings.Settings["autoCheckUpdate"] == null)
+                {
+                    config.AppSettings.Settings.Add("autoCheckUpdate", "Off");
+                }
+                else
+                {
+                    config.AppSettings.Settings["autoCheckUpdate"].Value = "Off";
+                }
+            }
+            config.Save();
+            */
         }
     }
 }

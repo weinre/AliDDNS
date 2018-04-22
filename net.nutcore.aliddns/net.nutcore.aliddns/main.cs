@@ -17,6 +17,7 @@ namespace net.nutcore.aliddns
 {
     public partial class mainForm : Form
     {
+        public static bool checkUpdate;
         static IClientProfile clientProfile;
         static DefaultAcsClient client;
 
@@ -91,6 +92,20 @@ namespace net.nutcore.aliddns
             //读取设置文件config.xml
             if(readConfigFile())
             {
+                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
+                string update = ExePath + "update.exe";
+                if(checkUpdate == true)
+                {
+                    if (!File.Exists(update))
+                    {
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "版本检测程序update.exe未找到，跳过版本检测！ " + "\r\n");
+                    }
+                    else
+                    {
+                        //执行update.exe
+                    }
+                }
+                
                 //窗体根据参数判断是否最小化驻留系统托盘
                 if (checkBox_minimized.Checked == true)
                 {
@@ -136,12 +151,13 @@ namespace net.nutcore.aliddns
             try
             {
                 //Create xml object
-                XmlDocument xmlDOC = new XmlDocument();
                 string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
                 string config_file = ExePath + "aliddns_config.xml";
+                XmlDocument xmlDOC = new XmlDocument();
                 xmlDOC.Load(config_file);
-                XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
-                XmlNodeList nodes = xmlDOC.SelectSingleNode("Config").ChildNodes; //读取config节点下所有元素
+                //XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
+                //textBox_log.AppendText(System.DateTime.Now.ToString() + " DEBUG: " + readXML.Value + "\r\n"); //显示读取内容，用于调试DEBUG。
+                XmlNodeList nodes = xmlDOC.SelectSingleNode("configuration").ChildNodes; //读取config节点下所有元素
                 /*
                 for (int i = 0; i < nodes.Count; i++)
                 {
@@ -181,6 +197,8 @@ namespace net.nutcore.aliddns
                 else
                     checkBox_logAutoSave.Checked = false;
                 textBox_TTL.Text = nodes[10].InnerText;
+                if (nodes[11].InnerText == "On") checkUpdate = true;
+                else checkUpdate = false;
 
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件读取成功！" + "\r\n");
                 return true;
@@ -212,7 +230,7 @@ namespace net.nutcore.aliddns
                 textWriter.WriteComment("AlidnsAutoCheckTool");
                 textWriter.WriteComment("Version:Beta 1.0");
                 //Start config file
-                textWriter.WriteStartElement("Config"); //设置项目开始
+                textWriter.WriteStartElement("configuration"); //设置项目开始
 
                 textWriter.WriteStartElement("AccessKeyID", "");
                 textWriter.WriteString(accessKeyId_encrypt);

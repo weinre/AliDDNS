@@ -9,6 +9,7 @@ namespace net.nutcore.aliddns
 {
     static class Program
     {
+        //static bool checkUpdate; //用于检测是否自动升级
         static System.Threading.Mutex _mutex; //定义为类变量，而非局部变量，用于检测线程
         /// <summary>
         /// 应用程序的主入口点。
