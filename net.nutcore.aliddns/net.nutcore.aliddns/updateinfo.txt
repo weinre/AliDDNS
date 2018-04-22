@@ -1,3 +1,6 @@
+v3.8.1.0
+1、在配置文件中对accessKeyId和accessKeySecret进行加密存储。注意现有配置文件中未加密参数将失效。
+
 v3.8.0.0
 1、增加TTL参数。2、修复代码BUG。
 
