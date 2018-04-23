@@ -3,6 +3,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using System.Net;
 
 namespace net.nutcore.aliddns
 {
@@ -14,8 +15,19 @@ namespace net.nutcore.aliddns
             InitializeComponent();
             this.MinimizeBox = false; //取消窗口最小化按钮
             this.MaximizeBox = false; //取消窗口最大化按钮
+            label_currentVer.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); //获取当前版本
             if (mainForm.checkUpdate == true)
+            {
                 checkBox_autoCheckUpdate.Checked = true;
+                //获取远程版本信息
+                /*
+                string strUrl = "https://api.github.com/respo/wisdomwei201804/AliDDNS/releases/latest"; //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
+                Uri uri = new Uri(strUrl);
+                WebRequest webreq = WebRequest.Create(uri);
+                Stream s = webreq.GetResponse().GetResponseStream();
+                StreamReader sr = new StreamReader(s, Encoding.Default);
+                string all = sr.ReadToEnd();*/
+            }
             else checkBox_autoCheckUpdate.Checked = false;
             textBox_updateInfo.ReadOnly = true;
             string filePath = System.AppDomain.CurrentDomain.BaseDirectory;

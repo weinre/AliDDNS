@@ -96,13 +96,13 @@ namespace net.nutcore.aliddns
                 string update = ExePath + "update.exe";
                 if(checkUpdate == true)
                 {
-                    if (!File.Exists(update))
+                    if (File.Exists(update))
                     {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "版本检测程序update.exe未找到，跳过版本检测！ " + "\r\n");
+                        //执行update.exe
                     }
                     else
                     {
-                        //执行update.exe
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "版本检测程序update.exe未找到，跳过版本检测！ " + "\r\n");
                     }
                 }
                 
@@ -286,6 +286,13 @@ namespace net.nutcore.aliddns
 
                 textWriter.WriteStartElement("TTL", "");
                 textWriter.WriteString(textBox_TTL.Text);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("autoCheckUpdate", "");
+                if (checkUpdate == false)
+                    textWriter.WriteString("Off");
+                else
+                    textWriter.WriteString("On");
                 textWriter.WriteEndElement();
 
                 textWriter.WriteEndElement(); //设置项目结束
