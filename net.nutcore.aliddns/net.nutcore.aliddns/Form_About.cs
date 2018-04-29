@@ -4,6 +4,8 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace net.nutcore.aliddns
 {
@@ -11,7 +13,7 @@ namespace net.nutcore.aliddns
     {
         public Form_About()
         {
-            
+
             InitializeComponent();
             this.MinimizeBox = false; //取消窗口最小化按钮
             this.MaximizeBox = false; //取消窗口最大化按钮
@@ -27,6 +29,31 @@ namespace net.nutcore.aliddns
                 Stream s = webreq.GetResponse().GetResponseStream();
                 StreamReader sr = new StreamReader(s, Encoding.Default);
                 string all = sr.ReadToEnd();*/
+
+                try
+                {
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                    HttpContent httpContent = new StringContent("");
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    httpContent.Headers.ContentType.CharSet = "utf-8";
+                    httpContent.Headers.Add("token", "11111111111");
+                    // httpContent.Headers.Add("appId", appId);
+                    //httpContent.Headers.Add("serviceURL", serviceURL);
+                    HttpClient httpClient = new HttpClient();
+                    //httpClient..setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
+                    HttpResponseMessage response = httpClient.PostAsync("https://api.github.com/respo/wisdomwei201804/AliDDNS/releases/latest", httpContent).Result;
+                    //statusCode = response.StatusCode.ToString();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string result = response.Content.ReadAsStringAsync().Result;
+                       // return result;
+                    }
+                }
+                catch( Exception error)
+                {
+                    MessageBox.Show(error.ToString());
+                }
+
             }
             else checkBox_autoCheckUpdate.Checked = false;
             textBox_updateInfo.ReadOnly = true;
