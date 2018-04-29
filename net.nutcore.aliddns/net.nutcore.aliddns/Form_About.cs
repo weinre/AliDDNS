@@ -6,11 +6,24 @@ using System.Xml;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace net.nutcore.aliddns
 {
     public partial class Form_About : Form
     {
+        public static bool RemoteCertificateValidationCallback(Object sender,
+           X509Certificate certificate,
+           X509Chain chain,
+           SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+        private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        {
+            return true; //总是接受  
+        }
         public Form_About()
         {
 
@@ -22,33 +35,45 @@ namespace net.nutcore.aliddns
             {
                 checkBox_autoCheckUpdate.Checked = true;
                 //获取远程版本信息
-                /*
-                string strUrl = "https://api.github.com/respo/wisdomwei201804/AliDDNS/releases/latest"; //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
-                Uri uri = new Uri(strUrl);
-                WebRequest webreq = WebRequest.Create(uri);
-                Stream s = webreq.GetResponse().GetResponseStream();
-                StreamReader sr = new StreamReader(s, Encoding.Default);
-                string all = sr.ReadToEnd();*/
-
                 try
                 {
-                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-                    HttpContent httpContent = new StringContent("");
+
+                    string strUrl = "https://api.github.com/wisdomwei201804/AliDDNS/releases/latest"; //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
+                    Uri uri = new Uri(strUrl);
+                    if (strUrl.StartsWith("https"))
+                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                    WebRequest webreq = WebRequest.Create(uri);
+                    Stream s = webreq.GetResponse().GetResponseStream();
+                    StreamReader sr = new StreamReader(s, Encoding.Default);
+                    string all = sr.ReadToEnd();
+                    MessageBox.Show(all.ToString());
+                }
+                /*try
+                {
+                    string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
+                    if(strUrl.StartsWith("https"))
+                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
+                    HttpClient httpClient = new HttpClient();
+                    HttpContent httpContent = new StringContent("Authorization: token 7e5aaa4649a6bdb9d5459abd221ef15ec484da79");
                     httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     httpContent.Headers.ContentType.CharSet = "utf-8";
-                    httpContent.Headers.Add("token", "11111111111");
+                    //httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+                    //httpContent.Headers.Add("token", "7e5aaa4649a6bdb9d5459abd221ef15ec484da79");
                     // httpContent.Headers.Add("appId", appId);
                     //httpContent.Headers.Add("serviceURL", serviceURL);
-                    HttpClient httpClient = new HttpClient();
+
+                    //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
                     //httpClient..setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
-                    HttpResponseMessage response = httpClient.PostAsync("https://api.github.com/respo/wisdomwei201804/AliDDNS/releases/latest", httpContent).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(strUrl, httpContent).Result;
                     //statusCode = response.StatusCode.ToString();
-                    if (response.IsSuccessStatusCode)
-                    {
+                   // if (response.IsSuccessStatusCode)
+                    //{
                         string result = response.Content.ReadAsStringAsync().Result;
+                        MessageBox.Show(result.ToString());
                        // return result;
-                    }
-                }
+                    //}
+                }*/
                 catch( Exception error)
                 {
                     MessageBox.Show(error.ToString());
