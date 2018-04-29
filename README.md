@@ -1,5 +1,6 @@
 # AliDDNS
 基于云解析API的动态DNS
 
-###只是显示图片  
-![github](http://github.com/unicorn.png "github")  
+# 程序界面
+![AliDDNS-UI-01.jpg](/images/AliDDNS-UI-01.jpg "AilDDNS")  
+![AliDDNS-UI-02.jpg](/images/AliDDNS-UI-02.jpg "AliDDNS")
