@@ -1,6 +1,19 @@
 # AliDDNS
 基于云解析API的动态DNS
 
+# 使用阿里域名API管理域名
+accessKeyId
+accessKeySecret
+上述两个参数从阿里云控制台获取。
+
+# 软件功能
+程序运行后驻留系统托盘，可设定倒计时参数，定时查询WAN口和域名绑定IP是否一致，当不一致时，修改域名绑定IP，从而实现动态域名效果。
+可设置随系统启动，此功能需要Win系统注册表修改权限。
+可设置启动后自动驻留系统托盘。
+可设置操作日志转储。
+可设置TTL参数。
+可设置域名查询时间。
+
 # 程序界面
 ![AliDDNS-UI-01.jpg](/images/AliDDNS-UI-01.JPG "AilDDNS")  
 ![AliDDNS-UI-02.jpg](/images/AliDDNS-UI-02.JPG "AliDDNS")
