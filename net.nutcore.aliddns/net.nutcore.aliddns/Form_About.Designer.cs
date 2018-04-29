@@ -38,11 +38,11 @@
             this.personalWebsite = new System.Windows.Forms.LinkLabel();
             this.textBox_updateInfo = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label_currentVer = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label_latestVer = new System.Windows.Forms.Label();
             this.checkBox_autoCheckUpdate = new System.Windows.Forms.CheckBox();
+            this.label_latestVer = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label_currentVer = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.authorInformation.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -145,42 +145,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "升级设置";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 19);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 12);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "当前版本:";
-            // 
-            // label_currentVer
-            // 
-            this.label_currentVer.AutoSize = true;
-            this.label_currentVer.Location = new System.Drawing.Point(71, 19);
-            this.label_currentVer.Name = "label_currentVer";
-            this.label_currentVer.Size = new System.Drawing.Size(47, 12);
-            this.label_currentVer.TabIndex = 1;
-            this.label_currentVer.Text = "0.0.0.0";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(125, 19);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 12);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "最新版本:";
-            // 
-            // label_latestVer
-            // 
-            this.label_latestVer.AutoSize = true;
-            this.label_latestVer.Location = new System.Drawing.Point(185, 19);
-            this.label_latestVer.Name = "label_latestVer";
-            this.label_latestVer.Size = new System.Drawing.Size(47, 12);
-            this.label_latestVer.TabIndex = 3;
-            this.label_latestVer.Text = "0.0.0.0";
-            // 
             // checkBox_autoCheckUpdate
             // 
             this.checkBox_autoCheckUpdate.AutoSize = true;
@@ -194,6 +158,42 @@
             this.checkBox_autoCheckUpdate.UseVisualStyleBackColor = true;
             this.checkBox_autoCheckUpdate.CheckedChanged += new System.EventHandler(this.checkBox_autoCheckUpdate_CheckedChanged);
             // 
+            // label_latestVer
+            // 
+            this.label_latestVer.AutoSize = true;
+            this.label_latestVer.Location = new System.Drawing.Point(185, 19);
+            this.label_latestVer.Name = "label_latestVer";
+            this.label_latestVer.Size = new System.Drawing.Size(47, 12);
+            this.label_latestVer.TabIndex = 3;
+            this.label_latestVer.Text = "0.0.0.0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(125, 19);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 12);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "最新版本:";
+            // 
+            // label_currentVer
+            // 
+            this.label_currentVer.AutoSize = true;
+            this.label_currentVer.Location = new System.Drawing.Point(71, 19);
+            this.label_currentVer.Name = "label_currentVer";
+            this.label_currentVer.Size = new System.Drawing.Size(47, 12);
+            this.label_currentVer.TabIndex = 1;
+            this.label_currentVer.Text = "0.0.0.0";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 19);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(59, 12);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "当前版本:";
+            // 
             // Form_About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -206,6 +206,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form_About";
             this.Text = "关于";
+            this.Load += new System.EventHandler(this.Form_About_Load);
             this.authorInformation.ResumeLayout(false);
             this.authorInformation.PerformLayout();
             this.groupBox1.ResumeLayout(false);

@@ -5,89 +5,18 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace net.nutcore.aliddns
 {
     public partial class Form_About : Form
     {
-        public static bool RemoteCertificateValidationCallback(Object sender,
-           X509Certificate certificate,
-           X509Chain chain,
-           SslPolicyErrors sslPolicyErrors)
-        {
-            return true;
-        }
-        private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
-        {
-            return true; //总是接受  
-        }
         public Form_About()
         {
 
             InitializeComponent();
             this.MinimizeBox = false; //取消窗口最小化按钮
             this.MaximizeBox = false; //取消窗口最大化按钮
-            label_currentVer.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); //获取当前版本
-            if (mainForm.checkUpdate == true)
-            {
-                checkBox_autoCheckUpdate.Checked = true;
-                //获取远程版本信息
-                try
-                {
-
-                    string strUrl = "https://api.github.com/wisdomwei201804/AliDDNS/releases/latest"; //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
-                    Uri uri = new Uri(strUrl);
-                    if (strUrl.StartsWith("https"))
-                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-                    WebRequest webreq = WebRequest.Create(uri);
-                    Stream s = webreq.GetResponse().GetResponseStream();
-                    StreamReader sr = new StreamReader(s, Encoding.Default);
-                    string all = sr.ReadToEnd();
-                    MessageBox.Show(all.ToString());
-                }
-                /*try
-                {
-                    string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
-                    if(strUrl.StartsWith("https"))
-                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
-                    HttpClient httpClient = new HttpClient();
-                    HttpContent httpContent = new StringContent("Authorization: token 7e5aaa4649a6bdb9d5459abd221ef15ec484da79");
-                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    httpContent.Headers.ContentType.CharSet = "utf-8";
-                    //httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
-                    //httpContent.Headers.Add("token", "7e5aaa4649a6bdb9d5459abd221ef15ec484da79");
-                    // httpContent.Headers.Add("appId", appId);
-                    //httpContent.Headers.Add("serviceURL", serviceURL);
-
-                    //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
-                    //httpClient..setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");
-                    HttpResponseMessage response = httpClient.PostAsync(strUrl, httpContent).Result;
-                    //statusCode = response.StatusCode.ToString();
-                   // if (response.IsSuccessStatusCode)
-                    //{
-                        string result = response.Content.ReadAsStringAsync().Result;
-                        MessageBox.Show(result.ToString());
-                       // return result;
-                    //}
-                }*/
-                catch( Exception error)
-                {
-                    MessageBox.Show(error.ToString());
-                }
-
-            }
-            else checkBox_autoCheckUpdate.Checked = false;
-            textBox_updateInfo.ReadOnly = true;
-            string filePath = System.AppDomain.CurrentDomain.BaseDirectory;
-            string updateInfoFile = filePath + "updateinfo.txt";
-            if (File.Exists(updateInfoFile))
-                textBox_updateInfo.Text = File.ReadAllText(updateInfoFile, Encoding.Default);
-            else
-                textBox_updateInfo.Text = "软件运行目录下没有找到updateinfo.txt文件！";
+            
         }
 
         private void PublishLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -162,6 +91,62 @@ namespace net.nutcore.aliddns
             }
             config.Save();
             */
+        }
+
+        private void Form_About_Load(object sender, EventArgs e)
+        {
+            //读取updateinfo.txt文件
+            textBox_updateInfo.ReadOnly = true;
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string updateInfoFile = filePath + "updateinfo.txt";
+            if (File.Exists(updateInfoFile))
+                textBox_updateInfo.Text = File.ReadAllText(updateInfoFile, Encoding.Default);
+            else
+                textBox_updateInfo.Text = "软件运行目录下没有找到updateinfo.txt文件！";
+            
+            //版本检查
+            label_currentVer.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); //获取当前版本
+            if (mainForm.checkUpdate == true)
+            {
+                checkBox_autoCheckUpdate.Checked = true;
+                //获取远程版本信息
+                try
+                {
+                    string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
+                    if (strUrl.StartsWith("https"))
+                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
+                    HttpClient httpClient = new HttpClient(
+                        new HttpClientHandler
+                        {
+                            //CookieContainer = cookies,
+                            AutomaticDecompression = DecompressionMethods.GZip //防止返回的json乱码
+                                                   | DecompressionMethods.Deflate
+                        });
+                    httpClient.DefaultRequestHeaders.Add("UserAgent", "Mozilla/4.0(compatible;MSIE6.0;WindowsNT5.1)");
+                    httpClient.DefaultRequestHeaders.Add("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4");
+                    httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, sdch");
+                    httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/x-www-form-urlencoded,application/xhtml+xml,application/json,application/xml;q=0.9,image/webp,*/*;q=0.8");
+                    httpClient.DefaultRequestHeaders.Accept.Clear();
+                    httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                    httpClient.DefaultRequestHeaders.AcceptCharset.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("UTF-8"));
+                    HttpResponseMessage response = httpClient.GetAsync(strUrl).Result;
+                    //var statusCode = response.StatusCode.ToString();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string result = response.Content.ReadAsStringAsync().Result;
+                        string ver = System.Text.RegularExpressions.Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value;
+                        label_latestVer.Text = ver.ToString();
+                        //MessageBox.Show(ver);
+                        //return result;
+                    }
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.ToString());
+                }
+
+            }
+            else checkBox_autoCheckUpdate.Checked = false;
         }
     }
 }
