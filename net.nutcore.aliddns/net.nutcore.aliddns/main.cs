@@ -794,6 +794,64 @@ namespace net.nutcore.aliddns
             }
 
         }
+
+        public static string verCheckUpdate()
+        {
+            try
+            {
+                string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
+                if (strUrl.StartsWith("https"))
+                    System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
+                System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient(
+                    new System.Net.Http.HttpClientHandler
+                    {
+                        //CookieContainer = cookies,
+                        AutomaticDecompression = DecompressionMethods.GZip //防止返回的json乱码
+                                               | DecompressionMethods.Deflate
+                    });
+                httpClient.DefaultRequestHeaders.Add("UserAgent", "Mozilla/4.0(compatible;MSIE6.0;WindowsNT5.1)");
+                httpClient.DefaultRequestHeaders.Add("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4");
+                httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, sdch");
+                httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/x-www-form-urlencoded,application/xhtml+xml,application/json,application/xml;q=0.9,image/webp,*/*;q=0.8");
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.AcceptCharset.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("UTF-8"));
+                System.Net.Http.HttpResponseMessage response = httpClient.GetAsync(strUrl).Result;
+                //var statusCode = response.StatusCode.ToString();
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = response.Content.ReadAsStringAsync().Result;
+                    string ver = System.Text.RegularExpressions.Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value;
+                    //MessageBox.Show(ver);
+                    return ver.ToString();
+                }
+                else
+                    return null;
+                httpClient.Dispose();
+                response.Dispose();
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.ToString());
+                return null;
+            }
+        }
+
+        private void ToolStripMenuItem_checkUPdate_Click(object sender, EventArgs e)
+        {
+            string strVer = verCheckUpdate();
+            if (strVer != null)
+            {
+                Version remoteVer = new Version(strVer);
+                Version localVer = new Version(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                if (remoteVer > localVer)
+                    MessageBox.Show("发现新版本: " + remoteVer);
+                else
+                    MessageBox.Show("没有新版本，无需升级！");
+            }
+            else
+                MessageBox.Show("获取新版本信息失败！");
+        }
     }
 
     /// <summary>

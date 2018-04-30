@@ -3,8 +3,6 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using System.Net;
-using System.Net.Http;
 
 namespace net.nutcore.aliddns
 {
@@ -110,41 +108,8 @@ namespace net.nutcore.aliddns
             {
                 checkBox_autoCheckUpdate.Checked = true;
                 //获取远程版本信息
-                try
-                {
-                    string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
-                    if (strUrl.StartsWith("https"))
-                        System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
-                    HttpClient httpClient = new HttpClient(
-                        new HttpClientHandler
-                        {
-                            //CookieContainer = cookies,
-                            AutomaticDecompression = DecompressionMethods.GZip //防止返回的json乱码
-                                                   | DecompressionMethods.Deflate
-                        });
-                    httpClient.DefaultRequestHeaders.Add("UserAgent", "Mozilla/4.0(compatible;MSIE6.0;WindowsNT5.1)");
-                    httpClient.DefaultRequestHeaders.Add("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4");
-                    httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, sdch");
-                    httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/x-www-form-urlencoded,application/xhtml+xml,application/json,application/xml;q=0.9,image/webp,*/*;q=0.8");
-                    httpClient.DefaultRequestHeaders.Accept.Clear();
-                    httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                    httpClient.DefaultRequestHeaders.AcceptCharset.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("UTF-8"));
-                    HttpResponseMessage response = httpClient.GetAsync(strUrl).Result;
-                    //var statusCode = response.StatusCode.ToString();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string result = response.Content.ReadAsStringAsync().Result;
-                        string ver = System.Text.RegularExpressions.Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value;
-                        label_latestVer.Text = ver.ToString();
-                        //MessageBox.Show(ver);
-                        //return result;
-                    }
-                }
-                catch (Exception error)
-                {
-                    MessageBox.Show(error.ToString());
-                }
-
+                string strVer = mainForm.verCheckUpdate();
+                label_latestVer.Text = strVer.ToString();
             }
             else checkBox_autoCheckUpdate.Checked = false;
         }

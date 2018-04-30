@@ -82,6 +82,7 @@
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
+            this.ToolStripMenuItem_checkUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -326,7 +327,7 @@
             // textBox_TTL
             // 
             this.textBox_TTL.Location = new System.Drawing.Point(65, 121);
-            this.textBox_TTL.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_TTL.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_TTL.Name = "textBox_TTL";
             this.textBox_TTL.Size = new System.Drawing.Size(37, 21);
             this.textBox_TTL.TabIndex = 15;
@@ -451,21 +452,22 @@
             this.contextMenuStrip_sysTrayMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip_sysTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_Exit,
+            this.ToolStripMenuItem_checkUpdate,
             this.ToolStripMenuItem_About});
             this.contextMenuStrip_sysTrayMenu.Name = "contextMenuStrip1";
-            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(101, 48);
+            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(153, 92);
             // 
             // toolStripMenuItem_Exit
             // 
             this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(100, 22);
+            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem_Exit.Text = "退出";
             this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // ToolStripMenuItem_About
             // 
             this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
-            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(100, 22);
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(152, 22);
             this.ToolStripMenuItem_About.Text = "关于";
             this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
             // 
@@ -614,6 +616,13 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
             // 
+            // ToolStripMenuItem_checkUpdate
+            // 
+            this.ToolStripMenuItem_checkUpdate.Name = "ToolStripMenuItem_checkUpdate";
+            this.ToolStripMenuItem_checkUpdate.Size = new System.Drawing.Size(152, 22);
+            this.ToolStripMenuItem_checkUpdate.Text = "检查升级";
+            this.ToolStripMenuItem_checkUpdate.Click += new System.EventHandler(this.ToolStripMenuItem_checkUPdate_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -700,6 +709,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBox_TTL;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_checkUpdate;
     }
 }
 
