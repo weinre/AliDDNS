@@ -860,6 +860,12 @@ namespace net.nutcore.aliddns
             else
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动不会加载！" + "\r\n");
         }
+
+        private void button_ngrok_Click(object sender, EventArgs e)
+        {
+            Form_ngrok ngrok = new Form_ngrok();
+            ngrok.Show(this);
+        }
     }
 
     /// <summary>

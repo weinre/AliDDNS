@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             this.timeSetGroup = new System.Windows.Forms.GroupBox();
+            this.button_ngrok = new System.Windows.Forms.Button();
+            this.checkBox_ngrok = new System.Windows.Forms.CheckBox();
             this.checkBox_logAutoSave = new System.Windows.Forms.CheckBox();
             this.checkBox_minimized = new System.Windows.Forms.CheckBox();
             this.checkBox_autoUpdate = new System.Windows.Forms.CheckBox();
@@ -83,8 +85,6 @@
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.checkBox_ngrok = new System.Windows.Forms.CheckBox();
-            this.button_ngrok = new System.Windows.Forms.Button();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -110,6 +110,27 @@
             this.timeSetGroup.TabIndex = 4;
             this.timeSetGroup.TabStop = false;
             this.timeSetGroup.Text = "其它设置";
+            // 
+            // button_ngrok
+            // 
+            this.button_ngrok.Location = new System.Drawing.Point(112, 53);
+            this.button_ngrok.Name = "button_ngrok";
+            this.button_ngrok.Size = new System.Drawing.Size(79, 23);
+            this.button_ngrok.TabIndex = 10;
+            this.button_ngrok.Text = "ngrok设置";
+            this.button_ngrok.UseVisualStyleBackColor = true;
+            this.button_ngrok.Click += new System.EventHandler(this.button_ngrok_Click);
+            // 
+            // checkBox_ngrok
+            // 
+            this.checkBox_ngrok.AutoSize = true;
+            this.checkBox_ngrok.Location = new System.Drawing.Point(9, 57);
+            this.checkBox_ngrok.Name = "checkBox_ngrok";
+            this.checkBox_ngrok.Size = new System.Drawing.Size(78, 16);
+            this.checkBox_ngrok.TabIndex = 9;
+            this.checkBox_ngrok.Text = "启用ngrok";
+            this.checkBox_ngrok.UseVisualStyleBackColor = true;
+            this.checkBox_ngrok.CheckedChanged += new System.EventHandler(this.checkBox_ngrok_CheckedChanged);
             // 
             // checkBox_logAutoSave
             // 
@@ -626,26 +647,6 @@
             this.label14.Size = new System.Drawing.Size(59, 12);
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
-            // 
-            // checkBox_ngrok
-            // 
-            this.checkBox_ngrok.AutoSize = true;
-            this.checkBox_ngrok.Location = new System.Drawing.Point(9, 57);
-            this.checkBox_ngrok.Name = "checkBox_ngrok";
-            this.checkBox_ngrok.Size = new System.Drawing.Size(78, 16);
-            this.checkBox_ngrok.TabIndex = 9;
-            this.checkBox_ngrok.Text = "启用ngrok";
-            this.checkBox_ngrok.UseVisualStyleBackColor = true;
-            this.checkBox_ngrok.CheckedChanged += new System.EventHandler(this.checkBox_ngrok_CheckedChanged);
-            // 
-            // button_ngrok
-            // 
-            this.button_ngrok.Location = new System.Drawing.Point(112, 53);
-            this.button_ngrok.Name = "button_ngrok";
-            this.button_ngrok.Size = new System.Drawing.Size(79, 23);
-            this.button_ngrok.TabIndex = 10;
-            this.button_ngrok.Text = "ngrok设置";
-            this.button_ngrok.UseVisualStyleBackColor = true;
             // 
             // mainForm
             // 
