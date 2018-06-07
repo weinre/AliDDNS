@@ -852,6 +852,14 @@ namespace net.nutcore.aliddns
             else
                 MessageBox.Show("获取新版本信息失败！");
         }
+
+        private void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
+        {
+             if (checkBox_ngrok.Checked == true)
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，再次启动会自动加载！" + "\r\n");
+            else
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动不会加载！" + "\r\n");
+        }
     }
 
     /// <summary>

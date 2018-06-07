@@ -67,6 +67,7 @@
             this.notifyIcon_sysTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip_sysTrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_checkUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.groupBox_netstate = new System.Windows.Forms.GroupBox();
@@ -82,7 +83,8 @@
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.ToolStripMenuItem_checkUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox_ngrok = new System.Windows.Forms.CheckBox();
+            this.button_ngrok = new System.Windows.Forms.Button();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -93,6 +95,8 @@
             // 
             // timeSetGroup
             // 
+            this.timeSetGroup.Controls.Add(this.button_ngrok);
+            this.timeSetGroup.Controls.Add(this.checkBox_ngrok);
             this.timeSetGroup.Controls.Add(this.checkBox_logAutoSave);
             this.timeSetGroup.Controls.Add(this.checkBox_minimized);
             this.timeSetGroup.Controls.Add(this.checkBox_autoUpdate);
@@ -110,7 +114,7 @@
             // checkBox_logAutoSave
             // 
             this.checkBox_logAutoSave.AutoSize = true;
-            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 71);
+            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 77);
             this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
             this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
             this.checkBox_logAutoSave.TabIndex = 8;
@@ -121,7 +125,7 @@
             // checkBox_minimized
             // 
             this.checkBox_minimized.AutoSize = true;
-            this.checkBox_minimized.Location = new System.Drawing.Point(9, 44);
+            this.checkBox_minimized.Location = new System.Drawing.Point(9, 37);
             this.checkBox_minimized.Name = "checkBox_minimized";
             this.checkBox_minimized.Size = new System.Drawing.Size(96, 16);
             this.checkBox_minimized.TabIndex = 7;
@@ -455,19 +459,26 @@
             this.ToolStripMenuItem_checkUpdate,
             this.ToolStripMenuItem_About});
             this.contextMenuStrip_sysTrayMenu.Name = "contextMenuStrip1";
-            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(153, 92);
+            this.contextMenuStrip_sysTrayMenu.Size = new System.Drawing.Size(125, 70);
             // 
             // toolStripMenuItem_Exit
             // 
             this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItem_Exit.Text = "退出";
             this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // ToolStripMenuItem_checkUpdate
+            // 
+            this.ToolStripMenuItem_checkUpdate.Name = "ToolStripMenuItem_checkUpdate";
+            this.ToolStripMenuItem_checkUpdate.Size = new System.Drawing.Size(124, 22);
+            this.ToolStripMenuItem_checkUpdate.Text = "检查升级";
+            this.ToolStripMenuItem_checkUpdate.Click += new System.EventHandler(this.ToolStripMenuItem_checkUPdate_Click);
             // 
             // ToolStripMenuItem_About
             // 
             this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
-            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(152, 22);
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(124, 22);
             this.ToolStripMenuItem_About.Text = "关于";
             this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
             // 
@@ -616,12 +627,25 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
             // 
-            // ToolStripMenuItem_checkUpdate
+            // checkBox_ngrok
             // 
-            this.ToolStripMenuItem_checkUpdate.Name = "ToolStripMenuItem_checkUpdate";
-            this.ToolStripMenuItem_checkUpdate.Size = new System.Drawing.Size(152, 22);
-            this.ToolStripMenuItem_checkUpdate.Text = "检查升级";
-            this.ToolStripMenuItem_checkUpdate.Click += new System.EventHandler(this.ToolStripMenuItem_checkUPdate_Click);
+            this.checkBox_ngrok.AutoSize = true;
+            this.checkBox_ngrok.Location = new System.Drawing.Point(9, 57);
+            this.checkBox_ngrok.Name = "checkBox_ngrok";
+            this.checkBox_ngrok.Size = new System.Drawing.Size(78, 16);
+            this.checkBox_ngrok.TabIndex = 9;
+            this.checkBox_ngrok.Text = "启用ngrok";
+            this.checkBox_ngrok.UseVisualStyleBackColor = true;
+            this.checkBox_ngrok.CheckedChanged += new System.EventHandler(this.checkBox_ngrok_CheckedChanged);
+            // 
+            // button_ngrok
+            // 
+            this.button_ngrok.Location = new System.Drawing.Point(112, 53);
+            this.button_ngrok.Name = "button_ngrok";
+            this.button_ngrok.Size = new System.Drawing.Size(79, 23);
+            this.button_ngrok.TabIndex = 10;
+            this.button_ngrok.Text = "ngrok设置";
+            this.button_ngrok.UseVisualStyleBackColor = true;
             // 
             // mainForm
             // 
@@ -710,6 +734,8 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBox_TTL;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_checkUpdate;
+        private System.Windows.Forms.Button button_ngrok;
+        private System.Windows.Forms.CheckBox checkBox_ngrok;
     }
 }
 
