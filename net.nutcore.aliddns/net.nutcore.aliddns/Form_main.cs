@@ -136,6 +136,10 @@ namespace net.nutcore.aliddns
             try //获取WAN口IP
             {
                 localIP.Text = getLocalIP();
+                if ((localIP.Text != domainIP.Text) && (checkBox_autoBoot.Checked = true))
+                {
+                    updatePrepare();
+                }
             }
             catch (Exception error)
             {
