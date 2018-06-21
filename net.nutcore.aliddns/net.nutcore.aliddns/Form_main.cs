@@ -883,8 +883,8 @@ namespace net.nutcore.aliddns
                 //检测ngrok.exe是否存在
                 if (ngrok.IsExists())
                 {
-                    await ngrok.Start();
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，ngrok.exe将自动加载！通过浏览器打开：http://127.0.0.1:4040 查看运行状态。" + "\r\n");
+                    await ngrok.Start();
                 }
                 else
                 {
