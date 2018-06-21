@@ -36,7 +36,9 @@ namespace net.nutcore.aliddns
         public class Tunnel
         {
             public Protocol website { get; set; }
-            public Protocol tcp { get; set; }
+            public Protocol tcp1 { get; set; }
+            public Protocol tcp2 { get; set; }
+            public Protocol tcp3 { get; set; }
         }
 
         public class Protocol
@@ -72,7 +74,7 @@ namespace net.nutcore.aliddns
                 var config = new Config
                 {
                     authtoken = string.Empty,
-                    server_addr = string.Empty,
+                    server_addr = "tunnels.ngrok.io:443",
                     console_ui = true,
                     region = "us",
                     log_level = "info",
@@ -92,12 +94,28 @@ namespace net.nutcore.aliddns
                             }
 
                         },
-                        tcp = new Protocol
+                        tcp1 = new Protocol
+                        {
+                            remote_port = 2221,
+                            proto = new Proto
+                            {
+                                tcp = 21
+                            }
+                        },
+                        tcp2 = new Protocol
                         {
                             remote_port = 2222,
                             proto = new Proto
                             {
                                 tcp = 22
+                            }
+                        },
+                        tcp3 = new Protocol
+                        {
+                            remote_port = 33890,
+                            proto = new Proto
+                            {
+                                tcp = 3389
                             }
                         }
                     }
@@ -140,15 +158,19 @@ namespace net.nutcore.aliddns
             return config;
         }
 
-        public void Save(string token, string server_addr, int http, string subdomain, int tcp, int lanport, bool run_website, bool run_tcp)
+        public void Save(string token, string server_addr, int http, string subdomain, int remoteport1, int lanport1, int remoteport2, int lanport2, int remoteport3, int lanport3, bool run_website, bool run_tcp)
         {
             var config = Load();
             config.authtoken = token;
             config.server_addr = server_addr;
             config.tunnels.website.proto.http = http;
             config.tunnels.website.subdomain = subdomain;
-            config.tunnels.tcp.remote_port = tcp;
-            config.tunnels.tcp.proto.tcp = lanport;
+            config.tunnels.tcp1.remote_port = remoteport1;
+            config.tunnels.tcp1.proto.tcp = lanport1;
+            config.tunnels.tcp2.remote_port = remoteport2;
+            config.tunnels.tcp2.proto.tcp = lanport2;
+            config.tunnels.tcp3.remote_port = remoteport3;
+            config.tunnels.tcp3.proto.tcp = lanport3;
             config.run_website = run_website;
             config.run_tcp = run_tcp;
 
@@ -173,11 +195,15 @@ namespace net.nutcore.aliddns
                     break;
 
                 case 2:
-                    exec.Arguments += "tcp";
+                    exec.Arguments += "website tcp1";
+                    break;
+
+                case 3:
+                    exec.Arguments += "website tcp1 tcp2";
                     break;
 
                 default:
-                    exec.Arguments += "website tcp";
+                    exec.Arguments += "website tcp1 tcp2 tcp3";
                     break;
             }
 

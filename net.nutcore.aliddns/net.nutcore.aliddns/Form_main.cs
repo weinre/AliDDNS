@@ -20,6 +20,8 @@ namespace net.nutcore.aliddns
         public static bool checkUpdate;
         static IClientProfile clientProfile;
         static DefaultAcsClient client;
+        //初始化ngrok操作类
+        private Ngrok ngrok = new Ngrok();
 
         public mainForm()
         {
@@ -203,7 +205,16 @@ namespace net.nutcore.aliddns
                 textBox_TTL.Text = nodes[10].InnerText;
                 if (nodes[11].InnerText == "On") checkUpdate = true;
                 else checkUpdate = false;
-
+                if (nodes[12].InnerText == "On")
+                {
+                    checkBox_ngrok.Checked = true;
+                    button_ngrok.Enabled = false;
+                }
+                else
+                {
+                    checkBox_ngrok.Checked = false;
+                    button_ngrok.Enabled = true;
+                }
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件读取成功！" + "\r\n");
                 return true;
             }
@@ -294,6 +305,13 @@ namespace net.nutcore.aliddns
 
                 textWriter.WriteStartElement("autoCheckUpdate", "");
                 if (checkUpdate == false)
+                    textWriter.WriteString("Off");
+                else
+                    textWriter.WriteString("On");
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("ngrokauto", "");
+                if (checkBox_ngrok.Checked == false)
                     textWriter.WriteString("Off");
                 else
                     textWriter.WriteString("On");
@@ -857,18 +875,43 @@ namespace net.nutcore.aliddns
                 MessageBox.Show("获取新版本信息失败！");
         }
 
-        private void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
+        private async void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
         {
              if (checkBox_ngrok.Checked == true)
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，再次启动会自动加载！" + "\r\n");
+            {
+                button_ngrok.Enabled = false;
+                //检测ngrok.exe是否存在
+                if (ngrok.IsExists())
+                {
+                    await ngrok.Start();
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，ngrok.exe将自动加载！通过浏览器打开：http://127.0.0.1:4040 查看运行状态。" + "\r\n");
+                }
+                else
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，但当前目录没有发现ngrok.exe，请往官网下载自行编译：https://ngrok.com/download" + "\r\n");
+                }
+            }
             else
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动不会加载！" + "\r\n");
+            {
+                await ngrok.Stop();
+                button_ngrok.Enabled = true;
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动将不会加载！" + "\r\n");
+            }
         }
 
         private void button_ngrok_Click(object sender, EventArgs e)
         {
             Form_ngrok ngrok = new Form_ngrok();
             ngrok.Show(this);
+        }
+
+        private void mainForm_Shown(object sender, EventArgs e)
+        {
+            //检测ngrok.exe是否存在
+            if (( checkBox_ngrok.Checked == true ) && ( !ngrok.IsExists() ))
+            {
+                MessageBox.Show("设置在当前目录没有发现ngrok.exe，请往官网下载自行编译。\nNgrok官网：https://ngrok.com/download");
+            }
         }
     }
 

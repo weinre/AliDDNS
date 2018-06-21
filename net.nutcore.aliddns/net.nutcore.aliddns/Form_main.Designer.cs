@@ -665,6 +665,7 @@
             this.Text = "AliDDNS";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
             this.Load += new System.EventHandler(this.mainForm_Load);
+            this.Shown += new System.EventHandler(this.mainForm_Shown);
             this.timeSetGroup.ResumeLayout(false);
             this.timeSetGroup.PerformLayout();
             this.debugMessage.ResumeLayout(false);
@@ -710,7 +711,6 @@
         private System.Windows.Forms.NotifyIcon notifyIcon_sysTray;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_sysTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;
-        private System.Windows.Forms.TextBox textBox_log;
         private System.Windows.Forms.GroupBox groupBox_netstate;
         private System.Windows.Forms.Label label_DomainIpStatus;
         private System.Windows.Forms.Label label_localIpStatus;
@@ -737,6 +737,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_checkUpdate;
         private System.Windows.Forms.Button button_ngrok;
         private System.Windows.Forms.CheckBox checkBox_ngrok;
+        public System.Windows.Forms.TextBox textBox_log;
     }
 }
 
