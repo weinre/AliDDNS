@@ -31,6 +31,10 @@ namespace net.nutcore.aliddns
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            //手工指定程序配置文件，如果不手工设定，默认是程序名称.exe.config  
+            System.AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "aliddns_config.config"));
+            string s = System.Configuration.ConfigurationManager.AppSettings["name"];
+            MessageBox.Show(s);
             //获取当前用户名和计算机名并写入日志
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "计算机名: " + System.Environment.UserDomainName + "\r\n");
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户: " + System.Environment.UserName + "\r\n");
@@ -89,15 +93,15 @@ namespace net.nutcore.aliddns
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 this.Dispose();
             }
-            
-            //读取设置文件config.xml
-            if(readConfigFile())
+
+            //读取设置文件aliddns_config.xml
+            if (readConfigFile())
             {
                 string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-                string update = ExePath + "update.exe";
+                string updateExe = ExePath + "update.exe";
                 if(checkUpdate == true)
                 {
-                    if (File.Exists(update))
+                    if (File.Exists(updateExe))
                     {
                         //执行update.exe
                     }
@@ -193,17 +197,21 @@ namespace net.nutcore.aliddns
                 if (nodes[5].InnerText == "On") checkBox_autoUpdate.Checked = true;
                 else checkBox_autoUpdate.Checked = false;
                 comboBox_whatIsUrl.Text = nodes[6].InnerText;
+
                 if (nodes[7].InnerText == "On") checkBox_autoBoot.Checked = true;
                 else checkBox_autoBoot.Checked = false;
+
                 if (nodes[8].InnerText == "On") checkBox_minimized.Checked = true;
                 else checkBox_minimized.Checked = false;
-                if (nodes[9].InnerText == "On")
-                    checkBox_logAutoSave.Checked = true;
-                else
-                    checkBox_logAutoSave.Checked = false;
+
+                if (nodes[9].InnerText == "On") checkBox_logAutoSave.Checked = true;
+                else checkBox_logAutoSave.Checked = false;
+
                 textBox_TTL.Text = nodes[10].InnerText;
+
                 if (nodes[11].InnerText == "On") checkUpdate = true;
                 else checkUpdate = false;
+
                 if (nodes[12].InnerText == "On")
                 {
                     checkBox_ngrok.Checked = true;
@@ -700,12 +708,10 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
                 }
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
             }
-                
-            
         }
 
         private void ToolStripMenuItem_About_Click(object sender, EventArgs e)

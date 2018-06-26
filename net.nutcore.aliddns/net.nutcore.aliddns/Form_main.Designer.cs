@@ -135,7 +135,7 @@
             // checkBox_logAutoSave
             // 
             this.checkBox_logAutoSave.AutoSize = true;
-            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 77);
+            this.checkBox_logAutoSave.Location = new System.Drawing.Point(9, 76);
             this.checkBox_logAutoSave.Name = "checkBox_logAutoSave";
             this.checkBox_logAutoSave.Size = new System.Drawing.Size(96, 16);
             this.checkBox_logAutoSave.TabIndex = 8;
@@ -146,7 +146,7 @@
             // checkBox_minimized
             // 
             this.checkBox_minimized.AutoSize = true;
-            this.checkBox_minimized.Location = new System.Drawing.Point(9, 37);
+            this.checkBox_minimized.Location = new System.Drawing.Point(9, 38);
             this.checkBox_minimized.Name = "checkBox_minimized";
             this.checkBox_minimized.Size = new System.Drawing.Size(96, 16);
             this.checkBox_minimized.TabIndex = 7;
@@ -157,9 +157,7 @@
             // checkBox_autoUpdate
             // 
             this.checkBox_autoUpdate.AutoSize = true;
-            this.checkBox_autoUpdate.Checked = true;
-            this.checkBox_autoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_autoUpdate.Location = new System.Drawing.Point(9, 97);
+            this.checkBox_autoUpdate.Location = new System.Drawing.Point(9, 95);
             this.checkBox_autoUpdate.Name = "checkBox_autoUpdate";
             this.checkBox_autoUpdate.Size = new System.Drawing.Size(72, 16);
             this.checkBox_autoUpdate.TabIndex = 6;
@@ -266,7 +264,7 @@
             // globalDomainType
             // 
             this.globalDomainType.AutoSize = true;
-            this.globalDomainType.Location = new System.Drawing.Point(93, 44);
+            this.globalDomainType.Location = new System.Drawing.Point(96, 44);
             this.globalDomainType.Name = "globalDomainType";
             this.globalDomainType.Size = new System.Drawing.Size(41, 12);
             this.globalDomainType.TabIndex = 6;
@@ -284,7 +282,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(62, 44);
+            this.label11.Location = new System.Drawing.Point(67, 44);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(35, 12);
             this.label11.TabIndex = 4;
