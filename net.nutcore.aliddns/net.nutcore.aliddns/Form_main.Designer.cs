@@ -189,13 +189,13 @@
             // 
             // label_nextUpdateSeconds
             // 
-            this.label_nextUpdateSeconds.AutoSize = true;
             this.label_nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
-            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(97, 99);
+            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(87, 99);
             this.label_nextUpdateSeconds.Name = "label_nextUpdateSeconds";
-            this.label_nextUpdateSeconds.Size = new System.Drawing.Size(17, 12);
+            this.label_nextUpdateSeconds.Size = new System.Drawing.Size(30, 12);
             this.label_nextUpdateSeconds.TabIndex = 3;
             this.label_nextUpdateSeconds.Text = "60";
+            this.label_nextUpdateSeconds.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // updateNow
             // 

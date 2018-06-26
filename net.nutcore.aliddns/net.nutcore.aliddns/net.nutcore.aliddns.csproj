@@ -88,6 +88,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EncryptHelper.cs" />
     <Compile Include="Form_About.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,7 +110,6 @@
     <Compile Include="ngrok.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="yml.cs" />
     <EmbeddedResource Include="Form_About.resx">
       <DependentUpon>Form_About.cs</DependentUpon>
     </EmbeddedResource>
@@ -149,7 +149,9 @@
     <Content Include="alidns_green.ico" />
     <Content Include="alidns_red.ico" />
     <Content Include="alidns_yellow.ico" />
-    <Content Include="updateinfo.txt" />
+    <Content Include="updateinfo.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\alidns_yellow.ico" />
     <None Include="Resources\alidns_red.ico" />
     <None Include="Resources\alidns_green.ico" />
@@ -172,7 +174,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)net.nutcore.aliddns\updateinfo.txt" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
