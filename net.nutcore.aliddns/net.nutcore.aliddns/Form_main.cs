@@ -21,7 +21,11 @@ namespace net.nutcore.aliddns
         static DefaultAcsClient client;
         //初始化ngrok操作类
         private Ngrok ngrok = new Ngrok();
-
+        //指定配置文件为aliddns_config.config
+        static String configFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aliddns_config.cfg");
+        //获得程序默认配置文件*.exe.config(或*.vhost.exe.config)的全路径    
+        //static String configFilePath = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+        private AppConfigHelper cfg = new AppConfigHelper(configFilePath);
         public mainForm()
         {
             InitializeComponent();
@@ -31,10 +35,6 @@ namespace net.nutcore.aliddns
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            //手工指定程序配置文件，如果不手工设定，默认是程序名称.exe.config  
-            System.AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "aliddns_config.config"));
-            string s = System.Configuration.ConfigurationManager.AppSettings["name"];
-            MessageBox.Show(s);
             //获取当前用户名和计算机名并写入日志
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "计算机名: " + System.Environment.UserDomainName + "\r\n");
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户: " + System.Environment.UserName + "\r\n");
