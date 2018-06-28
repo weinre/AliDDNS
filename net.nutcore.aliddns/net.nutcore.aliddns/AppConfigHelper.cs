@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -9,20 +10,175 @@ using System.Xml;
 
 namespace net.nutcore.aliddns
 {
-    public class AppConfigHelper
+    internal class AppConfigHelper
     {
-        public AppConfigHelper(String configFilePath)
+        System.Configuration.Configuration configFile = null;
+        private static readonly string fileName = "aliddns_config1.xml";
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public AppConfigHelper()
         {
-            if (!File.Exists(configFilePath))
+            string configFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, fileName);
+            try
             {
-
+                if (!File.Exists(configFilePath))
+                {
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty));
+                    XmlNode rootNode = xmlDoc.CreateElement("configuration");
+                    //rootNode.AppendChild();
+                    xmlDoc.AppendChild(rootNode);
+                    xmlDoc.Save(configFilePath);
+                   // XmlNode rootNode = xmlDoc.CreateElement("appSettings");
+                    //XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
+                    //textWriter.WriteStartDocument(); //文档开始
+                }
+                ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+                map.ExeConfigFilename = configFilePath;
+                configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
             }
-                System.AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configFilePath);
+            catch(Exception)
+            {
+                Console.WriteLine("Class AppConfigHelper running error!");
+            }
         }
-        public static string GetValueByKey(string key)
+
+        /// <summary>
+        /// //添加键值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void AddAppSetting(string key, string value)
+        {
+            configFile.AppSettings.Settings.Add(key, value);
+            configFile.Save();
+        }
+
+        /// <summary>
+        /// //修改键值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void SaveAppSetting(string key, string value)
+        {
+            configFile.AppSettings.Settings.Remove(key);
+            configFile.AppSettings.Settings.Add(key, value);
+
+            configFile.Save();
+        }
+
+        /// <summary>
+        /// //获得键值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetAppSetting(string key)
+        {
+            return configFile.AppSettings.Settings[key].Value;
+        }
+
+        /// <summary>
+        /// //移除键值
+        /// </summary>
+        /// <param name="key"></param>
+        public void DelAppSetting(string key)
+        {
+            configFile.AppSettings.Settings.Remove(key);
+            configFile.Save();
+        }
+
+        public ArrayList GetXmlElements(string strElem)
+        {
+            ArrayList list = new ArrayList();
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(System.Windows.Forms.Application.ExecutablePath + ".config");
+            XmlNodeList listNode = xmlDoc.SelectNodes(strElem);
+            foreach (XmlElement el in listNode)
+            {
+                list.Add(el.InnerText);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 使用当前路径中的指定文件作为配置文件
+        /// </summary>
+        /// <param name="configFileName">配置文件名</param>
+        public void SetConfigFile(string configFileName)
+        {
+            string configFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,    configFileName);
+            System.AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configFilePath);
+            //ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            //map.ExeConfigFilename = configFilePath;
+            //configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+        }
+
+        /// <summary>
+        /// 使用指定路径中的指定文件作为配置文件
+        /// </summary>
+        /// <param name="configFileName">配置文件名</param>
+        /// <param name="configFileDirectory">配置文件路径</param>
+        public void SetConfigFile(string configFileName, string configFileDirectory)
+        {
+            string configFilePath = System.IO.Path.Combine(configFileDirectory, configFileName);
+            System.AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configFilePath);
+            //ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            //map.ExeConfigFilename = configFilePath;
+            //configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+        }
+
+        /// <summary>
+        /// 读取配置文件所有内容
+        /// </summary>
+        static void ReadAllSettings()
+        {
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+
+                if (appSettings.Count == 0)
+                {
+                    Console.WriteLine("AppSettings is empty.");
+                }
+                else
+                {
+                    foreach (var key in appSettings.AllKeys)
+                    {
+                        Console.WriteLine("Key: {0} Value: {1}", key, appSettings[key]);
+                    }
+                }
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error reading app settings");
+            }
+        }
+
+        /// <summary>
+        /// 判断appSettings中是否有此项键名
+        /// </summary>
+        /// /// <param name="strKey">键名</param>
+        public bool AppSettingsKeyExists(string strKey)
+        {
+            foreach (string key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                if (key == strKey)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 获取设置文件中某个键的值
+        /// </summary>
+        /// <param name="strKey">键名</param>
+        public static string GetValueByKey(string strKey)
         {
             ConfigurationManager.RefreshSection("appSettings");
-            return ConfigurationManager.AppSettings[key];
+            return ConfigurationManager.AppSettings[strKey];
         }
         public static void ModifyAppSettings(string strKey, string value)
         {

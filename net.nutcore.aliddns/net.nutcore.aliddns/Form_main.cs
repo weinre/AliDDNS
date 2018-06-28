@@ -21,11 +21,8 @@ namespace net.nutcore.aliddns
         static DefaultAcsClient client;
         //初始化ngrok操作类
         private Ngrok ngrok = new Ngrok();
-        //指定配置文件为aliddns_config.config
-        static String configFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aliddns_config.cfg");
-        //获得程序默认配置文件*.exe.config(或*.vhost.exe.config)的全路径    
-        //static String configFilePath = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
-        private AppConfigHelper cfg = new AppConfigHelper(configFilePath);
+        private AppConfigHelper cfg = new AppConfigHelper();
+
         public mainForm()
         {
             InitializeComponent();
@@ -854,8 +851,8 @@ namespace net.nutcore.aliddns
                 }
                 else
                     return null;
-                httpClient.Dispose();
-                response.Dispose();
+                //httpClient.Dispose();
+                //response.Dispose();
             }
             catch (Exception error)
             {
