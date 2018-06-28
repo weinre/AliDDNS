@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace net.nutcore.aliddns
 {
@@ -24,15 +25,57 @@ namespace net.nutcore.aliddns
             {
                 if (!File.Exists(configFilePath))
                 {
+                    /*
                     XmlDocument xmlDoc = new XmlDocument();
                     xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty));
-                    XmlNode rootNode = xmlDoc.CreateElement("configuration");
-                    //rootNode.AppendChild();
-                    xmlDoc.AppendChild(rootNode);
+
+                    XmlElement configurationNode = xmlDoc.CreateElement("configuration");
+                    xmlDoc.AppendChild(configurationNode);
+
+                    XmlElement startupNode = xmlDoc.CreateElement("startup");
+                    configurationNode.AppendChild(startupNode);
+
+                    XmlElement supportedRuntimeNode = xmlDoc.CreateElement("supportedRuntime");
+                    startupNode.AppendChild(supportedRuntimeNode);
+                    supportedRuntimeNode.SetAttribute("version", "v4.0");
+                    supportedRuntimeNode.SetAttribute("sku", ".NETFramework,Version=v4.5.2");
+
+                    XmlElement appsettingsNode = xmlDoc.CreateElement("appSettings");
+                    configurationNode.AppendChild(appsettingsNode);
+
                     xmlDoc.Save(configFilePath);
-                   // XmlNode rootNode = xmlDoc.CreateElement("appSettings");
-                    //XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
-                    //textWriter.WriteStartDocument(); //文档开始
+                    */
+                    XElement xElement = new XElement(
+                        new XElement("configuration",
+                                new XElement("startup",
+                                    new XElement("supportedRuntime", new XAttribute("version", "v4.0"), new XAttribute("sku", ".NETFramework,Version=v4.5.2"))
+                                ),
+                                new XElement("appSettings",
+                                    new XElement("add", new XAttribute("key", "AccessKeyID"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "AccessKeySecret"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "RecordID"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "fullDomainName"), new XAttribute("value", "")), 
+                                    new XElement("add", new XAttribute("key", "WaitingTime"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "autoUpdate"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "whatIsUrl"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "autoBoot"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "minimized"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "logautosave"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "TTL"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "autoCheckUpdate"), new XAttribute("value", "")),
+                                    new XElement("add", new XAttribute("key", "ngrokauto"), new XAttribute("value", ""))
+                                )
+                        )
+                    );
+                    //需要指定编码格式，否则在读取时会抛：根级别上的数据无效。 第 1 行 位置 1异常
+                    XmlWriterSettings xmlDoc = new XmlWriterSettings();
+                    xmlDoc.Encoding = new UTF8Encoding(false);
+                    xmlDoc.Indent = true;
+                    XmlWriter xw = XmlWriter.Create(configFilePath, xmlDoc);
+                    xElement.Save(xw);//写入文件
+                    xw.Dispose();
+                    //xw.Flush();
+                    //xw.Close();
                 }
                 ExeConfigurationFileMap map = new ExeConfigurationFileMap();
                 map.ExeConfigFilename = configFilePath;
