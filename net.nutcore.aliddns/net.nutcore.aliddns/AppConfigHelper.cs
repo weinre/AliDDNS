@@ -14,13 +14,13 @@ namespace net.nutcore.aliddns
     internal class AppConfigHelper
     {
         System.Configuration.Configuration configFile = null;
-        private static readonly string fileName = "aliddns_config1.xml";
+        private static readonly string configFileName = "aliddns_config1.xml";
+        private static readonly string configFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, configFileName);
         /// <summary>
         /// 构造函数
         /// </summary>
         public AppConfigHelper()
         {
-            string configFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, fileName);
             try
             {
                 if (!File.Exists(configFilePath))
@@ -51,6 +51,7 @@ namespace net.nutcore.aliddns
                                     new XElement("supportedRuntime", new XAttribute("version", "v4.0"), new XAttribute("sku", ".NETFramework,Version=v4.5.2"))
                                 ),
                                 new XElement("appSettings",
+                                    new XElement("add", new XAttribute("key", "AliDDNS Version"), new XAttribute("value", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())),
                                     new XElement("add", new XAttribute("key", "AccessKeyID"), new XAttribute("value", "")),
                                     new XElement("add", new XAttribute("key", "AccessKeySecret"), new XAttribute("value", "")),
                                     new XElement("add", new XAttribute("key", "RecordID"), new XAttribute("value", "")),
@@ -77,9 +78,14 @@ namespace net.nutcore.aliddns
                     //xw.Flush();
                     //xw.Close();
                 }
+                else
+                {
+
+                }
                 ExeConfigurationFileMap map = new ExeConfigurationFileMap();
                 map.ExeConfigFilename = configFilePath;
                 configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+                GetAllAppSettings();
             }
             catch(Exception)
             {
@@ -88,7 +94,7 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// //添加键值
+        /// 在<appsettings></appsettings>下添加键和值
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -99,20 +105,20 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// //修改键值
+        /// 修改<appsettings></appsettings>下指定键的值
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void SaveAppSetting(string key, string value)
         {
+            //在保存key值时必须先删除它，否则改key的值将出现两个，例如：value="oldvalue, newvalue"
             configFile.AppSettings.Settings.Remove(key);
             configFile.AppSettings.Settings.Add(key, value);
-
             configFile.Save();
         }
 
         /// <summary>
-        /// //获得键值
+        /// 获取<appsettings></appsettings>下指定键的值
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -122,7 +128,49 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// //移除键值
+        /// 获取<appsettings></appsettings>下所有键和值
+        /// </summary>
+        public ArrayList GetAllAppSettings()
+        {
+            try
+            {
+                ArrayList list = new ArrayList() ;
+                //var appSettings = ConfigurationManager.AppSettings;
+
+                if (configFile.AppSettings.Settings.Count == 0)
+                {
+                    Console.WriteLine("AppSettings is empty.");
+                    return null;
+                }
+                else
+                {
+                    /*
+                    foreach (var key in configFile.AppSettings.Settings.AllKeys)
+                    {
+                        //list.Add(configFile.AppSettings.Settings[key].Value);
+                        Console.WriteLine("Key: {0} Value: {1}", key, configFile.AppSettings.Settings[key].Value);
+                    }*/
+                    list.Add(configFile.AppSettings.Settings.AllKeys);
+                    foreach (var key in list)
+                        Console.WriteLine(key.ToString());
+                    /*
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Console.WriteLine(list[i].ToString());
+                    }*/
+                    
+                    return list;
+                }
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error reading app settings");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 移除<appsettings></appsettings>下指定键
         /// </summary>
         /// <param name="key"></param>
         public void DelAppSetting(string key)
@@ -131,11 +179,16 @@ namespace net.nutcore.aliddns
             configFile.Save();
         }
 
+        /// <summary>
+        /// 读取XML配置文件指定元素(Elements)下的值
+        /// </summary>
+        /// <param name="strElem"></param>
+        /// <returns></returns>
         public ArrayList GetXmlElements(string strElem)
         {
             ArrayList list = new ArrayList();
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(System.Windows.Forms.Application.ExecutablePath + ".config");
+            xmlDoc.Load(configFilePath);
             XmlNodeList listNode = xmlDoc.SelectNodes(strElem);
             foreach (XmlElement el in listNode)
             {
@@ -169,33 +222,6 @@ namespace net.nutcore.aliddns
             //ExeConfigurationFileMap map = new ExeConfigurationFileMap();
             //map.ExeConfigFilename = configFilePath;
             //configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-        }
-
-        /// <summary>
-        /// 读取配置文件所有内容
-        /// </summary>
-        static void ReadAllSettings()
-        {
-            try
-            {
-                var appSettings = ConfigurationManager.AppSettings;
-
-                if (appSettings.Count == 0)
-                {
-                    Console.WriteLine("AppSettings is empty.");
-                }
-                else
-                {
-                    foreach (var key in appSettings.AllKeys)
-                    {
-                        Console.WriteLine("Key: {0} Value: {1}", key, appSettings[key]);
-                    }
-                }
-            }
-            catch (ConfigurationErrorsException)
-            {
-                Console.WriteLine("Error reading app settings");
-            }
         }
 
         /// <summary>
