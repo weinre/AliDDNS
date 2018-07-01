@@ -14,83 +14,120 @@ namespace net.nutcore.aliddns
     internal class AppConfigHelper
     {
         System.Configuration.Configuration configFile = null;
-        private static readonly string configFileName = "aliddns_config1.xml";
+        private static readonly string configFileName = "aliddns_config.xml";
+        private static readonly string appExePath = System.AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string configFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, configFileName);
         /// <summary>
         /// 构造函数
         /// </summary>
         public AppConfigHelper()
         {
+            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            map.ExeConfigFilename = configFilePath;
             try
             {
                 if (!File.Exists(configFilePath))
                 {
-                    /*
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty));
-
-                    XmlElement configurationNode = xmlDoc.CreateElement("configuration");
-                    xmlDoc.AppendChild(configurationNode);
-
-                    XmlElement startupNode = xmlDoc.CreateElement("startup");
-                    configurationNode.AppendChild(startupNode);
-
-                    XmlElement supportedRuntimeNode = xmlDoc.CreateElement("supportedRuntime");
-                    startupNode.AppendChild(supportedRuntimeNode);
-                    supportedRuntimeNode.SetAttribute("version", "v4.0");
-                    supportedRuntimeNode.SetAttribute("sku", ".NETFramework,Version=v4.5.2");
-
-                    XmlElement appsettingsNode = xmlDoc.CreateElement("appSettings");
-                    configurationNode.AppendChild(appsettingsNode);
-
-                    xmlDoc.Save(configFilePath);
-                    */
-                    XElement xElement = new XElement(
-                        new XElement("configuration",
-                                new XElement("startup",
-                                    new XElement("supportedRuntime", new XAttribute("version", "v4.0"), new XAttribute("sku", ".NETFramework,Version=v4.5.2"))
-                                ),
-                                new XElement("appSettings",
-                                    new XElement("add", new XAttribute("key", "AliDDNS Version"), new XAttribute("value", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())),
-                                    new XElement("add", new XAttribute("key", "AccessKeyID"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "AccessKeySecret"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "RecordID"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "fullDomainName"), new XAttribute("value", "")), 
-                                    new XElement("add", new XAttribute("key", "WaitingTime"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "autoUpdate"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "whatIsUrl"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "autoBoot"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "minimized"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "logautosave"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "TTL"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "autoCheckUpdate"), new XAttribute("value", "")),
-                                    new XElement("add", new XAttribute("key", "ngrokauto"), new XAttribute("value", ""))
-                                )
-                        )
-                    );
-                    //需要指定编码格式，否则在读取时会抛：根级别上的数据无效。 第 1 行 位置 1异常
-                    XmlWriterSettings xmlDoc = new XmlWriterSettings();
-                    xmlDoc.Encoding = new UTF8Encoding(false);
-                    xmlDoc.Indent = true;
-                    XmlWriter xw = XmlWriter.Create(configFilePath, xmlDoc);
-                    xElement.Save(xw);//写入文件
-                    xw.Dispose();
-                    //xw.Flush();
-                    //xw.Close();
+                    CreatNewConfig(configFilePath);
                 }
                 else
                 {
-
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(configFilePath);
+                    if(xmlDoc.SelectSingleNode("configuration") == null)
+                    {
+                        Console.WriteLine("Config file setting error! New config file is creating now!");
+                        FileInfo fileInfo = new FileInfo(configFilePath);
+                        fileInfo.MoveTo(configFilePath + ".bak");
+                        CreatNewConfig(configFilePath);
+                        Console.WriteLine("New config file is created ok!");
+                    }
+                    else
+                    {
+                        if (xmlDoc.SelectSingleNode(@"configuration/appSettings") == null)
+                        {
+                            Console.WriteLine("Config file has old format. Update now!");
+                            FileInfo fileInfo = new FileInfo(configFilePath);
+                            fileInfo.MoveTo(configFilePath + ".bak");
+                            CreatNewConfig(configFilePath);
+                            configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+                            xmlDoc.Load(configFilePath + ".bak");
+                            XmlNodeList oldNodes = xmlDoc.SelectSingleNode("configuration").ChildNodes;
+                            foreach (XmlNode node in oldNodes)
+                            {
+                                Console.WriteLine(node.Name.ToString()+" : "+node.InnerText.ToString());
+                                SaveAppSetting(node.Name.ToString(), node.InnerText.ToString());
+                            }
+                        }
+                    }
                 }
-                ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-                map.ExeConfigFilename = configFilePath;
                 configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-                GetAllAppSettings();
+                //GetAllAppSettings();
             }
-            catch(Exception)
+            catch(Exception error)
             {
-                Console.WriteLine("Class AppConfigHelper running error!");
+                Console.WriteLine("Class AppConfigHelper running error!" + error);
             }
+        }
+
+        /// <summary>
+        /// 创建XML格式的配置文件configFile
+        /// </summary>
+        /// <param name="configFile"></param>
+        public void CreatNewConfig(string configFile)
+        {
+            /*
+                   XmlDocument xmlDoc = new XmlDocument();
+                   xmlDoc.AppendChild(xmlDoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty));
+
+                   XmlElement configurationNode = xmlDoc.CreateElement("configuration");
+                   xmlDoc.AppendChild(configurationNode);
+
+                   XmlElement startupNode = xmlDoc.CreateElement("startup");
+                   configurationNode.AppendChild(startupNode);
+
+                   XmlElement supportedRuntimeNode = xmlDoc.CreateElement("supportedRuntime");
+                   startupNode.AppendChild(supportedRuntimeNode);
+                   supportedRuntimeNode.SetAttribute("version", "v4.0");
+                   supportedRuntimeNode.SetAttribute("sku", ".NETFramework,Version=v4.5.2");
+
+                   XmlElement appsettingsNode = xmlDoc.CreateElement("appSettings");
+                   configurationNode.AppendChild(appsettingsNode);
+
+                   xmlDoc.Save(configFilePath);
+                   */
+            XElement xElement = new XElement(
+                new XElement("configuration",
+                        new XElement("startup",
+                            new XElement("supportedRuntime", new XAttribute("version", "v4.0"), new XAttribute("sku", ".NETFramework,Version=v4.5.2"))
+                        ),
+                        new XElement("appSettings",
+                            new XElement("add", new XAttribute("key", "AliDDNS Version"), new XAttribute("value", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())),
+                            new XElement("add", new XAttribute("key", "AccessKeyID"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "AccessKeySecret"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "RecordID"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "fullDomainName"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "WaitingTime"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "autoUpdate"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "whatIsUrl"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "autoBoot"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "minimized"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "logautosave"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "TTL"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "autoCheckUpdate"), new XAttribute("value", "")),
+                            new XElement("add", new XAttribute("key", "ngrokauto"), new XAttribute("value", ""))
+                        )
+                )
+            );
+            //需要指定编码格式，否则在读取时会抛：根级别上的数据无效。 第 1 行 位置 1异常
+            XmlWriterSettings xmlDoc = new XmlWriterSettings();
+            xmlDoc.Encoding = new UTF8Encoding(false);
+            xmlDoc.Indent = true;
+            XmlWriter xw = XmlWriter.Create(configFilePath, xmlDoc);
+            xElement.Save(xw);//写入文件
+            xw.Dispose();
+            //xw.Flush();
+            //xw.Close();
         }
 
         /// <summary>

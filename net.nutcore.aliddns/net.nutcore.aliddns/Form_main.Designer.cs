@@ -179,7 +179,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(117, 99);
+            this.label3.Location = new System.Drawing.Point(117, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 4;
@@ -188,7 +188,7 @@
             // label_nextUpdateSeconds
             // 
             this.label_nextUpdateSeconds.ForeColor = System.Drawing.Color.Red;
-            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(87, 99);
+            this.label_nextUpdateSeconds.Location = new System.Drawing.Point(87, 96);
             this.label_nextUpdateSeconds.Name = "label_nextUpdateSeconds";
             this.label_nextUpdateSeconds.Size = new System.Drawing.Size(30, 12);
             this.label_nextUpdateSeconds.TabIndex = 3;
@@ -355,6 +355,7 @@
             this.textBox_TTL.Size = new System.Drawing.Size(37, 21);
             this.textBox_TTL.TabIndex = 15;
             this.textBox_TTL.Text = "600";
+            this.textBox_TTL.Leave += new System.EventHandler(this.textBox_TTL_Leave);
             // 
             // button_ShowHide
             // 
@@ -372,7 +373,7 @@
             this.checkAndSaveConfig.Name = "checkAndSaveConfig";
             this.checkAndSaveConfig.Size = new System.Drawing.Size(93, 23);
             this.checkAndSaveConfig.TabIndex = 10;
-            this.checkAndSaveConfig.Text = "测试并保存";
+            this.checkAndSaveConfig.Text = "测试连接";
             this.checkAndSaveConfig.UseVisualStyleBackColor = true;
             this.checkAndSaveConfig.Click += new System.EventHandler(this.checkConfig_Click);
             // 
@@ -392,6 +393,7 @@
             this.newSeconds.Size = new System.Drawing.Size(60, 21);
             this.newSeconds.TabIndex = 7;
             this.newSeconds.Text = "60";
+            this.newSeconds.Leave += new System.EventHandler(this.newSeconds_Leave);
             // 
             // label7
             // 
@@ -418,7 +420,7 @@
             this.fullDomainName.Size = new System.Drawing.Size(135, 21);
             this.fullDomainName.TabIndex = 4;
             this.fullDomainName.Text = "www.xxx.com";
-            this.fullDomainName.ModifiedChanged += new System.EventHandler(this.fullDomainName_ModifiedChanged);
+            this.fullDomainName.Leave += new System.EventHandler(this.fullDomainName_Leave);
             // 
             // accessKeySecret
             // 
@@ -428,6 +430,7 @@
             this.accessKeySecret.Size = new System.Drawing.Size(192, 21);
             this.accessKeySecret.TabIndex = 3;
             this.accessKeySecret.Text = "null";
+            this.accessKeySecret.Leave += new System.EventHandler(this.accessKeySecret_Leave);
             // 
             // label5
             // 
@@ -446,6 +449,7 @@
             this.accessKeyId.Size = new System.Drawing.Size(192, 21);
             this.accessKeyId.TabIndex = 1;
             this.accessKeyId.Text = "null";
+            this.accessKeyId.Leave += new System.EventHandler(this.accessKeyId_Leave);
             // 
             // label4
             // 
@@ -626,6 +630,7 @@
             this.comboBox_whatIsUrl.Size = new System.Drawing.Size(189, 20);
             this.comboBox_whatIsUrl.TabIndex = 18;
             this.comboBox_whatIsUrl.Text = "http://whatismyip.akamai.com/";
+            this.comboBox_whatIsUrl.Leave += new System.EventHandler(this.comboBox_whatIsUrl_Leave);
             // 
             // button_whatIsTest
             // 

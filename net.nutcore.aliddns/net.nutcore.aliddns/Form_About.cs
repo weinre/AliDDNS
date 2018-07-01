@@ -8,6 +8,7 @@ namespace net.nutcore.aliddns
 {
     public partial class Form_About : Form
     {
+        private AppConfigHelper cfg = new AppConfigHelper();
         public Form_About()
         {
 
@@ -34,61 +35,17 @@ namespace net.nutcore.aliddns
 
         private void checkBox_autoCheckUpdate_CheckedChanged(object sender, EventArgs e)
         {
-            string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-            string config_file = ExePath + "aliddns_config.xml";
-            if(File.Exists(config_file))
-            {
-                XmlDocument xmlDOC = new XmlDocument();
-                xmlDOC.Load(config_file);
-                if (xmlDOC.GetElementsByTagName("autoCheckUpdate")[0] == null)
-                {
-                    XmlNode node = xmlDOC.CreateNode(XmlNodeType.Element, "autoCheckUpdate",null);
-                    if (checkBox_autoCheckUpdate.Checked == true)
-                        node.InnerText = "On";
-                    else
-                        node.InnerText = "Off";
-                    xmlDOC.DocumentElement.AppendChild(node);
-                    xmlDOC.Save(config_file);
-                }
-                else
-                {
-                    XmlNode node = xmlDOC.GetElementsByTagName("autoCheckUpdate")[0];
-                    if (checkBox_autoCheckUpdate.Checked == true)
-                        node.InnerText = "On";
-                    else
-                        node.InnerText = "Off";
-                    xmlDOC.DocumentElement.AppendChild(node);
-                    xmlDOC.Save(config_file);
-                }
-            }
-            /*
-            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-            map.ExeConfigFilename = config_file;
-            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
             if(checkBox_autoCheckUpdate.Checked == true)
             {
-                if (config.AppSettings.Settings["autoCheckUpdate"] == null)
-                {
-                    config.AppSettings.Settings.Add("autoCheckUpdate", "On");
-                }
-                else
-                {
-                    config.AppSettings.Settings["autoCheckUpdate"].Value = "On";
-                }
+                cfg.SaveAppSetting("autoCheckUpdate", "On");
+                //mainForm.textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件自动检测升级启用！" + "\r\n");
             }
             else
             {
-                if (config.AppSettings.Settings["autoCheckUpdate"] == null)
-                {
-                    config.AppSettings.Settings.Add("autoCheckUpdate", "Off");
-                }
-                else
-                {
-                    config.AppSettings.Settings["autoCheckUpdate"].Value = "Off";
-                }
+                cfg.SaveAppSetting("autoCheckUpdate", "Off");
+                //mainForm.textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件自动检测升级关闭！" + "\r\n");
             }
-            config.Save();
-            */
+           
         }
 
         private void Form_About_Load(object sender, EventArgs e)

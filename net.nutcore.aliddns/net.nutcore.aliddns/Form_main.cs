@@ -70,27 +70,6 @@ namespace net.nutcore.aliddns
             */
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "当前用户需要文件写入和注册表操作权限，否则相关参数不起作用！" + "\r\n");
             
-            try //检查设置文件，如果没有则新建，并赋值默认值
-            {
-                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-                string config_file = ExePath + "aliddns_config.xml";
-                if (File.Exists(config_file) != true) //当设置文件aliddns_config.xml不存在时，创建一个新的。
-                {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "没有找到设置文件 aliddns_config.xml，重新创建！" + "\r\n");
-                    if (saveConfigFile())
-                    {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件 aliddns_config.xml 创建成功！" + "\r\n");
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件设置项目默认赋值完成！" + "\r\n");
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请填写正确内容，点击“测试并保存”完成设置！" + "\r\n");
-                    }
-                }
-            }
-            catch(Exception error)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
-                this.Dispose();
-            }
-
             //读取设置文件aliddns_config.xml
             if (readConfigFile())
             {
@@ -156,60 +135,30 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                //Create xml object
-                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-                string config_file = ExePath + "aliddns_config.xml";
-                XmlDocument xmlDOC = new XmlDocument();
-                xmlDOC.Load(config_file);
-                //XmlNodeReader readXML = new XmlNodeReader(xmlDOC);
-                //textBox_log.AppendText(System.DateTime.Now.ToString() + " DEBUG: " + readXML.Value + "\r\n"); //显示读取内容，用于调试DEBUG。
-                XmlNodeList nodes = xmlDOC.SelectSingleNode("configuration").ChildNodes; //读取config节点下所有元素
-                /*
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + nodes[i].Name + ":" + nodes[i].InnerText + "\r\n"); //显示读取内容，用于调试DEBUG。
-                }
-                string[] config = new string[nodes.Count]; //创建一个设置读取数组用于存储读取内容
-                int i = 0;
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件找到，开始读取..." + "\r\n");
-                while (readXML.Read())
-                {
-                    readXML.MoveToElement(); //Forward
-                    if (readXML.NodeType == XmlNodeType.Text) //(node.NodeType 是Text时，即是最内层 即innertext值，node.Attributes为null。
-                    {
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + readXML.NodeType + "\r\n"); //显示读取内容，用于调试DEBUG。
-                        config[i] = readXML.Value;
-                        //此行用于调试读取内容
-                        //textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "项目[" + i + "]: " + config[i] + "\r\n"); //显示读取内容，用于调试DEBUG。
-                        i++;
-                    }
-                }*/
-                accessKeyId.Text = EncryptHelper.AESDecrypt(nodes[0].InnerText);
-                accessKeySecret.Text = EncryptHelper.AESDecrypt(nodes[1].InnerText);
-                //accessKeyId.Text = nodes[0].InnerText;
-                //accessKeySecret.Text = nodes[1].InnerText;
-                recordId.Text = nodes[2].InnerText;
-                fullDomainName.Text = nodes[3].InnerText;
-                label_nextUpdateSeconds.Text = newSeconds.Text = nodes[4].InnerText;
-                if (nodes[5].InnerText == "On") checkBox_autoUpdate.Checked = true;
+                accessKeyId.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeyID").ToString());
+                accessKeySecret.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeySecret").ToString());
+                recordId.Text = cfg.GetAppSetting("RecordID").ToString();
+                fullDomainName.Text = cfg.GetAppSetting("fullDomainName").ToString();
+                label_nextUpdateSeconds.Text = newSeconds.Text = cfg.GetAppSetting("WaitingTime").ToString();
+                if (cfg.GetAppSetting("autoUpdate").ToString() == "On") checkBox_autoUpdate.Checked = true;
                 else checkBox_autoUpdate.Checked = false;
-                comboBox_whatIsUrl.Text = nodes[6].InnerText;
+                comboBox_whatIsUrl.Text = cfg.GetAppSetting("whatIsUrl").ToString();
 
-                if (nodes[7].InnerText == "On") checkBox_autoBoot.Checked = true;
+                if (cfg.GetAppSetting("autoBoot").ToString() == "On") checkBox_autoBoot.Checked = true;
                 else checkBox_autoBoot.Checked = false;
 
-                if (nodes[8].InnerText == "On") checkBox_minimized.Checked = true;
+                if (cfg.GetAppSetting("minimized").ToString() == "On") checkBox_minimized.Checked = true;
                 else checkBox_minimized.Checked = false;
 
-                if (nodes[9].InnerText == "On") checkBox_logAutoSave.Checked = true;
+                if (cfg.GetAppSetting("logautosave").ToString() == "On") checkBox_logAutoSave.Checked = true;
                 else checkBox_logAutoSave.Checked = false;
 
-                textBox_TTL.Text = nodes[10].InnerText;
+                textBox_TTL.Text = cfg.GetAppSetting("TTL").ToString();
 
-                if (nodes[11].InnerText == "On") checkUpdate = true;
+                if (cfg.GetAppSetting("autoCheckUpdate").ToString() == "On") checkUpdate = true;
                 else checkUpdate = false;
 
-                if (nodes[12].InnerText == "On")
+                if (cfg.GetAppSetting("ngrokauto").ToString() == "On")
                 {
                     checkBox_ngrok.Checked = true;
                     button_ngrok.Enabled = false;
@@ -577,16 +526,11 @@ namespace net.nutcore.aliddns
                 client = new DefaultAcsClient(clientProfile);
                 if (setRecordId()) //检查能否从服务器返回RecordId，返回则设置正确，否则设置不正确
                 {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置项目内容填写正确，即将保存到设置文件！ " + "\r\n");
-
-                    if (saveConfigFile()) //检查设置文件是否保存成功
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件保存成功！ " + "\r\n");
-                    else
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件保存失败，请检查文件权限！ " + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务返回RecordId，连接成功！ " + "\r\n");
                 }
                 else
                 {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务没有返回RecordId，设置项目内容没有保存！" + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务没有返回RecordId，请检查设置项目是否正确！" + "\r\n");
                 }
             }
             catch (Exception error)
@@ -678,11 +622,6 @@ namespace net.nutcore.aliddns
             }
         }
 
-        private void fullDomainName_ModifiedChanged(object sender, EventArgs e)
-        {
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名修改后请测试并保存！" + "\r\n");
-        }
-
         private void checkBox_autoBoot_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -695,6 +634,7 @@ namespace net.nutcore.aliddns
                     Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
                     Rkey.SetValue("AliDDNS Tray", thisExecutablePath);
                     Rkey.Close();
+                    cfg.SaveAppSetting("autoBoot", "On");
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行设置成功！" + "\r\n");
                 }
                 else
@@ -702,6 +642,7 @@ namespace net.nutcore.aliddns
                     Microsoft.Win32.RegistryKey Rkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     Rkey.DeleteValue("AliDDNS Tray");
                     Rkey.Close();
+                    cfg.SaveAppSetting("autoBoot", "Off");
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "随系统启动自动运行取消！" + "\r\n");
                 }
             }
@@ -720,9 +661,15 @@ namespace net.nutcore.aliddns
         private void checkBox_logAutoSave_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox_logAutoSave.Checked == true)
+            {
+                cfg.SaveAppSetting("ngrokauto", "On");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储启用成功！日志超过1万行将自动转储。" + "\r\n");
+            }
             else
+            {
+                cfg.SaveAppSetting("ngrokauto", "Off");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储取消！" + "\r\n");
+            }
         }
 
         private void logToFiles()
@@ -760,17 +707,29 @@ namespace net.nutcore.aliddns
         private void checkBox_autoUpdate_CheckedChanged(object sender, EventArgs e)
         {
             if(checkBox_autoUpdate.Checked == true)
+            {
+                cfg.SaveAppSetting("autoUpdate", "On");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名记录自动更新启用成功！" + "\r\n");
+            }
             else
+            {
+                cfg.SaveAppSetting("autoUpdate", "Off");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名记录自动更新取消！" + "\r\n");
+            }
         }
 
         private void checkBox_minimized_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox_minimized.Checked == true)
+            {
+                cfg.SaveAppSetting("minimized", "On");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘启用！" + "\r\n");
+            }
             else
+            {
+                cfg.SaveAppSetting("minimized", "Off");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "软件启动时驻留到系统托盘取消！" + "\r\n");
+            }
         }
 
         private void button_setIP_Click(object sender, EventArgs e)
@@ -879,9 +838,11 @@ namespace net.nutcore.aliddns
 
         private async void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
         {
-             if (checkBox_ngrok.Checked == true)
+
+            if (checkBox_ngrok.Checked == true)
             {
                 button_ngrok.Enabled = false;
+                cfg.SaveAppSetting("ngrokauto", "On");
                 //检测ngrok.exe是否存在
                 if (ngrok.IsExists())
                 {
@@ -895,6 +856,7 @@ namespace net.nutcore.aliddns
             }
             else
             {
+                cfg.SaveAppSetting("ngrokauto", "Off");
                 await ngrok.Stop();
                 button_ngrok.Enabled = true;
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动将不会加载！" + "\r\n");
@@ -914,6 +876,66 @@ namespace net.nutcore.aliddns
             {
                 MessageBox.Show("设置在当前目录没有发现ngrok.exe，请往官网下载自行编译。\nNgrok官网：https://ngrok.com/download");
             }
+        }
+
+        private void fullDomainName_Leave(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("请确认域名: " + this.fullDomainName.Text.ToString(), "提醒", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                cfg.SaveAppSetting("fullDomainName", this.fullDomainName.Text.ToString());
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名已经保存，点击测试连接将测试创建域名记录！" + "\r\n");
+            }
+            else
+            {
+                this.fullDomainName.Focus();
+            }
+        }
+
+        private void accessKeyId_Leave(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("请确认accessKeyId:\n" + this.accessKeyId.Text.ToString(), "提醒", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                cfg.SaveAppSetting("AccessKeyID", EncryptHelper.AESEncrypt(this.accessKeyId.Text.ToString()));
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "accessKeyId已经保存，请完成设置录入后点击测试连接！" + "\r\n");
+            }
+            else
+            {
+                this.accessKeyId.Focus();
+            }
+        }
+
+        private void accessKeySecret_Leave(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("请确认accessKeySecret:\n" + this.accessKeySecret.Text.ToString(), "提醒", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                cfg.SaveAppSetting("AccessKeySecret", EncryptHelper.AESEncrypt(this.accessKeySecret.Text.ToString()));
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "accessKeySecret已经保存，请完成设置录入后点击测试连接！" + "\r\n");
+            }
+            else
+            {
+                this.accessKeySecret.Focus();
+            }
+        }
+
+        private void textBox_TTL_Leave(object sender, EventArgs e)
+        {
+            cfg.SaveAppSetting("TTL",this.textBox_TTL.Text.ToString());
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "TTL设置修改保存成功！" + "\r\n");
+        }
+
+        private void newSeconds_Leave(object sender, EventArgs e)
+        {
+            cfg.SaveAppSetting("WaitingTime", this.textBox_TTL.Text.ToString());
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "自动更新倒计时设置修改保存成功！" + "\r\n");
+        }
+
+        private void comboBox_whatIsUrl_Leave(object sender, EventArgs e)
+        {
+            cfg.SaveAppSetting("whatIsUrl", this.comboBox_whatIsUrl.Text.ToString());
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "公网IP查询网址修改保存成功！" + "\r\n");
         }
     }
 }
