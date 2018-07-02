@@ -142,9 +142,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="alidns.ico" />
     <Content Include="alidns_gray.ico" />
     <Content Include="alidns_green.ico" />

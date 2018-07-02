@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -36,7 +33,7 @@ namespace net.nutcore.aliddns
                     xmlDoc.Load(configFilePath);
                     if(xmlDoc.SelectSingleNode("configuration") == null)
                     {
-                        Console.WriteLine("Config file setting error! New config file is creating now!");
+                        Console.WriteLine("Config file setting error! New config file is created now!");
                         FileInfo fileInfo = new FileInfo(configFilePath);
                         fileInfo.MoveTo(configFilePath + ".bak");
                         CreatNewConfig(configFilePath);
@@ -55,18 +52,18 @@ namespace net.nutcore.aliddns
                             XmlNodeList oldNodes = xmlDoc.SelectSingleNode("configuration").ChildNodes;
                             foreach (XmlNode node in oldNodes)
                             {
-                                Console.WriteLine(node.Name.ToString()+" : "+node.InnerText.ToString());
+                                Console.WriteLine(node.Name.ToString() + " : " + node.InnerText.ToString());
                                 SaveAppSetting(node.Name.ToString(), node.InnerText.ToString());
                             }
                         }
                     }
                 }
                 configFile = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-                //GetAllAppSettings();
+                GetAllAppSettings();
             }
             catch(Exception error)
             {
-                Console.WriteLine("Class AppConfigHelper running error!" + error);
+                Console.WriteLine("Class AppConfigHelper running error! " + error);
             }
         }
 
@@ -165,15 +162,12 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// 获取<appsettings></appsettings>下所有键和值
+        /// 获取<appSettings></appSettings>下所有键和值
         /// </summary>
-        public ArrayList GetAllAppSettings()
+        public string[] GetAllAppSettings()
         {
             try
             {
-                ArrayList list = new ArrayList() ;
-                //var appSettings = ConfigurationManager.AppSettings;
-
                 if (configFile.AppSettings.Settings.Count == 0)
                 {
                     Console.WriteLine("AppSettings is empty.");
@@ -181,33 +175,22 @@ namespace net.nutcore.aliddns
                 }
                 else
                 {
-                    /*
                     foreach (var key in configFile.AppSettings.Settings.AllKeys)
                     {
-                        //list.Add(configFile.AppSettings.Settings[key].Value);
                         Console.WriteLine("Key: {0} Value: {1}", key, configFile.AppSettings.Settings[key].Value);
-                    }*/
-                    list.Add(configFile.AppSettings.Settings.AllKeys);
-                    foreach (var key in list)
-                        Console.WriteLine(key.ToString());
-                    /*
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        Console.WriteLine(list[i].ToString());
-                    }*/
-                    
-                    return list;
+                    }
+                    return configFile.AppSettings.Settings.AllKeys;
                 }
             }
             catch (ConfigurationErrorsException)
             {
-                Console.WriteLine("Error reading app settings");
+                Console.WriteLine("GetAllAppSettings() run error!");
                 return null;
             }
         }
 
         /// <summary>
-        /// 移除<appsettings></appsettings>下指定键
+        /// 移除<appSettings></appSettings>下指定键
         /// </summary>
         /// <param name="key"></param>
         public void DelAppSetting(string key)
@@ -262,7 +245,7 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// 判断appSettings中是否有此项键名
+        /// 判断appSettings中是否有指定键名
         /// </summary>
         /// /// <param name="strKey">键名</param>
         public bool AppSettingsKeyExists(string strKey)
@@ -278,19 +261,16 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// 获取设置文件中某个键的值
+        /// 修改配置文件指定键和值
         /// </summary>
-        /// <param name="strKey">键名</param>
-        public static string GetValueByKey(string strKey)
-        {
-            ConfigurationManager.RefreshSection("appSettings");
-            return ConfigurationManager.AppSettings[strKey];
-        }
+        /// <param name="strKey"></param>
+        /// <param name="value"></param>
         public static void ModifyAppSettings(string strKey, string value)
         {
             var doc = new XmlDocument();
             //获得配置文件的全路径    
-            var strFileName = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+            //var strFileName = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+            var strFileName = configFilePath;
             doc.Load(strFileName);
 
             //找出名称为“add”的所有元素    

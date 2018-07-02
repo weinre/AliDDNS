@@ -9,7 +9,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
 using static Aliyun.Acs.Alidns.Model.V20150109.DescribeSubDomainRecordsResponse;
 
 namespace net.nutcore.aliddns
@@ -169,113 +168,6 @@ namespace net.nutcore.aliddns
                     button_ngrok.Enabled = true;
                 }
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "设置文件读取成功！" + "\r\n");
-                return true;
-            }
-            catch (Exception error)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
-                return false;
-            }
-
-        }
-
-        private bool saveConfigFile()
-        {
-            try
-            {
-                if (accessKeyId.Text == "" || accessKeySecret.Text == "" || recordId.Text == "" || fullDomainName.Text == "" || newSeconds.Text == "" || comboBox_whatIsUrl.Text == "")
-                {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "任何值都不能为空！无法填写请输入null或0！" + "\r\n");
-                    return false;
-                }
-                string accessKeyId_encrypt = EncryptHelper.AESEncrypt(accessKeyId.Text);
-                string accessKeySecret_encrypt = EncryptHelper.AESEncrypt(accessKeySecret.Text);
-                string ExePath = System.AppDomain.CurrentDomain.BaseDirectory;
-                string config_file = ExePath + "aliddns_config.xml";
-                XmlTextWriter textWriter = new XmlTextWriter(config_file, null);
-                textWriter.WriteStartDocument(); //文档开始
-
-                textWriter.WriteComment("AlidnsAutoCheckTool");
-                textWriter.WriteComment("Version:Beta 1.0");
-                //Start config file
-                textWriter.WriteStartElement("configuration"); //设置项目开始
-
-                textWriter.WriteStartElement("AccessKeyID", "");
-                textWriter.WriteString(accessKeyId_encrypt);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("AccessKeySecret", "");
-                textWriter.WriteString(accessKeySecret_encrypt);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("RecordID", "");
-                textWriter.WriteString(recordId.Text);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("fullDomainName", "");
-                textWriter.WriteString(fullDomainName.Text);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("WaitingTime", "");
-                textWriter.WriteString(newSeconds.Text);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("autoUpdate", "");
-                if (checkBox_autoUpdate.Checked == true)
-                    textWriter.WriteString("On");
-                else
-                    textWriter.WriteString("Off");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("whatIsUrl", "");
-                textWriter.WriteString(comboBox_whatIsUrl.Text);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("autoBoot", "");
-                if (checkBox_autoBoot.Checked == true)
-                    textWriter.WriteString("On");
-                else
-                    textWriter.WriteString("Off");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("minimized", "");
-                if (checkBox_minimized.Checked == true)
-                    textWriter.WriteString("On");
-                else
-                    textWriter.WriteString("Off");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("logautosave", "");
-                if (checkBox_logAutoSave.Checked == true)
-                    textWriter.WriteString("On");
-                else
-                    textWriter.WriteString("Off");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("TTL", "");
-                textWriter.WriteString(textBox_TTL.Text);
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("autoCheckUpdate", "");
-                if (checkUpdate == false)
-                    textWriter.WriteString("Off");
-                else
-                    textWriter.WriteString("On");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteStartElement("ngrokauto", "");
-                if (checkBox_ngrok.Checked == false)
-                    textWriter.WriteString("Off");
-                else
-                    textWriter.WriteString("On");
-                textWriter.WriteEndElement();
-
-                textWriter.WriteEndElement(); //设置项目结束
-                textWriter.WriteEndDocument();//文档结束
-                textWriter.Close(); //文档保存关闭
-
-                label_nextUpdateSeconds.Text = newSeconds.Text;
-
                 return true;
             }
             catch (Exception error)
@@ -662,12 +554,12 @@ namespace net.nutcore.aliddns
         {
             if (checkBox_logAutoSave.Checked == true)
             {
-                cfg.SaveAppSetting("ngrokauto", "On");
+                cfg.SaveAppSetting("logautosave", "On");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储启用成功！日志超过1万行将自动转储。" + "\r\n");
             }
             else
             {
-                cfg.SaveAppSetting("ngrokauto", "Off");
+                cfg.SaveAppSetting("logautosave", "Off");
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "日志自动转储取消！" + "\r\n");
             }
         }
@@ -838,7 +730,7 @@ namespace net.nutcore.aliddns
 
         private async void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
         {
-
+            
             if (checkBox_ngrok.Checked == true)
             {
                 button_ngrok.Enabled = false;
