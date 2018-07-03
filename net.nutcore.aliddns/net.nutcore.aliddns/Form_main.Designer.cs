@@ -85,6 +85,8 @@
             this.comboBox_whatIsUrl = new System.Windows.Forms.ComboBox();
             this.button_whatIsTest = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
+            this.button_addNewDomain = new System.Windows.Forms.Button();
+            this.button_addUrl = new System.Windows.Forms.Button();
             this.timeSetGroup.SuspendLayout();
             this.debugMessage.SuspendLayout();
             this.globalSetGroup.SuspendLayout();
@@ -219,7 +221,7 @@
             this.debugMessage.Controls.Add(this.label9);
             this.debugMessage.Location = new System.Drawing.Point(219, 47);
             this.debugMessage.Name = "debugMessage";
-            this.debugMessage.Size = new System.Drawing.Size(206, 79);
+            this.debugMessage.Size = new System.Drawing.Size(216, 79);
             this.debugMessage.TabIndex = 5;
             this.debugMessage.TabStop = false;
             this.debugMessage.Text = "调试信息";
@@ -317,6 +319,7 @@
             // 
             // globalSetGroup
             // 
+            this.globalSetGroup.Controls.Add(this.button_addNewDomain);
             this.globalSetGroup.Controls.Add(this.label13);
             this.globalSetGroup.Controls.Add(this.textBox_TTL);
             this.globalSetGroup.Controls.Add(this.button_ShowHide);
@@ -332,7 +335,7 @@
             this.globalSetGroup.Controls.Add(this.label4);
             this.globalSetGroup.Location = new System.Drawing.Point(219, 132);
             this.globalSetGroup.Name = "globalSetGroup";
-            this.globalSetGroup.Size = new System.Drawing.Size(206, 198);
+            this.globalSetGroup.Size = new System.Drawing.Size(216, 198);
             this.globalSetGroup.TabIndex = 6;
             this.globalSetGroup.TabStop = false;
             this.globalSetGroup.Text = "设置";
@@ -340,7 +343,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 124);
+            this.label13.Location = new System.Drawing.Point(8, 123);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(47, 12);
@@ -349,7 +352,7 @@
             // 
             // textBox_TTL
             // 
-            this.textBox_TTL.Location = new System.Drawing.Point(65, 121);
+            this.textBox_TTL.Location = new System.Drawing.Point(65, 120);
             this.textBox_TTL.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_TTL.Name = "textBox_TTL";
             this.textBox_TTL.Size = new System.Drawing.Size(37, 21);
@@ -359,9 +362,9 @@
             // 
             // button_ShowHide
             // 
-            this.button_ShowHide.Location = new System.Drawing.Point(106, 169);
+            this.button_ShowHide.Location = new System.Drawing.Point(75, 169);
             this.button_ShowHide.Name = "button_ShowHide";
-            this.button_ShowHide.Size = new System.Drawing.Size(91, 23);
+            this.button_ShowHide.Size = new System.Drawing.Size(65, 23);
             this.button_ShowHide.TabIndex = 14;
             this.button_ShowHide.Text = "显示录入";
             this.button_ShowHide.UseVisualStyleBackColor = true;
@@ -369,9 +372,9 @@
             // 
             // checkAndSaveConfig
             // 
-            this.checkAndSaveConfig.Location = new System.Drawing.Point(8, 169);
+            this.checkAndSaveConfig.Location = new System.Drawing.Point(5, 169);
             this.checkAndSaveConfig.Name = "checkAndSaveConfig";
-            this.checkAndSaveConfig.Size = new System.Drawing.Size(93, 23);
+            this.checkAndSaveConfig.Size = new System.Drawing.Size(65, 23);
             this.checkAndSaveConfig.TabIndex = 10;
             this.checkAndSaveConfig.Text = "测试连接";
             this.checkAndSaveConfig.UseVisualStyleBackColor = true;
@@ -380,7 +383,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(107, 152);
+            this.label8.Location = new System.Drawing.Point(107, 148);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(65, 12);
             this.label8.TabIndex = 8;
@@ -388,7 +391,7 @@
             // 
             // newSeconds
             // 
-            this.newSeconds.Location = new System.Drawing.Point(41, 149);
+            this.newSeconds.Location = new System.Drawing.Point(41, 145);
             this.newSeconds.Name = "newSeconds";
             this.newSeconds.Size = new System.Drawing.Size(60, 21);
             this.newSeconds.TabIndex = 7;
@@ -398,7 +401,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 152);
+            this.label7.Location = new System.Drawing.Point(6, 148);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(29, 12);
             this.label7.TabIndex = 6;
@@ -489,7 +492,7 @@
             this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
             this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItem_Exit.Text = "退出";
-            this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.toolStripMenuItem_Exit.Click += new System.EventHandler(this.toolStripMenuItem_Quit_Click);
             // 
             // ToolStripMenuItem_checkUpdate
             // 
@@ -512,7 +515,7 @@
             this.textBox_log.Name = "textBox_log";
             this.textBox_log.ReadOnly = true;
             this.textBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_log.Size = new System.Drawing.Size(413, 109);
+            this.textBox_log.Size = new System.Drawing.Size(423, 109);
             this.textBox_log.TabIndex = 8;
             // 
             // groupBox_netstate
@@ -525,7 +528,7 @@
             this.groupBox_netstate.Controls.Add(this.label1);
             this.groupBox_netstate.Location = new System.Drawing.Point(12, 3);
             this.groupBox_netstate.Name = "groupBox_netstate";
-            this.groupBox_netstate.Size = new System.Drawing.Size(413, 38);
+            this.groupBox_netstate.Size = new System.Drawing.Size(423, 38);
             this.groupBox_netstate.TabIndex = 9;
             this.groupBox_netstate.TabStop = false;
             this.groupBox_netstate.Text = "网络状态";
@@ -534,7 +537,7 @@
             // 
             this.label_DomainIpStatus.AutoSize = true;
             this.label_DomainIpStatus.ForeColor = System.Drawing.Color.Red;
-            this.label_DomainIpStatus.Location = new System.Drawing.Point(364, 19);
+            this.label_DomainIpStatus.Location = new System.Drawing.Point(371, 19);
             this.label_DomainIpStatus.Name = "label_DomainIpStatus";
             this.label_DomainIpStatus.Size = new System.Drawing.Size(41, 12);
             this.label_DomainIpStatus.TabIndex = 9;
@@ -553,7 +556,7 @@
             // domainIP
             // 
             this.domainIP.AutoSize = true;
-            this.domainIP.Location = new System.Drawing.Point(259, 19);
+            this.domainIP.Location = new System.Drawing.Point(264, 19);
             this.domainIP.Name = "domainIP";
             this.domainIP.Size = new System.Drawing.Size(47, 12);
             this.domainIP.TabIndex = 7;
@@ -562,7 +565,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(213, 19);
+            this.label2.Location = new System.Drawing.Point(218, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 6;
@@ -588,6 +591,7 @@
             // 
             // groupBox_setWanIp
             // 
+            this.groupBox_setWanIp.Controls.Add(this.button_addUrl);
             this.groupBox_setWanIp.Controls.Add(this.maskedTextBox_setIP);
             this.groupBox_setWanIp.Controls.Add(this.button_setIP);
             this.groupBox_setWanIp.Controls.Add(this.comboBox_whatIsUrl);
@@ -636,7 +640,7 @@
             // 
             this.button_whatIsTest.Location = new System.Drawing.Point(6, 66);
             this.button_whatIsTest.Name = "button_whatIsTest";
-            this.button_whatIsTest.Size = new System.Drawing.Size(189, 23);
+            this.button_whatIsTest.Size = new System.Drawing.Size(90, 23);
             this.button_whatIsTest.TabIndex = 17;
             this.button_whatIsTest.Text = "获取WAN口IP";
             this.button_whatIsTest.UseVisualStyleBackColor = true;
@@ -651,11 +655,31 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "查询网址:";
             // 
+            // button_addNewDomain
+            // 
+            this.button_addNewDomain.Location = new System.Drawing.Point(145, 169);
+            this.button_addNewDomain.Name = "button_addNewDomain";
+            this.button_addNewDomain.Size = new System.Drawing.Size(65, 23);
+            this.button_addNewDomain.TabIndex = 17;
+            this.button_addNewDomain.Text = "添加域名";
+            this.button_addNewDomain.UseVisualStyleBackColor = true;
+            this.button_addNewDomain.Click += new System.EventHandler(this.button_addNewDomain_Click);
+            // 
+            // button_addUrl
+            // 
+            this.button_addUrl.Location = new System.Drawing.Point(105, 66);
+            this.button_addUrl.Name = "button_addUrl";
+            this.button_addUrl.Size = new System.Drawing.Size(90, 23);
+            this.button_addUrl.TabIndex = 21;
+            this.button_addUrl.Text = "添加地址";
+            this.button_addUrl.UseVisualStyleBackColor = true;
+            this.button_addUrl.Click += new System.EventHandler(this.button_addUrl_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 451);
+            this.ClientSize = new System.Drawing.Size(447, 451);
             this.Controls.Add(this.groupBox_setWanIp);
             this.Controls.Add(this.groupBox_netstate);
             this.Controls.Add(this.textBox_log);
@@ -741,6 +765,8 @@
         private System.Windows.Forms.Button button_ngrok;
         private System.Windows.Forms.CheckBox checkBox_ngrok;
         public System.Windows.Forms.TextBox textBox_log;
+        private System.Windows.Forms.Button button_addNewDomain;
+        private System.Windows.Forms.Button button_addUrl;
     }
 }
 
