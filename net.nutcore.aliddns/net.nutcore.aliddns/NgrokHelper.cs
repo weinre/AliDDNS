@@ -9,7 +9,7 @@ using YamlDotNet.Serialization;
 
 namespace net.nutcore.aliddns
 {
-    internal class Ngrok
+    internal class NgrokHelper
     {
         private static readonly string NgrokExecutable = "ngrok.exe";
         private static readonly string NgrokYaml = "ngrok.cfg";
@@ -67,7 +67,7 @@ namespace net.nutcore.aliddns
             public string proto { get; set; }
         }
 
-        public Ngrok()
+        public NgrokHelper()
         {
             if (!File.Exists(FileConfig))
             {
@@ -139,7 +139,7 @@ namespace net.nutcore.aliddns
                 using (WebClient web = new WebClient())
                 {
                     var content = web.DownloadString($"http://{LocalHost}/api/tunnels");
-                    return JsonConvert.DeserializeObject<Ngrok.Response>(content);
+                    return JsonConvert.DeserializeObject<NgrokHelper.Response>(content);
                 }
             }
             catch

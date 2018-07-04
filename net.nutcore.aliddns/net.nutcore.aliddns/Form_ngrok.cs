@@ -6,7 +6,7 @@ namespace net.nutcore.aliddns
     public partial class Form_ngrok : Form
     {
         //初始化ngrok操作类
-        private Ngrok ngrok = new Ngrok();
+        private NgrokHelper ngrok = new NgrokHelper();
         public Form_ngrok()
         {
             InitializeComponent();

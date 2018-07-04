@@ -108,7 +108,7 @@
     <Compile Include="Form_main.Designer.cs">
       <DependentUpon>Form_main.cs</DependentUpon>
     </Compile>
-    <Compile Include="ngrok.cs" />
+    <Compile Include="NgrokHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form_About.resx">

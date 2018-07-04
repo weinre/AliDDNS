@@ -19,7 +19,7 @@ namespace net.nutcore.aliddns
         static IClientProfile clientProfile;
         static DefaultAcsClient client;
         //初始化ngrok操作类
-        private Ngrok ngrok = new Ngrok();
+        private NgrokHelper ngrok = new NgrokHelper();
         private AppConfigHelper cfg = new AppConfigHelper();
 
         public mainForm()
@@ -250,16 +250,20 @@ namespace net.nutcore.aliddns
                 }
             }
             //处理错误
-            catch (ServerException e)  
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "updateDomainRecord() Exception:  " + error + "\r\n");
+            }
+            /*
+            catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                return false;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                return false;
-            }
+            }*/
+            return false;
         }
 
         /// <summary>
@@ -297,23 +301,24 @@ namespace net.nutcore.aliddns
                     return response.Value;
                 }
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取域名绑定IP失败！" + "\r\n");
-                return "0.0.0.0";
             }
             //处理错误 
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "getAliDnsRecordDomainIP() Exception:  " + error + "\r\n");
+            }
+            /*
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                label_DomainIpStatus.Text = "未绑定";
-                label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
-                return "0.0.0.0";
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                label_DomainIpStatus.Text = "未绑定";
-                label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
-                return "0.0.0.0";
-            }
+            }*/
+            label_DomainIpStatus.Text = "未绑定";
+            label_DomainIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
+            return "0.0.0.0";
         }
 
         /// <summary>
@@ -346,6 +351,11 @@ namespace net.nutcore.aliddns
                 recordId.Text = response.RecordId;
             }
             //处理错误
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "updateDomainRecord() Exception:  " + error + "\r\n");
+            }
+            /*
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
@@ -353,7 +363,7 @@ namespace net.nutcore.aliddns
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-            }
+            }*/
         }
 
         /// <summary>
@@ -382,7 +392,8 @@ namespace net.nutcore.aliddns
                 if (response.RecordId != null)
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + " 域名：" + fullDomainName.Text + "添加成功！" + "服务器返回RecordId:" + response.RecordId  + "\r\n");
-                    recordId.Text = response.RecordId;
+                    recordId.Text = response.RecordId.ToString();
+                    cfg.SaveAppSetting("RecordID", response.RecordId.ToString());
                     globalDomainType.Text = request.Type;
                     globalRR.Text = request.RR;
                     globalValue.Text = domainIP.Text = request.Value;
@@ -406,16 +417,20 @@ namespace net.nutcore.aliddns
                     
             }
             //处理错误
-            catch (ServerException e)  
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "updateDomainRecord() Exception:  " + error + "\r\n");
+            }
+            /*
+            catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                return false;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
-                return false;
-            }
+            }*/
+            return false;
         }
 
         /// <summary>
