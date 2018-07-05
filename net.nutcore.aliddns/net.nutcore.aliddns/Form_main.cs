@@ -870,7 +870,7 @@ namespace net.nutcore.aliddns
         private void comboBox_whatIsUrl_Leave(object sender, EventArgs e)
         {
             //cfg.SaveAppSetting("whatIsUrl", this.comboBox_whatIsUrl.Text.ToString());
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "公网IP查询网址已经修改，请测试并确定是否添加进配置文件！" + "\r\n");
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "网址有变化，请测试并确定是否添加进配置文件！" + "\r\n");
         }
 
         private void button_addNewDomain_Click(object sender, EventArgs e)
@@ -885,7 +885,7 @@ namespace net.nutcore.aliddns
             {
                 if (newItem == comboBox_whatIsUrl.Items[i].ToString())
                 {
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "填写的公网IP查询网址已经存在，无需重复添加！" + "\r\n");
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "该网址已经存在，无需重复添加！" + "\r\n");
                     return;
                 }
             }

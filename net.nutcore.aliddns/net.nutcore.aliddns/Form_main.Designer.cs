@@ -363,7 +363,7 @@
             // textBox_TTL
             // 
             this.textBox_TTL.Location = new System.Drawing.Point(65, 120);
-            this.textBox_TTL.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_TTL.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_TTL.Name = "textBox_TTL";
             this.textBox_TTL.Size = new System.Drawing.Size(37, 21);
             this.textBox_TTL.TabIndex = 15;
@@ -620,7 +620,7 @@
             this.button_addUrl.Name = "button_addUrl";
             this.button_addUrl.Size = new System.Drawing.Size(90, 23);
             this.button_addUrl.TabIndex = 21;
-            this.button_addUrl.Text = "添加地址";
+            this.button_addUrl.Text = "添加网址";
             this.button_addUrl.UseVisualStyleBackColor = true;
             this.button_addUrl.Click += new System.EventHandler(this.button_addUrl_Click);
             // 
