@@ -106,10 +106,10 @@ namespace net.nutcore.aliddns
                 }
 
                 //获取阿里云域名记录绑定IP
-                domainIP.Text = getAliDnsRecordDomainIP();
+                //domainIP.Text = getAliDnsRecordDomainIP();
                 //获取WAN口IP
-                localIP.Text = getWanIP();
-                if ((localIP.Text != domainIP.Text) && (checkBox_autoBoot.Checked = true))
+                //localIP.Text = getWanIP();
+                if (checkBox_autoBoot.Checked == true)
                 {
                     updatePrepare();
                 }
@@ -132,8 +132,16 @@ namespace net.nutcore.aliddns
                 label_nextUpdateSeconds.Text = newSeconds.Text = cfg.GetAppSetting("WaitingTime").ToString();
                 if (cfg.GetAppSetting("autoUpdate").ToString() == "On") checkBox_autoUpdate.Checked = true;
                 else checkBox_autoUpdate.Checked = false;
-                comboBox_whatIsUrl.Text = cfg.GetAppSetting("whatIsUrl").ToString();
-
+                if(cfg.GetAppSetting("whatIsUrl").ToString() != null)
+                {
+                    string[] arrayUrl = cfg.GetAppSetting("whatIsUrl").ToString().Split(',');
+                    foreach(string strUrl in arrayUrl)
+                    {
+                        comboBox_whatIsUrl.Items.Add(strUrl.ToString().Trim());
+                    }
+                    comboBox_whatIsUrl.SelectedIndex = 0;
+                }
+                
                 if (cfg.GetAppSetting("autoBoot").ToString() == "On") checkBox_autoBoot.Checked = true;
                 else checkBox_autoBoot.Checked = false;
 
@@ -172,41 +180,52 @@ namespace net.nutcore.aliddns
         /// <summary>
         /// 获取网络出口公网IP
         /// </summary>
+        /// <param name="strUrl"></param>
         /// <returns></returns>
-        private string getWanIP()
+        private string getWanIP(string strUrl)
         {
             try
             {
-                //从控件获取WAN口IP查询网址，默认值为："http://whatismyip.akamai.com/";
-                string strUrl = comboBox_whatIsUrl.Text; 
-                Uri uri = new Uri(strUrl);
-                WebRequest webreq = WebRequest.Create(uri);
-                Stream s = webreq.GetResponse().GetResponseStream();
-                StreamReader sr = new StreamReader(s, Encoding.Default);
-                string all = sr.ReadToEnd();
-                sr.Close();
-                sr.Dispose();
-                all = Regex.Replace(all, @"(\d+)", "000$1");
-                all = Regex.Replace(all, @"0+(\d{1,4})", "$1");
-                string reg = @"(\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4})";
-                Regex regex = new Regex(reg);
-                Match match = regex.Match(all);
-                string ip = match.Groups[1].Value;
-                if (ip.Length > 0)
+                if (strUrl != null)
                 {
-                    label_localIpStatus.Text = "已连接";
-                    label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
-                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "成功获取WAN口IP:" + ip + "\r\n");
+                    Uri uri = new Uri(strUrl);
+                    WebRequest webreq = WebRequest.Create(uri);
+                    Stream s = webreq.GetResponse().GetResponseStream();
+                    StreamReader sr = new StreamReader(s, Encoding.Default);
+                    string all = sr.ReadToEnd();
+                    sr.Close();
+                    sr.Dispose();
+                    all = Regex.Replace(all, @"(\d+)", "000$1");
+                    all = Regex.Replace(all, @"0+(\d{1,4})", "$1");
+                    string reg = @"(\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4})";
+                    Regex regex = new Regex(reg);
+                    Match match = regex.Match(all);
+                    string ip = match.Groups[1].Value;
+                    if ((ip.Length > 0) && (ip.ToString() != "0.0.0.0"))
+                    {
+                        label_localIpStatus.Text = "已连接";
+                        label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(0, 0, 0, 255);
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "从" + strUrl + "成功获取WAN口IP:" + ip + "\r\n");
+                        //return ip;
+                        return Regex.Replace(ip, @"0*(\d+)", "$1");
+                    }
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "从" + strUrl + "返回IP是空值，查询失败！" + "\r\n");
+                    label_localIpStatus.Text = "未连接";
+                    label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(255, 255, 0, 0);
+                    return "0.0.0.0";
                 }
-                //return ip;
-                return Regex.Replace(ip, @"0*(\d+)", "$1");
+                else
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查配置文件查询网址设置！" + "\r\n");
+                    return "0.0.0.0";
+                }
+                return "0.0.0.0";
             }
             catch (Exception error)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "运行出错！信息: " + error + "\r\n");
                 label_localIpStatus.Text = "未连接";
                 label_localIpStatus.ForeColor = System.Drawing.Color.FromArgb(255,255,0,0);
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "获取WAN口IP失败，请检查设置！" + "\r\n");
                 return "0.0.0.0";
             }
         }
@@ -439,7 +458,19 @@ namespace net.nutcore.aliddns
         private void updatePrepare()
         {
             label_nextUpdateSeconds.Text = newSeconds.Text;
-            localIP.Text = getWanIP();
+            string[] arrayUrl = cfg.GetAppSetting("whatIsUrl").ToString().Split(',');
+            foreach (string strUrl in arrayUrl)
+            {
+                if ((localIP.Text = getWanIP(strUrl)) != "0.0.0.0")
+                {
+                    break;
+                }
+            }
+            if(localIP.Text.ToString() == "0.0.0.0")
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "WAN口IP:" + localIP.Text + "，域名绑定IP更新停止，请检查查询网址设置或者手工指定IP！" + "\r\n");
+                return;
+            }
             domainIP.Text = getAliDnsRecordDomainIP();
             if (domainIP.Text == localIP.Text)
             {
@@ -529,7 +560,7 @@ namespace net.nutcore.aliddns
         private void button_whatIsTest_Click(object sender, EventArgs e)
         {
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "开始向网址发起查询... " + "\r\n");
-            localIP.Text = getWanIP();
+            localIP.Text = getWanIP(comboBox_whatIsUrl.Text.ToString().Trim());
             notifyIcon_sysTray_Update(); //监测网络状态、刷新系统托盘图标
         }
 
@@ -838,8 +869,8 @@ namespace net.nutcore.aliddns
 
         private void comboBox_whatIsUrl_Leave(object sender, EventArgs e)
         {
-            cfg.SaveAppSetting("whatIsUrl", this.comboBox_whatIsUrl.Text.ToString());
-            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "公网IP查询网址修改保存成功！" + "\r\n");
+            //cfg.SaveAppSetting("whatIsUrl", this.comboBox_whatIsUrl.Text.ToString());
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "公网IP查询网址已经修改，请测试并确定是否添加进配置文件！" + "\r\n");
         }
 
         private void button_addNewDomain_Click(object sender, EventArgs e)
@@ -850,8 +881,17 @@ namespace net.nutcore.aliddns
         private void button_addUrl_Click(object sender, EventArgs e)
         {
             string newItem = comboBox_whatIsUrl.Text.Trim().ToLower().ToString();
+            for(int i = 0; i < comboBox_whatIsUrl.Items.Count; i++)
+            {
+                if (newItem == comboBox_whatIsUrl.Items[i].ToString())
+                {
+                    textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "填写的公网IP查询网址已经存在，无需重复添加！" + "\r\n");
+                    return;
+                }
+            }
             comboBox_whatIsUrl.Items.Add(newItem);
             cfg.AddAppSetting("whatIsUrl", newItem);
+            textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "新增公网IP查询网址保存成功！" + "\r\n");
         }
     }
 }

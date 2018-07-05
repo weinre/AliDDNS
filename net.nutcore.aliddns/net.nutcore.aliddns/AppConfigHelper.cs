@@ -103,16 +103,16 @@ namespace net.nutcore.aliddns
                             new XElement("add", new XAttribute("key", "AccessKeyID"), new XAttribute("value", "")),
                             new XElement("add", new XAttribute("key", "AccessKeySecret"), new XAttribute("value", "")),
                             new XElement("add", new XAttribute("key", "RecordID"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "fullDomainName"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "WaitingTime"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "autoUpdate"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "whatIsUrl"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "autoBoot"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "minimized"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "logautosave"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "TTL"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "autoCheckUpdate"), new XAttribute("value", "")),
-                            new XElement("add", new XAttribute("key", "ngrokauto"), new XAttribute("value", ""))
+                            new XElement("add", new XAttribute("key", "fullDomainName"), new XAttribute("value", "www.xxx.com")),
+                            new XElement("add", new XAttribute("key", "WaitingTime"), new XAttribute("value", "600")),
+                            new XElement("add", new XAttribute("key", "autoUpdate"), new XAttribute("value", "Off")),
+                            new XElement("add", new XAttribute("key", "whatIsUrl"), new XAttribute("value", "http://whatismyip.akamai.com/,http://www.net.cn/static/customercare/yourip.asp")),
+                            new XElement("add", new XAttribute("key", "autoBoot"), new XAttribute("value", "Off")),
+                            new XElement("add", new XAttribute("key", "minimized"), new XAttribute("value", "Off")),
+                            new XElement("add", new XAttribute("key", "logautosave"), new XAttribute("value", "Off")),
+                            new XElement("add", new XAttribute("key", "TTL"), new XAttribute("value", "600")),
+                            new XElement("add", new XAttribute("key", "autoCheckUpdate"), new XAttribute("value", "Off")),
+                            new XElement("add", new XAttribute("key", "ngrokauto"), new XAttribute("value", "Off"))
                         )
                 )
             );
