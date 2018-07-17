@@ -528,9 +528,9 @@ namespace net.nutcore.aliddns
             }
         }
 
-        private async void toolStripMenuItem_Quit_Click(object sender, EventArgs e)
+        private void toolStripMenuItem_Quit_Click(object sender, EventArgs e)
         {
-            await ngrok.Stop();
+            ngrok.Stop();
             this.Dispose();
         }
 
@@ -795,7 +795,7 @@ namespace net.nutcore.aliddns
                 MessageBox.Show("获取新版本信息失败！");
         }
 
-        private async void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
+        private void checkBox_ngrok_CheckedChanged(object sender, EventArgs e)
         {
             
             if (checkBox_ngrok.Checked == true)
@@ -806,7 +806,7 @@ namespace net.nutcore.aliddns
                 if (ngrok.IsExists())
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能启用，ngrok.exe将自动加载！本机浏览器打开：http://127.0.0.1:4040 查看运行状态。" + "\r\n");
-                    await ngrok.Start();
+                    ngrok.Start();
                 }
                 else
                 {
@@ -816,7 +816,7 @@ namespace net.nutcore.aliddns
             else
             {
                 cfg.SaveAppSetting("ngrokauto", "Off");
-                await ngrok.Stop();
+                ngrok.Stop();
                 button_ngrok.Enabled = true;
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Ngrok功能关闭，再次启动将不会加载！" + "\r\n");
             }

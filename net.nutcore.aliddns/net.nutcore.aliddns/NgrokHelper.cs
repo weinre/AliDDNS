@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YamlDotNet.Serialization;
@@ -179,7 +180,7 @@ namespace net.nutcore.aliddns
             File.WriteAllText(FileConfig, yaml);
         }
 
-        public async Task Start(int code = 0)
+        public void Start(int code = 0)
         {
             var exec = new ProcessStartInfo();
             exec.WorkingDirectory = CurrentDirectory;
@@ -209,7 +210,7 @@ namespace net.nutcore.aliddns
 
             try
             {
-                await Task.Run(() =>
+                Thread thread = new Thread(() =>
                 {
                     var proc = Process.Start(exec);
                     proc.WaitForExit();
@@ -222,9 +223,9 @@ namespace net.nutcore.aliddns
             }
         }
 
-        public async Task Stop()
+        public void Stop()
         {
-            await Task.Run(() =>
+            Thread thread = new Thread(() =>
             {
                 Process[] pList = Process.GetProcessesByName("Ngrok");
                 foreach (Process p in pList)

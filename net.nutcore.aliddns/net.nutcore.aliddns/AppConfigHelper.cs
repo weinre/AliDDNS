@@ -122,9 +122,9 @@ namespace net.nutcore.aliddns
             xmlDoc.Indent = true;
             XmlWriter xw = XmlWriter.Create(configFilePath, xmlDoc);
             xElement.Save(xw);//写入文件
-            xw.Dispose();
+            //xw.Dispose();
             //xw.Flush();
-            //xw.Close();
+            xw.Close();
         }
 
         /// <summary>
