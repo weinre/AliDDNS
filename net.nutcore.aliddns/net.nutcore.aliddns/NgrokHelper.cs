@@ -210,12 +210,13 @@ namespace net.nutcore.aliddns
 
             try
             {
-                Thread thread = new Thread(() =>
+                Task task = Task.Factory.StartNew(() =>
                 {
                     var proc = Process.Start(exec);
                     proc.WaitForExit();
                     proc.Dispose();
                 });
+                task.Start();
             }
             catch (Exception ex)
             {
@@ -225,17 +226,26 @@ namespace net.nutcore.aliddns
 
         public void Stop()
         {
-            Thread thread = new Thread(() =>
+            try
             {
-                Process[] pList = Process.GetProcessesByName("Ngrok");
-                foreach (Process p in pList)
+                Task task = Task.Factory.StartNew(() =>
                 {
-                    Console.WriteLine($"Kill: {p.Id}");
-                    p.Kill();
-                    p.WaitForExit();
-                    p.Dispose();
-                }
-            });
+                    Process[] pList = Process.GetProcessesByName("Ngrok");
+                    foreach (Process p in pList)
+                    {
+                        Console.WriteLine($"Kill: {p.Id}");
+                        p.Kill();
+                        p.WaitForExit();
+                        p.Dispose();
+                    }
+                });
+                task.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
     }
 }

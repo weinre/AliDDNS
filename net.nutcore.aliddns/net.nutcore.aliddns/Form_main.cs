@@ -219,7 +219,7 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查配置文件查询网址设置！" + "\r\n");
                     return "0.0.0.0";
                 }
-                return "0.0.0.0";
+                //return "0.0.0.0";
             }
             catch (Exception error)
             {
