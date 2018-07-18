@@ -210,13 +210,12 @@ namespace net.nutcore.aliddns
 
             try
             {
-                Task task = Task.Factory.StartNew(() =>
+                new Thread(() =>
                 {
                     var proc = Process.Start(exec);
                     proc.WaitForExit();
                     proc.Dispose();
-                });
-                task.Start();
+                }).Start();
             }
             catch (Exception ex)
             {
@@ -228,7 +227,7 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                Task task = Task.Factory.StartNew(() =>
+                new Thread(() =>
                 {
                     Process[] pList = Process.GetProcessesByName("Ngrok");
                     foreach (Process p in pList)
@@ -238,8 +237,7 @@ namespace net.nutcore.aliddns
                         p.WaitForExit();
                         p.Dispose();
                     }
-                });
-                task.Start();
+                }).Start();
             }
             catch (Exception ex)
             {
