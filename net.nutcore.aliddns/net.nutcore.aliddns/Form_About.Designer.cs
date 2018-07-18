@@ -174,7 +174,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 12);
             this.label6.TabIndex = 2;
-            this.label6.Text = "最新版本:";
+            this.label6.Text = "远程版本:";
             // 
             // label_currentVer
             // 
@@ -192,7 +192,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 12);
             this.label4.TabIndex = 0;
-            this.label4.Text = "当前版本:";
+            this.label4.Text = "本地版本:";
             // 
             // Form_About
             // 

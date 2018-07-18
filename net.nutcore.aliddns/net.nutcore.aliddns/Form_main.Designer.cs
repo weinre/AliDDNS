@@ -43,7 +43,7 @@
             this.debugMessage = new System.Windows.Forms.GroupBox();
             this.label_TTL = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.recordId = new System.Windows.Forms.TextBox();
+            this.textBox_recordId = new System.Windows.Forms.TextBox();
             this.globalValue = new System.Windows.Forms.Label();
             this.globalDomainType = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -58,13 +58,13 @@
             this.button_ShowHide = new System.Windows.Forms.Button();
             this.checkAndSaveConfig = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
-            this.newSeconds = new System.Windows.Forms.TextBox();
+            this.textBox_newSeconds = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.fullDomainName = new System.Windows.Forms.TextBox();
-            this.accessKeySecret = new System.Windows.Forms.TextBox();
+            this.textBox_accessKeySecret = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.accessKeyId = new System.Windows.Forms.TextBox();
+            this.textBox_accessKeyId = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.autoUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon_sysTray = new System.Windows.Forms.NotifyIcon(this.components);
@@ -211,7 +211,7 @@
             // 
             this.debugMessage.Controls.Add(this.label_TTL);
             this.debugMessage.Controls.Add(this.label15);
-            this.debugMessage.Controls.Add(this.recordId);
+            this.debugMessage.Controls.Add(this.textBox_recordId);
             this.debugMessage.Controls.Add(this.globalValue);
             this.debugMessage.Controls.Add(this.globalDomainType);
             this.debugMessage.Controls.Add(this.label12);
@@ -246,13 +246,13 @@
             this.label15.TabIndex = 9;
             this.label15.Text = "TTL:";
             // 
-            // recordId
+            // textBox_recordId
             // 
-            this.recordId.Location = new System.Drawing.Point(68, 18);
-            this.recordId.Name = "recordId";
-            this.recordId.Size = new System.Drawing.Size(116, 21);
-            this.recordId.TabIndex = 8;
-            this.recordId.Text = "<null>";
+            this.textBox_recordId.Location = new System.Drawing.Point(68, 18);
+            this.textBox_recordId.Name = "textBox_recordId";
+            this.textBox_recordId.Size = new System.Drawing.Size(116, 21);
+            this.textBox_recordId.TabIndex = 8;
+            this.textBox_recordId.Text = "<null>";
             // 
             // globalValue
             // 
@@ -325,13 +325,13 @@
             this.globalSetGroup.Controls.Add(this.button_ShowHide);
             this.globalSetGroup.Controls.Add(this.checkAndSaveConfig);
             this.globalSetGroup.Controls.Add(this.label8);
-            this.globalSetGroup.Controls.Add(this.newSeconds);
+            this.globalSetGroup.Controls.Add(this.textBox_newSeconds);
             this.globalSetGroup.Controls.Add(this.label7);
             this.globalSetGroup.Controls.Add(this.label6);
             this.globalSetGroup.Controls.Add(this.fullDomainName);
-            this.globalSetGroup.Controls.Add(this.accessKeySecret);
+            this.globalSetGroup.Controls.Add(this.textBox_accessKeySecret);
             this.globalSetGroup.Controls.Add(this.label5);
-            this.globalSetGroup.Controls.Add(this.accessKeyId);
+            this.globalSetGroup.Controls.Add(this.textBox_accessKeyId);
             this.globalSetGroup.Controls.Add(this.label4);
             this.globalSetGroup.Location = new System.Drawing.Point(219, 132);
             this.globalSetGroup.Name = "globalSetGroup";
@@ -399,14 +399,14 @@
             this.label8.TabIndex = 8;
             this.label8.Text = "秒更新一次";
             // 
-            // newSeconds
+            // textBox_newSeconds
             // 
-            this.newSeconds.Location = new System.Drawing.Point(41, 145);
-            this.newSeconds.Name = "newSeconds";
-            this.newSeconds.Size = new System.Drawing.Size(60, 21);
-            this.newSeconds.TabIndex = 7;
-            this.newSeconds.Text = "60";
-            this.newSeconds.Leave += new System.EventHandler(this.newSeconds_Leave);
+            this.textBox_newSeconds.Location = new System.Drawing.Point(41, 145);
+            this.textBox_newSeconds.Name = "textBox_newSeconds";
+            this.textBox_newSeconds.Size = new System.Drawing.Size(60, 21);
+            this.textBox_newSeconds.TabIndex = 7;
+            this.textBox_newSeconds.Text = "60";
+            this.textBox_newSeconds.Leave += new System.EventHandler(this.newSeconds_Leave);
             // 
             // label7
             // 
@@ -435,15 +435,15 @@
             this.fullDomainName.Text = "www.xxx.com";
             this.fullDomainName.Leave += new System.EventHandler(this.fullDomainName_Leave);
             // 
-            // accessKeySecret
+            // textBox_accessKeySecret
             // 
-            this.accessKeySecret.Location = new System.Drawing.Point(8, 68);
-            this.accessKeySecret.Name = "accessKeySecret";
-            this.accessKeySecret.PasswordChar = '*';
-            this.accessKeySecret.Size = new System.Drawing.Size(192, 21);
-            this.accessKeySecret.TabIndex = 3;
-            this.accessKeySecret.Text = "null";
-            this.accessKeySecret.Leave += new System.EventHandler(this.accessKeySecret_Leave);
+            this.textBox_accessKeySecret.Location = new System.Drawing.Point(8, 68);
+            this.textBox_accessKeySecret.Name = "textBox_accessKeySecret";
+            this.textBox_accessKeySecret.PasswordChar = '*';
+            this.textBox_accessKeySecret.Size = new System.Drawing.Size(192, 21);
+            this.textBox_accessKeySecret.TabIndex = 3;
+            this.textBox_accessKeySecret.Text = "null";
+            this.textBox_accessKeySecret.Leave += new System.EventHandler(this.accessKeySecret_Leave);
             // 
             // label5
             // 
@@ -454,15 +454,15 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "accessKeySecret";
             // 
-            // accessKeyId
+            // textBox_accessKeyId
             // 
-            this.accessKeyId.Location = new System.Drawing.Point(8, 29);
-            this.accessKeyId.Name = "accessKeyId";
-            this.accessKeyId.PasswordChar = '*';
-            this.accessKeyId.Size = new System.Drawing.Size(192, 21);
-            this.accessKeyId.TabIndex = 1;
-            this.accessKeyId.Text = "null";
-            this.accessKeyId.Leave += new System.EventHandler(this.accessKeyId_Leave);
+            this.textBox_accessKeyId.Location = new System.Drawing.Point(8, 29);
+            this.textBox_accessKeyId.Name = "textBox_accessKeyId";
+            this.textBox_accessKeyId.PasswordChar = '*';
+            this.textBox_accessKeyId.Size = new System.Drawing.Size(192, 21);
+            this.textBox_accessKeyId.TabIndex = 1;
+            this.textBox_accessKeyId.Text = "null";
+            this.textBox_accessKeyId.Leave += new System.EventHandler(this.accessKeyId_Leave);
             // 
             // label4
             // 
@@ -713,13 +713,13 @@
         private System.Windows.Forms.GroupBox debugMessage;
         private System.Windows.Forms.GroupBox globalSetGroup;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox newSeconds;
+        private System.Windows.Forms.TextBox textBox_newSeconds;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox fullDomainName;
-        private System.Windows.Forms.TextBox accessKeySecret;
+        private System.Windows.Forms.TextBox textBox_accessKeySecret;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox accessKeyId;
+        private System.Windows.Forms.TextBox textBox_accessKeyId;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Timer autoUpdateTimer;
         private System.Windows.Forms.Button checkAndSaveConfig;
@@ -730,7 +730,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label globalDomainType;
         private System.Windows.Forms.Label globalValue;
-        private System.Windows.Forms.TextBox recordId;
+        private System.Windows.Forms.TextBox textBox_recordId;
         private System.Windows.Forms.NotifyIcon notifyIcon_sysTray;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_sysTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;

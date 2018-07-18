@@ -125,11 +125,11 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                accessKeyId.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeyID").ToString());
-                accessKeySecret.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeySecret").ToString());
-                recordId.Text = cfg.GetAppSetting("RecordID").ToString();
+                textBox_accessKeyId.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeyID").ToString());
+                textBox_accessKeySecret.Text = EncryptHelper.AESDecrypt(cfg.GetAppSetting("AccessKeySecret").ToString());
+                textBox_recordId.Text = cfg.GetAppSetting("RecordID").ToString();
                 fullDomainName.Text = cfg.GetAppSetting("fullDomainName").ToString();
-                label_nextUpdateSeconds.Text = newSeconds.Text = cfg.GetAppSetting("WaitingTime").ToString();
+                label_nextUpdateSeconds.Text = textBox_newSeconds.Text = cfg.GetAppSetting("WaitingTime").ToString();
                 if (cfg.GetAppSetting("autoUpdate").ToString() == "On") checkBox_autoUpdate.Checked = true;
                 else checkBox_autoUpdate.Checked = false;
                 if(cfg.GetAppSetting("whatIsUrl").ToString() != null)
@@ -231,17 +231,22 @@ namespace net.nutcore.aliddns
         }
 
         /// <summary>
-        /// 从阿里云获取域名记录
+        /// 从阿里云获取域名记录recordId
         /// </summary>
         /// <returns></returns>
-        private bool getRecordId() //获取阿里云解析返回recordId
+        private bool getRecordId()
         {
-            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text.ToString(), accessKeySecret.Text.ToString());
+            if(textBox_accessKeyId.Text.ToString()==null||textBox_accessKeySecret.Text.ToString()==null||fullDomainName.Text.ToString()==null||textBox_TTL.Text.ToString()==null||textBox_newSeconds.Text.ToString()==null)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "请检查设置，不能为空！" + "\r\n");
+                return false;
+            }
+            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", textBox_accessKeyId.Text.ToString(), textBox_accessKeySecret.Text.ToString());
             client = new DefaultAcsClient(clientProfile);
             DescribeSubDomainRecordsRequest request = new DescribeSubDomainRecordsRequest();
             request.SubDomain = fullDomainName.Text;
             try
-            {                
+            {
                 DescribeSubDomainRecordsResponse response = client.GetAcsResponse(request);
                 List<Record> list = response.DomainRecords;
 
@@ -257,7 +262,7 @@ namespace net.nutcore.aliddns
                     {
                         i++;
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务返回RecordId:" + i.ToString() + " RecordId：" + record.RecordId + "\r\n");
-                        recordId.Text = record.RecordId;
+                        textBox_recordId.Text = record.RecordId;
                         globalRR.Text = record.RR;
                         globalDomainType.Text = record.Type;
                         globalValue.Text = domainIP.Text = record.Value;
@@ -268,21 +273,23 @@ namespace net.nutcore.aliddns
                     return true;
                 }
             }
-            //处理错误
-            catch (Exception error)
-            {
-                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "updateDomainRecord() Exception:  " + error + "\r\n");
-            }
-            /*
             catch (ServerException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Server Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
+                return false;
             }
             catch (ClientException e)
             {
                 textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "Client Exception:  " + e.ErrorCode + e.ErrorMessage + "\r\n");
+                return false;
+            }
+            //处理错误
+            /*
+            catch (Exception error)
+            {
+                textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "updateDomainRecord() Exception:  " + error + "\r\n");
+                return false;
             }*/
-            return false;
         }
 
         /// <summary>
@@ -291,10 +298,10 @@ namespace net.nutcore.aliddns
         /// <returns></returns>
         private string getAliDnsRecordDomainIP()
         {
-            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text.ToString(), accessKeySecret.Text.ToString());
+            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", textBox_accessKeyId.Text.ToString(), textBox_accessKeySecret.Text.ToString());
             client = new DefaultAcsClient(clientProfile);
             DescribeDomainRecordInfoRequest request = new DescribeDomainRecordInfoRequest();
-            request.RecordId = recordId.Text.ToString();
+            request.RecordId = textBox_recordId.Text.ToString();
             try
             {
                 DescribeDomainRecordInfoResponse response = client.GetAcsResponse(request);
@@ -304,13 +311,13 @@ namespace net.nutcore.aliddns
                     if(fullDomain != fullDomainName.Text.ToString())
                     {
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS域名记录:"+ response.RecordId + " 对应域名为:" + fullDomain + "\r\n");
-                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件域名记录:" + recordId.Text.ToString() + " 对应域名为:" + fullDomainName.Text.ToString() + "\r\n");
+                        textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件域名记录:" + textBox_recordId.Text.ToString() + " 对应域名为:" + fullDomainName.Text.ToString() + "\r\n");
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "配置文件设置错误！可能原因是修改域名记录后未及时添加，已经自动修改配置文件与服务器记录一致！" + "\r\n");
                         fullDomainName.Text = fullDomain;
                         cfg.SaveAppSetting("fullDomainName", fullDomain);
                     }
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名:" + response.RR + "." + response.DomainName + " 已经绑定IP:" + response.Value + "\r\n");
-                    recordId.Text = response.RecordId;
+                    textBox_recordId.Text = response.RecordId;
                     globalRR.Text = response.RR;
                     globalDomainType.Text = response.Type;
                     globalValue.Text = response.Value;
@@ -350,12 +357,12 @@ namespace net.nutcore.aliddns
             string domainRR = data[0];
             string domainName = data[1] + "." + data[2];
 
-            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text.ToString(), accessKeySecret.Text.ToString());
+            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", textBox_accessKeyId.Text.ToString(), textBox_accessKeySecret.Text.ToString());
             client = new DefaultAcsClient(clientProfile);
             UpdateDomainRecordRequest request = new UpdateDomainRecordRequest();
             request.Type = "A";
             request.RR = domainRR;
-            request.RecordId = recordId.Text;
+            request.RecordId = textBox_recordId.Text;
             request.TTL = Convert.ToInt32(textBox_TTL.Text);
             request.Value = localIP.Text;
             try
@@ -367,7 +374,7 @@ namespace net.nutcore.aliddns
                     domainIP.Text = localIP.Text; //更新窗体数据
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "域名绑定IP更新成功！" + "\r\n");
                 }
-                recordId.Text = response.RecordId;
+                textBox_recordId.Text = response.RecordId;
             }
             //处理错误
             catch (Exception error)
@@ -396,7 +403,7 @@ namespace net.nutcore.aliddns
             string domainRR = data[0];
             string domainName = data[1] + "." + data[2];
 
-            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId.Text.ToString(), accessKeySecret.Text.ToString());
+            clientProfile = DefaultProfile.GetProfile("cn-hangzhou", textBox_accessKeyId.Text.ToString(), textBox_accessKeySecret.Text.ToString());
             client = new DefaultAcsClient(clientProfile);
             AddDomainRecordRequest request = new AddDomainRecordRequest();
             request.Type = "A";
@@ -411,7 +418,7 @@ namespace net.nutcore.aliddns
                 if (response.RecordId != null)
                 {
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + " 域名：" + fullDomainName.Text + "添加成功！" + "服务器返回RecordId:" + response.RecordId  + "\r\n");
-                    recordId.Text = response.RecordId.ToString();
+                    textBox_recordId.Text = response.RecordId.ToString();
                     cfg.SaveAppSetting("RecordID", response.RecordId.ToString());
                     globalDomainType.Text = request.Type;
                     globalRR.Text = request.RR;
@@ -425,7 +432,7 @@ namespace net.nutcore.aliddns
                     textBox_log.AppendText(System.DateTime.Now.ToString() + " " + " 域名：" + fullDomainName.Text + "添加失败！" + "\r\n");
                     label_DomainIpStatus.Text = "未绑定";
                     domainIP.Text = "0.0.0.0";
-                    recordId.Text = "null";
+                    textBox_recordId.Text = "null";
                     globalRR.Text = "null";
                     globalDomainType.Text = "null";
                     globalValue.Text = "null";
@@ -457,7 +464,7 @@ namespace net.nutcore.aliddns
         /// </summary>
         private void updatePrepare()
         {
-            label_nextUpdateSeconds.Text = newSeconds.Text;
+            label_nextUpdateSeconds.Text = textBox_newSeconds.Text;
             string[] arrayUrl = cfg.GetAppSetting("whatIsUrl").ToString().Split(',');
             foreach (string strUrl in arrayUrl)
             {
@@ -569,14 +576,14 @@ namespace net.nutcore.aliddns
             if (button_ShowHide.Text == "显示录入")
             {
                 button_ShowHide.Text = "隐藏录入";
-                accessKeyId.PasswordChar = (char)0;
-                accessKeySecret.PasswordChar = (char)0;
+                textBox_accessKeyId.PasswordChar = (char)0;
+                textBox_accessKeySecret.PasswordChar = (char)0;
             }
             else
             {
                 button_ShowHide.Text = "显示录入";
-                accessKeyId.PasswordChar = '*';
-                accessKeySecret.PasswordChar = '*';
+                textBox_accessKeyId.PasswordChar = '*';
+                textBox_accessKeySecret.PasswordChar = '*';
             }
         }
 
@@ -737,40 +744,37 @@ namespace net.nutcore.aliddns
 
         }
 
+        /// <summary>
+        /// 从github.com仓库检查软件最新release版本信息，返回版本号
+        /// </summary>
+        /// <returns></returns>
         public static string verCheckUpdate()
         {
             try
             {
                 string strUrl = "https://github.com/wisdomwei201804/AliDDNS/releases/latest";
                 if (strUrl.StartsWith("https"))
-                    System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
-                System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient(
-                    new System.Net.Http.HttpClientHandler
-                    {
-                        //CookieContainer = cookies,
-                        AutomaticDecompression = DecompressionMethods.GZip //防止返回的json乱码
-                                               | DecompressionMethods.Deflate
-                    });
-                httpClient.DefaultRequestHeaders.Add("UserAgent", "Mozilla/4.0(compatible;MSIE6.0;WindowsNT5.1)");
-                httpClient.DefaultRequestHeaders.Add("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4");
-                httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, sdch");
-                httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/x-www-form-urlencoded,application/xhtml+xml,application/json,application/xml;q=0.9,image/webp,*/*;q=0.8");
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.AcceptCharset.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("UTF-8"));
-                System.Net.Http.HttpResponseMessage response = httpClient.GetAsync(strUrl).Result;
-                //var statusCode = response.StatusCode.ToString();
-                if (response.IsSuccessStatusCode)
                 {
-                    string result = response.Content.ReadAsStringAsync().Result;
-                    string ver = System.Text.RegularExpressions.Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value;
-                    //MessageBox.Show(ver);
-                    return ver.ToString();
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls1.2 | SecurityProtocolType.Tls12;
+                }
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(strUrl);
+                request.Method = "GET";
+                request.Accept = "application/json";
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader sr = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("utf-8"));
+                string result = sr.ReadToEnd();
+                sr.Close();
+                sr.Dispose();
+                if (response.StatusCode.ToString() == "OK" )
+                {
+                    //MessageBox.Show(response.StatusCode.ToString());
+                    //MessageBox.Show(Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value);
+                    return Regex.Match(result, @"""tag_name"":""([^""]*)""").Groups[1].Value;
                 }
                 else
+                {
                     return null;
-                //httpClient.Dispose();
-                //response.Dispose();
+                }
             }
             catch (Exception error)
             {
@@ -845,13 +849,13 @@ namespace net.nutcore.aliddns
 
         private void accessKeyId_Leave(object sender, EventArgs e)
         {
-            cfg.SaveAppSetting("AccessKeyID", EncryptHelper.AESEncrypt(this.accessKeyId.Text.ToString()));
+            cfg.SaveAppSetting("AccessKeyID", EncryptHelper.AESEncrypt(this.textBox_accessKeyId.Text.ToString()));
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "accessKeyId已经保存，请完成设置录入后点击测试连接！" + "\r\n");
         }
 
         private void accessKeySecret_Leave(object sender, EventArgs e)
         {
-            cfg.SaveAppSetting("AccessKeySecret", EncryptHelper.AESEncrypt(this.accessKeySecret.Text.ToString()));
+            cfg.SaveAppSetting("AccessKeySecret", EncryptHelper.AESEncrypt(this.textBox_accessKeySecret.Text.ToString()));
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "accessKeySecret已经保存，请完成设置录入后点击测试连接！" + "\r\n");
         }
 
