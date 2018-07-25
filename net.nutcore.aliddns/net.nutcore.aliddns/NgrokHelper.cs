@@ -210,15 +210,18 @@ namespace net.nutcore.aliddns
 
             try
             {
-                new Thread(() =>
+                Task task = new Task(() =>
                 {
                     var proc = Process.Start(exec);
                     proc.WaitForExit();
                     proc.Dispose();
-                }).Start();
+                });
+                task.Start();
+                task.Wait(); //Wait for new Thread Exception throw
             }
-            catch (Exception ex)
+            catch (AggregateException ex)
             {
+                MessageBox.Show("Ngrok start running error：" + ex.ToString());
                 Console.WriteLine(ex.Message);
             }
         }
@@ -227,7 +230,7 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                new Thread(() =>
+                Task task = new Task(() =>
                 {
                     Process[] pList = Process.GetProcessesByName("Ngrok");
                     foreach (Process p in pList)
@@ -237,10 +240,13 @@ namespace net.nutcore.aliddns
                         p.WaitForExit();
                         p.Dispose();
                     }
-                }).Start();
+                });
+                task.Start();
+                task.Wait(); //Wait for new Thread Exception throw
             }
-            catch (Exception ex)
+            catch (AggregateException ex)
             {
+                MessageBox.Show("Ngrok stop running error：" + ex.ToString());
                 Console.WriteLine(ex.Message);
             }
 
