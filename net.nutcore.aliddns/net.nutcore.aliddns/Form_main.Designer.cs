@@ -250,6 +250,7 @@
             // 
             this.textBox_recordId.Location = new System.Drawing.Point(68, 18);
             this.textBox_recordId.Name = "textBox_recordId";
+            this.textBox_recordId.ReadOnly = true;
             this.textBox_recordId.Size = new System.Drawing.Size(116, 21);
             this.textBox_recordId.TabIndex = 8;
             this.textBox_recordId.Text = "<null>";

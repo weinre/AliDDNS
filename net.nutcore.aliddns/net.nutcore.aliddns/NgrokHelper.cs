@@ -210,14 +210,20 @@ namespace net.nutcore.aliddns
 
             try
             {
-                Task task = new Task(() =>
+                new Thread(()=>
                 {
-                    var proc = Process.Start(exec);
-                    proc.WaitForExit();
-                    proc.Dispose();
-                });
-                task.Start();
-                task.Wait(); //Wait for new Thread Exception throw
+                    try
+                    {
+                        var proc = Process.Start(exec);
+                        proc.WaitForExit();
+                        proc.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ngrok start running error：" + ex.ToString());
+                        Console.WriteLine(ex.Message);
+                    }
+                }).Start();
             }
             catch (AggregateException ex)
             {
@@ -230,19 +236,25 @@ namespace net.nutcore.aliddns
         {
             try
             {
-                Task task = new Task(() =>
+                new Thread(() =>
                 {
-                    Process[] pList = Process.GetProcessesByName("Ngrok");
-                    foreach (Process p in pList)
+                    try
                     {
-                        Console.WriteLine($"Kill: {p.Id}");
-                        p.Kill();
-                        p.WaitForExit();
-                        p.Dispose();
+                        Process[] pList = Process.GetProcessesByName("Ngrok");
+                        foreach (Process p in pList)
+                        {
+                            Console.WriteLine($"Kill: {p.Id}");
+                            p.Kill();
+                            p.WaitForExit();
+                            p.Dispose();
+                        }
                     }
-                });
-                task.Start();
-                task.Wait(); //Wait for new Thread Exception throw
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ngrok start running error：" + ex.ToString());
+                        Console.WriteLine(ex.Message);
+                    }
+                }).Start();
             }
             catch (AggregateException ex)
             {
