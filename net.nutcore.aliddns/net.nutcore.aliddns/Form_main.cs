@@ -263,6 +263,7 @@ namespace net.nutcore.aliddns
                         i++;
                         textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "阿里云DNS服务返回RecordId:" + i.ToString() + " RecordId：" + record.RecordId + "\r\n");
                         textBox_recordId.Text = record.RecordId;
+                        cfg.SaveAppSetting("RecordID", record.RecordId.ToString());
                         globalRR.Text = record.RR;
                         globalDomainType.Text = record.Type;
                         globalValue.Text = domainIP.Text = record.Value;
