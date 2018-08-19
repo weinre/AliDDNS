@@ -867,7 +867,7 @@ namespace net.nutcore.aliddns
 
         private void newSeconds_Leave(object sender, EventArgs e)
         {
-            cfg.SaveAppSetting("WaitingTime", this.textBox_TTL.Text.ToString());
+            cfg.SaveAppSetting("WaitingTime", this.textBox_newSeconds.Text.ToString());
             textBox_log.AppendText(System.DateTime.Now.ToString() + " " + "自动更新倒计时设置修改保存成功！" + "\r\n");
         }
 
